@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using RGen.Logic;
 using RGen.Properties;
 
 
@@ -7,16 +8,14 @@ namespace RGen;
 
 internal static class Greeter
 {
-	public static void Greet()
+	public static void Greet(string[] args)
 	{
 		try
 		{
-//TODO: Stay quiet if silent option is requested
+			if (args.Any(a => string.Equals(a, GlobalSilentOption.SilentOption, StringComparison.OrdinalIgnoreCase)))
+				return;
 
 			var splashLines = Resources.splash.Split("\r\n");
-			var maxWidth = splashLines.Max(l => l.Length);
-			//TODO: Calculate the buffer offset.
-
 			Console.ForegroundColor = ConsoleColor.Cyan;
 			foreach (var splashLine in splashLines)
 				Console.WriteLine(splashLine);

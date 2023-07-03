@@ -5,6 +5,7 @@ using System.CommandLine.Hosting;
 using System.CommandLine.Parsing;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RGen.Logic;
 using RGen.Logic.Integer;
 
 
@@ -30,6 +31,7 @@ internal static class Startup
 			{
 				new GenerateIntegerCommand()
 			};
+		rootCommand.AddGlobalOption(GlobalSilentOption.Create());
 		return new CommandLineBuilder(rootCommand);
 	}
 }

@@ -5,7 +5,7 @@ using RGen;
 using RGen.Logic;
 
 Console.InputEncoding = Console.OutputEncoding = Encoding.UTF8;
-Greeter.Greet();
+Greeter.Greet(args);
 
 try
 {
