@@ -3,7 +3,12 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <AssemblyName>rgen</AssemblyName>
+    <ApplicationIcon>dots-16.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="dots-16.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RGen.Logic\RGen.Logic.csproj" />
