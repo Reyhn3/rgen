@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="dots-16.ico" />
+    <ProjectReference Include="..\RGen.Logic\RGen.Logic.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RGen.Logic\RGen.Logic.csproj" />
+    <Content Include="dots-16.ico" />
   </ItemGroup>
 
   <ItemGroup>
