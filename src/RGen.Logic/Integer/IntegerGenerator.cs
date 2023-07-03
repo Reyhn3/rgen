@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 
 
 namespace RGen.Logic.Integer;
@@ -8,7 +8,7 @@ namespace RGen.Logic.Integer;
 public class IntegerGenerator : IIntegerGenerator
 {
 	private static int Single() =>
-		DateTime.Now.Microsecond;
+		RandomNumberGenerator.GetInt32(int.MaxValue);
 
 	public IEnumerable<int> Multiple(int n) =>
 		Enumerable.Range(0, n).Select(_ => Single());
