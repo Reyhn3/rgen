@@ -1,6 +1,6 @@
 # RGen
 
-![dots-64](.\assets\dots-64.png) A flexible random value generator for the command-line.
+![dots-64](assets/dots-64.png) A flexible random value generator for the command-line.
 
 ## Attributions
 
