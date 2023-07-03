@@ -3,6 +3,7 @@ using System.CommandLine;
 using System.CommandLine.Builder;
 using System.CommandLine.Hosting;
 using System.CommandLine.Parsing;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RGen.Logic;
@@ -22,6 +23,8 @@ internal static class Startup
 					.ConfigureLogging(builder => builder.ClearProviders())
 					.UseConsoleLifetime()
 					.UseContentRoot(AppContext.BaseDirectory)
+					.ConfigureServices(services =>
+						services.AddSingleton<IIntegerGenerator, IntegerGenerator>())
 					.UseCommandHandler<GenerateIntegerCommand, GenerateIntegerHandler>())
 			.Build();
 
