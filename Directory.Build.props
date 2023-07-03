@@ -1,0 +1,10 @@
+<Project>
+  <PropertyGroup>
+    <Authors>Björn Bengtsson</Authors>
+    <Copyright>Copyright © 2023 Björn Bengtsson</Copyright>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+</Project>
