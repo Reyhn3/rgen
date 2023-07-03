@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "RGen": {
+      "commandName": "Project",
+      "commandLineArgs": "int 3 --set 2 --silent"
+    }
+  }
+}
