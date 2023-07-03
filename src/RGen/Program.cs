@@ -1,3 +1,4 @@
 ﻿using System;
+using RGen;
 
-Console.WriteLine("Hello, RGen!");
+Greeter.Greet();
