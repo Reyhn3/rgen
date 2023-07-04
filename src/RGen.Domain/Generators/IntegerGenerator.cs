@@ -3,7 +3,7 @@ using System.Linq;
 using System.Security.Cryptography;
 
 
-namespace RGen.Application.Integer;
+namespace RGen.Domain.Generators;
 
 public class IntegerGenerator : IIntegerGenerator
 {

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 
-namespace RGen.Application.Output;
+namespace RGen.Domain.Output;
 
 public interface IOutput
 {

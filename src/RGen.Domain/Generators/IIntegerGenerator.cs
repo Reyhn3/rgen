@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 
-namespace RGen.Application.Integer;
+namespace RGen.Domain.Generators;
 
 public interface IIntegerGenerator
 {

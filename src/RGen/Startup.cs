@@ -9,7 +9,8 @@ using Microsoft.Extensions.Logging;
 using RGen.Application;
 using RGen.Logic.Formatting;
 using RGen.Application.Integer;
-using RGen.Application.Output;
+using RGen.Domain.Generators;
+using RGen.Domain.Output;
 
 
 namespace RGen;
