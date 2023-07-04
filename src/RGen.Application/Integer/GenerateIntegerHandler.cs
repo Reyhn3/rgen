@@ -2,11 +2,11 @@
 using System.CommandLine.Invocation;
 using System.Threading;
 using System.Threading.Tasks;
+using RGen.Application.Output;
 using RGen.Logic.Formatting;
-using RGen.Logic.Output;
 
 
-namespace RGen.Logic.Integer;
+namespace RGen.Application.Integer;
 
 public class GenerateIntegerHandler : GlobalCommandHandler
 {

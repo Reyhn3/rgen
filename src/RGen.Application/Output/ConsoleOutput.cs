@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace RGen.Logic.Output;
+namespace RGen.Application.Output;
 
 public class ConsoleOutput : IOutput
 {

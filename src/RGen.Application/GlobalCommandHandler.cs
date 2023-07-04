@@ -3,7 +3,7 @@ using System.CommandLine.Invocation;
 using System.Threading.Tasks;
 
 
-namespace RGen.Logic;
+namespace RGen.Application;
 
 public abstract class GlobalCommandHandler : ICommandHandler
 {
