@@ -1,6 +1,8 @@
 ﻿using System;
 using System.CommandLine.Invocation;
+using System.Threading;
 using System.Threading.Tasks;
+using RGen.Logic.Output;
 
 
 namespace RGen.Logic.Integer;
@@ -8,32 +10,24 @@ namespace RGen.Logic.Integer;
 public class GenerateIntegerHandler : GlobalCommandHandler
 {
 	private readonly IIntegerGenerator _generator;
+	private readonly IOutput _output;
 
-	public GenerateIntegerHandler(IIntegerGenerator generator)
+	public GenerateIntegerHandler(IIntegerGenerator generator, IOutput output)
 	{
 		_generator = generator ?? throw new ArgumentNullException(nameof(generator));
+		_output = output ?? throw new ArgumentNullException(nameof(output));
 	}
 
 	public int N { get; set; }
 	public int Set { get; set; }
 
-	protected override Task<int> InvokeCoreAsync(InvocationContext context)
+	protected override async Task<int> InvokeCoreAsync(InvocationContext context)
 	{
 //TODO: Validate boundaries (Set should be >= 1)
-		if (Set == 1)
-		{
-			var numbers = _generator.Multiple(N);
-			foreach (var number in numbers)
-				Console.WriteLine(number);
-		}
-		else
-		{
-			var sets = _generator.Set(N, Set);
-			foreach (var set in sets)
-//TODO: Extract formatting to separate class
-				Console.WriteLine("[{0}]", string.Join(", ", set));
-		}
+		var sets = _generator.Set(N, Set);
+//TODO: Get CT from call-chain
+		await _output.WriteAsync(sets, CancellationToken.None);
 
-		return Task.FromResult(0);
+		return ExitCodes.OK;
 	}
 }

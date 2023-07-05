@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RGen.Logic;
 using RGen.Logic.Integer;
+using RGen.Logic.Output;
 
 
 namespace RGen;
@@ -23,8 +24,9 @@ internal static class Startup
 					.ConfigureLogging(builder => builder.ClearProviders())
 					.UseConsoleLifetime()
 					.UseContentRoot(AppContext.BaseDirectory)
-					.ConfigureServices(services =>
-						services.AddSingleton<IIntegerGenerator, IntegerGenerator>())
+					.ConfigureServices(services => services
+						.AddSingleton<IIntegerGenerator, IntegerGenerator>()
+						.AddSingleton<IOutput, ConsoleOutput>())
 					.UseCommandHandler<GenerateIntegerCommand, GenerateIntegerHandler>())
 			.Build();
 
