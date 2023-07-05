@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RGen.Logic;
+using RGen.Logic.Formatting;
 using RGen.Logic.Integer;
 using RGen.Logic.Output;
 
@@ -26,6 +27,7 @@ internal static class Startup
 					.UseContentRoot(AppContext.BaseDirectory)
 					.ConfigureServices(services => services
 						.AddSingleton<IIntegerGenerator, IntegerGenerator>()
+						.AddSingleton<IFormatter, ConsoleFormatter>()
 						.AddSingleton<IOutput, ConsoleOutput>())
 					.UseCommandHandler<GenerateIntegerCommand, GenerateIntegerHandler>())
 			.Build();
