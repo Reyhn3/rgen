@@ -7,15 +7,14 @@ public static class GlobalSilentOption
 {
 	public const string SilentOption = "--silent";
 
-	public static Option<bool> Create() =>
-		new(
-				new[]
-					{
-						SilentOption
-					},
-				() => false,
-				"Don't show the beautiful splash graphics")
+	public static Option<bool> Create() => new(
+			new[]
 				{
-					IsRequired = false
-				};
+					SilentOption
+				},
+			() => false,
+			"Don't show the beautiful splash graphics")
+			{
+				IsRequired = false
+			};
 }

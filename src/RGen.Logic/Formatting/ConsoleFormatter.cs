@@ -51,6 +51,7 @@ public class ConsoleFormatter : IFormatter
 		return sb.ToString();
 	}
 
+//TEST: Coloring
 	private static string Format<T>(T element, bool isColoringDisabled) =>
 		isColoringDisabled
 			? element.ToString()

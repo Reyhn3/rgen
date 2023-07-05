@@ -5,15 +5,14 @@ namespace RGen.Logic;
 
 public static class GlobalColorOption
 {
-	public static Option<bool> Create() =>
-		new(
-				new[]
-					{
-						"--no-color"
-					},
-				() => false,
-				"Disable console output colors")
+	public static Option<bool> Create() => new(
+			new[]
 				{
-					IsRequired = false
-				};
+					"--no-color"
+				},
+			() => false,
+			"Disable console output colors")
+			{
+				IsRequired = false
+			};
 }
