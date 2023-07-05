@@ -19,7 +19,7 @@ public abstract class GlobalCommandHandler : ICommandHandler
 		catch (Exception ex)
 		{
 			CliHelper.PrintException(ex, "Error executing command");
-			return default;
+			return ExitCodes.CommandExecutionException;
 		}
 	}
 
