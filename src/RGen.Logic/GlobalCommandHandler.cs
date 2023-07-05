@@ -7,6 +7,10 @@ namespace RGen.Logic;
 
 public abstract class GlobalCommandHandler : ICommandHandler
 {
+#region Global Options
+	public bool NoColor { get; set; }
+#endregion Global Options
+
 	public int Invoke(InvocationContext context) =>
 		InvokeAsync(context).GetAwaiter().GetResult();
 

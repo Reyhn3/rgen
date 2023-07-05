@@ -3,18 +3,16 @@
 
 namespace RGen.Logic;
 
-public static class GlobalSilentOption
+public static class GlobalColorOption
 {
-	public const string SilentOption = "--silent";
-
 	public static Option<bool> Create() =>
 		new(
 				new[]
 					{
-						SilentOption
+						"--no-color"
 					},
 				() => false,
-				"Don't show the beautiful splash graphics")
+				"Disable console output colors")
 				{
 					IsRequired = false
 				};

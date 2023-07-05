@@ -38,7 +38,10 @@ internal static class Startup
 			{
 				new GenerateIntegerCommand()
 			};
+
 		rootCommand.AddGlobalOption(GlobalSilentOption.Create());
+		rootCommand.AddGlobalOption(GlobalColorOption.Create());
+		
 		return new CommandLineBuilder(rootCommand);
 	}
 }

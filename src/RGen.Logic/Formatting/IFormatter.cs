@@ -5,5 +5,5 @@ namespace RGen.Logic.Formatting;
 
 public interface IFormatter
 {
-	string Format<T>(IEnumerable<IEnumerable<T>> sets);
+	string Format<T>(IEnumerable<IEnumerable<T>> sets, bool isColoringDisabled);
 }

@@ -32,7 +32,7 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 //TODO: Validate boundaries (N should be >= 1)
 
 		var sets = _generator.Set(N, Set);
-		var formatted = _formatter.Format(sets);
+		var formatted = _formatter.Format(sets, NoColor);
 //TODO: Get CT from call-chain
 		await _output.WriteAsync(formatted, CancellationToken.None);
 

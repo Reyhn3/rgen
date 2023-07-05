@@ -13,7 +13,7 @@ public class ConsoleFormatter : IFormatter
 	private static readonly string SetSeparator = Environment.NewLine;
 	private static readonly string ElementSeparator = ", ";
 
-	public string Format<T>(IEnumerable<IEnumerable<T>> sets)
+	public string Format<T>(IEnumerable<IEnumerable<T>> sets, bool isColoringDisabled)
 	{
 		var sb = new StringBuilder();
 
@@ -34,7 +34,7 @@ public class ConsoleFormatter : IFormatter
 			{
 				elementCount++;
 
-				var formatted = Format(element);
+				var formatted = Format(element, isColoringDisabled);
 				if (elementCount > 1)
 					sb.Append($"{ElementSeparator}{formatted}");
 				else
@@ -51,7 +51,8 @@ public class ConsoleFormatter : IFormatter
 		return sb.ToString();
 	}
 
-//TODO: Color, if enabled
-	private string Format<T>(T element) =>
-		element.ToString();
+	private static string Format<T>(T element, bool isColoringDisabled) =>
+		isColoringDisabled
+			? element.ToString()
+			: $"\x1b[1;32m{element}\x1b[0m";
 }
