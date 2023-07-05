@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 
@@ -17,36 +18,32 @@ public class ConsoleFormatter : IFormatter
 	{
 		var sb = new StringBuilder();
 
-		var setCount = 0;
-		var elementCount = 0;
+		var array = sets.Select(s => s.ToArray()).ToArray();
+		var isMultiSet = array.Length > 1;
+		var isMultiElement = array.First().Length > 1;
 
-		foreach (var set in sets)
+		for (var i = 0; i < array.Length; i++)
 		{
-			setCount++;
-
-			if (setCount > 1)
-			{
-				sb.Append(SetSeparator);
+			var set = array[i];
+			if (isMultiSet && isMultiElement)
 				sb.Append(BeginArray);
-			}
 
-			foreach (var element in set)
+			for (var j = 0; j < set.Length; j++)
 			{
-				elementCount++;
-
+				var element = set[j];
 				var formatted = Format(element, isColoringDisabled);
-				if (elementCount > 1)
-					sb.Append($"{ElementSeparator}{formatted}");
-				else
-					sb.Append(formatted);
+				sb.Append(formatted);
+
+				if (j < set.Length - 1)
+					sb.Append(isMultiSet ? ElementSeparator : SetSeparator);
 			}
 
-			sb.Append(EndArray);
-			elementCount = 0;
-		}
+			if (isMultiSet && isMultiElement)
+				sb.Append(EndArray);
 
-		if (setCount > 1)
-			sb.Insert(0, BeginArray);
+			if (i < array.Length - 1)
+				sb.Append(SetSeparator);
+		}
 
 		return sb.ToString();
 	}

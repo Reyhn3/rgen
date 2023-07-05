@@ -61,25 +61,25 @@ public class ConsoleFormatterTests
 	}
 
 	[Test]
-	public void Format_should_not_append_nor_suffix_single_set_single_value() =>
+	public void Format_single_set_single_value_should_not_append_nor_suffix() =>
 		_sut.Format(SingleSetSingleValue, true)
 			.Dump()
 			.ShouldBe("1");
 
 	[Test]
-	public void Format_should_not_append_nor_suffix_single_set_multiple_values() =>
+	public void Format_single_set_multiple_values_should_not_append_nor_suffix() =>
 		_sut.Format(SingleSetMultipleValues, true)
 			.Dump()
 			.ShouldBe("1\r\n2");
 
 	[Test]
-	public void Format_should_not_append_nor_suffix_multiple_sets_single_value() =>
+	public void Format_multiple_sets_single_value_should_not_append_nor_suffix() =>
 		_sut.Format(MultipleSetsSingleValue, true)
 			.Dump()
 			.ShouldBe("1\r\n2");
 
 	[Test]
-	public void Format_should_enclose_and_separate_multiple_sets_with_multiple_values() =>
+	public void Format_multiple_sets_with_multiple_values_should_enclose_set() =>
 		_sut.Format(MultipleSetsMultipleValues, true)
 			.Dump()
 			.ShouldBe("[1, 2]\r\n[3, 4]");
