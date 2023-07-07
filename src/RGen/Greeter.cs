@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using RGen.Application;
 using RGen.Application.Commanding;
 using RGen.Properties;
 
