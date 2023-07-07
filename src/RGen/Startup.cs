@@ -10,7 +10,7 @@ using RGen.Application;
 using RGen.Application.Commanding;
 using RGen.Application.Commanding.Integer;
 using RGen.Application.Formatting;
-using RGen.Application.Output;
+using RGen.Application.Writing;
 using RGen.Domain.Generators;
 
 
@@ -30,7 +30,7 @@ internal static class Startup
 					.ConfigureServices(services => services
 						.AddSingleton<IIntegerGenerator, IntegerGenerator>()
 						.AddSingleton<IFormatter, ConsoleFormatter>()
-						.AddSingleton<IOutput, ConsoleOutput>())
+						.AddSingleton<IWriter, ConsoleWriter>())
 					.UseCommandHandler<GenerateIntegerCommand, GenerateIntegerHandler>())
 			.Build();
 

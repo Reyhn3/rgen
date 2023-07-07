@@ -3,7 +3,7 @@ using System.CommandLine.Invocation;
 using System.Threading;
 using System.Threading.Tasks;
 using RGen.Application.Formatting;
-using RGen.Application.Output;
+using RGen.Application.Writing;
 using RGen.Domain.Generators;
 
 
@@ -13,13 +13,13 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 {
 	private readonly IIntegerGenerator _generator;
 	private readonly IFormatter _formatter;
-	private readonly IOutput _output;
+	private readonly IWriter _writer;
 
-	public GenerateIntegerHandler(IIntegerGenerator generator, IFormatter formatter, IOutput output)
+	public GenerateIntegerHandler(IIntegerGenerator generator, IFormatter formatter, IWriter writer)
 	{
 		_generator = generator ?? throw new ArgumentNullException(nameof(generator));
 		_formatter = formatter ?? throw new ArgumentNullException(nameof(formatter));
-		_output = output ?? throw new ArgumentNullException(nameof(output));
+		_writer = writer ?? throw new ArgumentNullException(nameof(writer));
 	}
 
 	public int N { get; set; }
@@ -35,7 +35,7 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 		var sets = _generator.Set(N, Set);
 		var formatted = _formatter.Format(sets, NoColor);
 //TODO: Get CT from call-chain
-		await _output.WriteAsync(formatted, CancellationToken.None);
+		await _writer.WriteAsync(formatted, CancellationToken.None);
 
 		return ExitCodes.OK;
 	}

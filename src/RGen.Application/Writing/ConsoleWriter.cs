@@ -3,9 +3,9 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace RGen.Application.Output;
+namespace RGen.Application.Writing;
 
-public class ConsoleOutput : IOutput
+public class ConsoleWriter : IWriter
 {
 	public Task WriteAsync(string values, CancellationToken cancellationToken)
 	{

@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 
 
-namespace RGen.Application.Output;
+namespace RGen.Application.Writing;
 
-public interface IOutput
+public interface IWriter
 {
 	Task WriteAsync(string values, CancellationToken cancellationToken);
 }
