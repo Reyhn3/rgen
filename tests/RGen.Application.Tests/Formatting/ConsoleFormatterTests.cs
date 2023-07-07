@@ -1,9 +1,9 @@
 ﻿using NUnit.Framework;
-using RGen.Logic.Formatting;
+using RGen.Application.Formatting;
 using Shouldly;
 
 
-namespace RGen.Logic.Tests.Formatting;
+namespace RGen.Application.Tests.Formatting;
 
 public class ConsoleFormatterTests
 {

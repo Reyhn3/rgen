@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RGen", "src\RGen\RGen.cspro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RGen.Application", "src\RGen.Application\RGen.Application.csproj", "{7C4008D0-2109-41C5-B338-DC03D043C8BD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RGen.Domain.Tests", "tests\RGen.Domain.Tests\RGen.Domain.Tests.csproj", "{D83E7DFF-BBFF-4FD4-81F2-E16FE4282D8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RGen.Application.Tests", "tests\RGen.Application.Tests\RGen.Application.Tests.csproj", "{D83E7DFF-BBFF-4FD4-81F2-E16FE4282D8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RGen.Domain", "src\RGen.Domain\RGen.Domain.csproj", "{062845EC-C16F-4568-87F0-DBEB25ACC80A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RGen.Domain", "src\RGen.Domain\RGen.Domain.csproj", "{062845EC-C16F-4568-87F0-DBEB25ACC80A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

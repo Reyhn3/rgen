@@ -2,8 +2,8 @@
 using System.CommandLine.Invocation;
 using System.Threading;
 using System.Threading.Tasks;
+using RGen.Application.Formatting;
 using RGen.Domain.Generators;
-using RGen.Logic.Formatting;
 using RGen.Domain.Output;
 
 

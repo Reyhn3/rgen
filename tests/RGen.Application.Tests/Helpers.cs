@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace RGen.Logic.Tests;
+namespace RGen.Application.Tests;
 
 internal static class Helpers
 {

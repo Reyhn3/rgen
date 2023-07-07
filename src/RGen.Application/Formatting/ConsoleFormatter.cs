@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 
-namespace RGen.Logic.Formatting;
+namespace RGen.Application.Formatting;
 
 public class ConsoleFormatter : IFormatter
 {
