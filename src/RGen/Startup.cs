@@ -11,6 +11,7 @@ using RGen.Logic.Formatting;
 using RGen.Application.Integer;
 using RGen.Domain.Generators;
 using RGen.Domain.Output;
+using RGen.Logic;
 
 
 namespace RGen;
