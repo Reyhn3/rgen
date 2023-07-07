@@ -1,7 +1,7 @@
 ﻿using System.CommandLine;
 
 
-namespace RGen.Application.Integer;
+namespace RGen.Application.Commanding.Integer;
 
 public class GenerateIntegerCommand : Command
 {

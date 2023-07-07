@@ -3,7 +3,7 @@ using System.CommandLine.Invocation;
 using System.Threading.Tasks;
 
 
-namespace RGen.Application;
+namespace RGen.Application.Commanding;
 
 public abstract class GlobalCommandHandler : ICommandHandler
 {
@@ -22,7 +22,7 @@ public abstract class GlobalCommandHandler : ICommandHandler
 		}
 		catch (Exception ex)
 		{
-			CliHelper.PrintException(ex, "Error executing command");
+			ConsoleHelper.PrintException(ex, "Error executing command");
 			return ExitCodes.CommandExecutionException;
 		}
 	}

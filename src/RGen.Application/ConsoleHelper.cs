@@ -4,7 +4,7 @@
 namespace RGen.Application;
 
 //TODO: Replace with Spectre
-public static class CliHelper
+public static class ConsoleHelper
 {
 	public static void PrintException(Exception ex, string label)
 	{

@@ -7,10 +7,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RGen.Application;
+using RGen.Application.Commanding;
+using RGen.Application.Commanding.Integer;
 using RGen.Application.Formatting;
-using RGen.Application.Integer;
+using RGen.Application.Output;
 using RGen.Domain.Generators;
-using RGen.Domain.Output;
 
 
 namespace RGen;

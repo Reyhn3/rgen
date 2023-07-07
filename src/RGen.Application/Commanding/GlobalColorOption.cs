@@ -1,7 +1,7 @@
 ﻿using System.CommandLine;
 
 
-namespace RGen.Application;
+namespace RGen.Application.Commanding;
 
 public static class GlobalColorOption
 {

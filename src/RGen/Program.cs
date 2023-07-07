@@ -14,6 +14,6 @@ try
 }
 catch (Exception ex)
 {
-	CliHelper.PrintException(ex, "Unhandled exception");
+	ConsoleHelper.PrintException(ex, "Unhandled exception");
 	return ExitCodes.UnhandledException;
 }
