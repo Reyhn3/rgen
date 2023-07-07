@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace RGen.Logic;
+namespace RGen.Application;
 
 //TODO: Replace with Spectre
 public static class CliHelper

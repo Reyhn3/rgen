@@ -2,7 +2,7 @@
 using System.CommandLine.Parsing;
 using System.Text;
 using RGen;
-using RGen.Logic;
+using RGen.Application;
 
 Console.InputEncoding = Console.OutputEncoding = Encoding.UTF8;
 Greeter.Greet(args);

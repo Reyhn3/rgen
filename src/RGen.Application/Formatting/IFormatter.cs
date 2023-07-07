@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 
-namespace RGen.Logic.Formatting;
+namespace RGen.Application.Formatting;
 
 public interface IFormatter
 {

@@ -6,10 +6,11 @@ using System.CommandLine.Parsing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using RGen.Logic;
-using RGen.Logic.Formatting;
-using RGen.Logic.Integer;
-using RGen.Logic.Output;
+using RGen.Application;
+using RGen.Application.Formatting;
+using RGen.Application.Integer;
+using RGen.Domain.Generators;
+using RGen.Domain.Output;
 
 
 namespace RGen;

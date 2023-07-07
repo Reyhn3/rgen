@@ -1,4 +1,4 @@
-﻿namespace RGen.Logic;
+﻿namespace RGen.Application;
 
 public static class ExitCodes
 {
