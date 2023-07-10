@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using RGen.Application.Formatting;
 using RGen.Application.Formatting.Console;
 using RGen.Application.Writing;
+using RGen.Application.Writing.Console;
 using RGen.Domain.Generators;
 
 
@@ -14,13 +15,16 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 {
 	private readonly IIntegerGenerator _generator;
 	private readonly IFormatterFactory _formatterFactory;
-	private readonly IWriter _writer;
+	private readonly IWriterFactory _writerFactory;
 
-	public GenerateIntegerHandler(IIntegerGenerator generator, IFormatterFactory formatterFactory, IWriter writer)
+	public GenerateIntegerHandler(
+		IIntegerGenerator generator, 
+		IFormatterFactory formatterFactory, 
+		IWriterFactory writerFactory)
 	{
 		_generator = generator ?? throw new ArgumentNullException(nameof(generator));
 		_formatterFactory = formatterFactory ?? throw new ArgumentNullException(nameof(formatterFactory));
-		_writer = writer ?? throw new ArgumentNullException(nameof(writer));
+		_writerFactory = writerFactory ?? throw new ArgumentNullException(nameof(writerFactory));
 	}
 
 	public int N { get; set; }
@@ -40,7 +44,8 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 		var formatted = formatter.Format(sets);
 
 //TODO: Get CT from call-chain
-		await _writer.WriteAsync(formatted, CancellationToken.None);
+		var writer = _writerFactory.Create(new ConsoleWriterOptions());
+		await writer.WriteAsync(formatted, CancellationToken.None);
 
 		return ExitCodes.OK;
 	}

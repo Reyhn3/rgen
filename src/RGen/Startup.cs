@@ -11,6 +11,7 @@ using RGen.Application.Commanding.Integer;
 using RGen.Application.Formatting;
 using RGen.Application.Formatting.Console;
 using RGen.Application.Writing;
+using RGen.Application.Writing.Console;
 using RGen.Domain.Generators;
 
 
@@ -32,7 +33,9 @@ internal static class Startup
 						.AddSingleton(_ =>
 							new FormatterFactory()
 								.Register<ConsoleFormatterOptions>(o => new ConsoleFormatter(o)))
-						.AddSingleton<IWriter, ConsoleWriter>())
+						.AddSingleton(_ =>
+							new WriterFactory()
+								.Register<ConsoleWriterOptions>(o => new ConsoleWriter(o))))
 					.UseCommandHandler<GenerateIntegerCommand, GenerateIntegerHandler>())
 			.Build();
 
