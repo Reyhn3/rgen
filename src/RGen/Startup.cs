@@ -28,7 +28,9 @@ internal static class Startup
 					.UseContentRoot(AppContext.BaseDirectory)
 					.ConfigureServices(services => services
 						.AddSingleton<IIntegerGenerator, IntegerGenerator>()
-						.AddSingleton<IFormatter, ConsoleFormatter>()
+						.AddSingleton(_ =>
+							new FormatterFactory()
+								.Register<ConsoleFormatterOptions>(o => new ConsoleFormatter(o)))
 						.AddSingleton<IWriter, ConsoleWriter>())
 					.UseCommandHandler<GenerateIntegerCommand, GenerateIntegerHandler>())
 			.Build();
@@ -42,7 +44,7 @@ internal static class Startup
 
 		rootCommand.AddGlobalOption(GlobalSilentOption.Create());
 		rootCommand.AddGlobalOption(GlobalColorOption.Create());
-		
+
 		return new CommandLineBuilder(rootCommand);
 	}
 }

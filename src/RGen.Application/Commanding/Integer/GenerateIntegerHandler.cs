@@ -12,13 +12,13 @@ namespace RGen.Application.Commanding.Integer;
 public class GenerateIntegerHandler : GlobalCommandHandler
 {
 	private readonly IIntegerGenerator _generator;
-	private readonly IFormatter _formatter;
+	private readonly IFormatterFactory _formatterFactory;
 	private readonly IWriter _writer;
 
-	public GenerateIntegerHandler(IIntegerGenerator generator, IFormatter formatter, IWriter writer)
+	public GenerateIntegerHandler(IIntegerGenerator generator, IFormatterFactory formatterFactory, IWriter writer)
 	{
 		_generator = generator ?? throw new ArgumentNullException(nameof(generator));
-		_formatter = formatter ?? throw new ArgumentNullException(nameof(formatter));
+		_formatterFactory = formatterFactory ?? throw new ArgumentNullException(nameof(formatterFactory));
 		_writer = writer ?? throw new ArgumentNullException(nameof(writer));
 	}
 
@@ -33,7 +33,11 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 //TODO: Validate boundaries (N should be >= 1)
 
 		var sets = _generator.Set(N, Set);
-		var formatted = _formatter.Format(sets, NoColor);
+
+		var options = new ConsoleFormatterOptions(NoColor);
+		var formatter = _formatterFactory.Create(options);
+		var formatted = formatter.Format(sets);
+
 //TODO: Get CT from call-chain
 		await _writer.WriteAsync(formatted, CancellationToken.None);
 

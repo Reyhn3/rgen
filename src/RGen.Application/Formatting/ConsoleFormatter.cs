@@ -14,7 +14,14 @@ public class ConsoleFormatter : IFormatter
 	private static readonly string SetSeparator = Environment.NewLine;
 	private static readonly string ElementSeparator = ", ";
 
-	public string Format<T>(IEnumerable<IEnumerable<T>> sets, bool isColoringDisabled)
+	private readonly bool _isColoringDisabled;
+
+	public ConsoleFormatter(ConsoleFormatterOptions options)
+	{
+		_isColoringDisabled = options.IsColoringDisabled;
+	}
+
+	public string Format<T>(IEnumerable<IEnumerable<T>> sets)
 	{
 		var sb = new StringBuilder();
 
@@ -31,7 +38,7 @@ public class ConsoleFormatter : IFormatter
 			for (var j = 0; j < set.Length; j++)
 			{
 				var element = set[j];
-				var formatted = Format(element, isColoringDisabled);
+				var formatted = Format(element, _isColoringDisabled);
 				sb.Append(formatted);
 
 				if (j < set.Length - 1)

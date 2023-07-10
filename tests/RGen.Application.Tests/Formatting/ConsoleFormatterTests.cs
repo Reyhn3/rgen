@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using FakeItEasy;
+using NUnit.Framework;
 using RGen.Application.Formatting;
 using Shouldly;
 
@@ -57,30 +58,30 @@ public class ConsoleFormatterTests
 	[SetUp]
 	public void PreRun()
 	{
-		_sut = new ConsoleFormatter();
+		_sut = new ConsoleFormatter(A.Dummy<ConsoleFormatterOptions>());
 	}
 
 	[Test]
 	public void Format_single_set_single_value_should_not_append_nor_suffix() =>
-		_sut.Format(SingleSetSingleValue, true)
+		_sut.Format(SingleSetSingleValue)
 			.Dump()
 			.ShouldBe("1");
 
 	[Test]
 	public void Format_single_set_multiple_values_should_not_append_nor_suffix() =>
-		_sut.Format(SingleSetMultipleValues, true)
+		_sut.Format(SingleSetMultipleValues)
 			.Dump()
 			.ShouldBe("1\r\n2");
 
 	[Test]
 	public void Format_multiple_sets_single_value_should_not_append_nor_suffix() =>
-		_sut.Format(MultipleSetsSingleValue, true)
+		_sut.Format(MultipleSetsSingleValue)
 			.Dump()
 			.ShouldBe("1\r\n2");
 
 	[Test]
 	public void Format_multiple_sets_with_multiple_values_should_enclose_set() =>
-		_sut.Format(MultipleSetsMultipleValues, true)
+		_sut.Format(MultipleSetsMultipleValues)
 			.Dump()
 			.ShouldBe("[1, 2]\r\n[3, 4]");
 
