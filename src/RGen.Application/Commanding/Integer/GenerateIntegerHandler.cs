@@ -39,8 +39,7 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 
 		var sets = _generator.Set(N, Set);
 
-		var options = new ConsoleFormatterOptions(NoColor);
-		var formatter = _formatterFactory.Create(options);
+		var formatter = _formatterFactory.Create(new ConsoleFormatterOptions(NoColor));
 		var formatted = formatter.Format(sets);
 
 //TODO: Get CT from call-chain
