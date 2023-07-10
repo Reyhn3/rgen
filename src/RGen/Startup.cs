@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using RGen.Application.Commanding;
 using RGen.Application.Commanding.Integer;
 using RGen.Application.Formatting;
+using RGen.Application.Formatting.Console;
 using RGen.Application.Writing;
 using RGen.Domain.Generators;
 

@@ -3,6 +3,7 @@ using System.CommandLine.Invocation;
 using System.Threading;
 using System.Threading.Tasks;
 using RGen.Application.Formatting;
+using RGen.Application.Formatting.Console;
 using RGen.Application.Writing;
 using RGen.Domain.Generators;
 

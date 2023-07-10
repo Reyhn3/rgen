@@ -1,6 +1,7 @@
 ﻿using FakeItEasy;
 using NUnit.Framework;
 using RGen.Application.Formatting;
+using RGen.Application.Formatting.Console;
 using Shouldly;
 
 

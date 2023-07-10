@@ -1,3 +1,3 @@
-﻿namespace RGen.Application.Formatting;
+﻿namespace RGen.Application.Formatting.Console;
 
 public record struct ConsoleFormatterOptions(bool IsColoringDisabled) : IFormatterOptions;
