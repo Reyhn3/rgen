@@ -20,14 +20,14 @@ public abstract class GlobalCommandHandler : ICommandHandler
 	{
 		try
 		{
-			return await InvokeCoreAsync(context).ConfigureAwait(false);
+			return (int)await InvokeCoreAsync(context).ConfigureAwait(false);
 		}
 		catch (Exception ex)
 		{
 			ConsoleHelper.PrintException(ex, "Error executing command");
-			return ExitCodes.CommandExecutionException;
+			return (int)ExitCode.CommandExecutionException;
 		}
 	}
 
-	protected abstract Task<int> InvokeCoreAsync(InvocationContext context);
+	protected abstract Task<ExitCode> InvokeCoreAsync(InvocationContext context);
 }

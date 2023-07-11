@@ -14,9 +14,9 @@ public class ConsoleWriter : IWriter
 		_options = options;
 	}
 
-	public Task WriteAsync(string values, CancellationToken cancellationToken)
+	public Task<ExitCode> WriteAsync(string values, CancellationToken cancellationToken)
 	{
 		StdOut.WriteLine(values);
-		return Task.CompletedTask;
+		return Task.FromResult(ExitCode.OK);
 	}
 }

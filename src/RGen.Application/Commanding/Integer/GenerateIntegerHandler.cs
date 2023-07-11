@@ -30,7 +30,7 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 	public int N { get; set; }
 	public int Set { get; set; }
 
-	protected override async Task<int> InvokeCoreAsync(InvocationContext context)
+	protected override async Task<ExitCode> InvokeCoreAsync(InvocationContext context)
 	{
 //TODO: Refactor to be a chained process, e.g. generate -> format -> output
 
@@ -44,8 +44,8 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 
 //TODO: Get CT from call-chain
 		var writer = _writerFactory.Create(new ConsoleWriterOptions());
-		await writer.WriteAsync(formatted, CancellationToken.None);
+		var writeResult = await writer.WriteAsync(formatted, CancellationToken.None);
 
-		return ExitCodes.OK;
+		return writeResult;
 	}
 }
