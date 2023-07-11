@@ -35,20 +35,24 @@ public class PlainTextFileWriter : IWriter
 		return ExitCode.OK;
 	}
 
-	private static bool TryGetOrCreateFileName(FileInfo? optionsFileName, out string? filename)
+	internal static bool TryGetOrCreateFileName(FileInfo? optionsFileName, out string? filename)
 	{
 		try
 		{
 			if (optionsFileName != null)
 			{
-//TEST: Relative path
-//TEST: Path variables (like %TEMP%)
-//TEST: Not a path (like invalid characters)
-				filename = Path.GetFullPath(optionsFileName.ToString());
+				var pathAndFilename = Path.GetFullPath(optionsFileName.ToString());
+				if (IsInvalidPath(pathAndFilename))
+				{
+					filename = null;
+					return false;
+				}
 
-				var fullPath = Path.GetDirectoryName(filename);
-				Directory.CreateDirectory(fullPath);
+				var pathOnly = Path.GetDirectoryName(pathAndFilename);
+				if (pathOnly != null)
+					Directory.CreateDirectory(pathOnly);
 
+				filename = pathAndFilename;
 				return true;
 			}
 		}
@@ -75,6 +79,25 @@ public class PlainTextFileWriter : IWriter
 			filename = null;
 			return false;
 		}
+	}
+
+	private static bool IsInvalidPath(string proposed)
+	{
+		FileInfo fileInfo = null;
+
+		try
+		{
+//BUG: This should throw if invalid characters are used, but it does not...?!
+			fileInfo = new FileInfo(proposed);
+		}
+		catch (ArgumentException)
+		{}
+		catch (PathTooLongException)
+		{}
+		catch (NotSupportedException)
+		{}
+
+		return ReferenceEquals(fileInfo, null);
 	}
 
 	private static async Task<bool> TryWriteContentToFileAsync(string filename, string content, Encoding encoding, CancellationToken cancellationToken)
