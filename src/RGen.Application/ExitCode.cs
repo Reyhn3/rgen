@@ -6,6 +6,8 @@ public enum ExitCode
 	UnhandledException = -1,
 	CommandExecutionException = -2,
 
-	OutputFilePathError = -10,
-	OutputFileWriteError = -11
+	NoDataGenerated = -10,
+
+	OutputFilePathError = -20,
+	OutputFileWriteError = -21
 }

@@ -41,9 +41,10 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 
 		var sets = _generator.Set(N, Set);
 
-//TODO: Handle exceptions and return proper exit code
 		var formatter = _formatterFactory.Create(new ConsoleFormatterOptions(NoColor));
 		var formatted = formatter.Format(sets);
+		if (formatted.IsEmpty)
+			return ExitCode.NoDataGenerated;
 
 //TODO: Get CT from call-chain
 		var consoleResult = await WriteToConsole(formatted.Formatted, CancellationToken.None);
