@@ -48,6 +48,7 @@ internal static class Startup
 
 		rootCommand.AddGlobalOption(GlobalSilentOption.Create());
 		rootCommand.AddGlobalOption(GlobalColorOption.Create());
+		rootCommand.AddGlobalOption(GlobalOutputOption.Create());
 
 		return new CommandLineBuilder(rootCommand);
 	}
