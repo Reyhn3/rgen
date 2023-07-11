@@ -1,13 +1,30 @@
 ﻿using System;
+using RGen.Application.Formatting;
 
 
 namespace RGen.Application.Tests;
 
 internal static class Helpers
 {
-	public static T Dump<T>(this T item)
+	private const string NullValue = "<null>";
+
+	public static FormatContext? Dump(this FormatContext? item)
 	{
-		Console.WriteLine(item?.ToString() ?? "<null>");
+		if (item == null)
+		{
+			Console.WriteLine(NullValue);
+			return item;
+		}
+
+		Console.WriteLine("Raw:\t\t\t{0}", item.Raw);
+		Console.WriteLine("Formatted:\t{0}", item.Formatted);
+		return item;
+	}
+
+
+	public static T? Dump<T>(this T? item)
+	{
+		Console.WriteLine(item?.ToString() ?? NullValue);
 		return item;
 	}
 }
