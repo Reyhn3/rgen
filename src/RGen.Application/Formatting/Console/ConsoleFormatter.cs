@@ -21,9 +21,10 @@ public class ConsoleFormatter : IFormatter
 		_isColoringDisabled = options.IsColoringDisabled;
 	}
 
-	public string Format<T>(IEnumerable<IEnumerable<T>> sets)
+	public FormatContext Format<T>(IEnumerable<IEnumerable<T>> sets)
 	{
-		var sb = new StringBuilder();
+		var rawStringBuilder = new StringBuilder();
+		var formattedStringBuilder = new StringBuilder();
 
 		var array = sets.Select(s => s.ToArray()).ToArray();
 		var isMultiSet = array.Length > 1;
@@ -33,26 +34,39 @@ public class ConsoleFormatter : IFormatter
 		{
 			var set = array[i];
 			if (isMultiSet && isMultiElement)
-				sb.Append(BeginArray);
+			{
+				rawStringBuilder.Append(BeginArray);
+				formattedStringBuilder.Append(BeginArray);
+			}
 
 			for (var j = 0; j < set.Length; j++)
 			{
 				var element = set[j];
 				var formatted = Format(element, _isColoringDisabled);
-				sb.Append(formatted);
+				rawStringBuilder.Append(element);
+				formattedStringBuilder.Append(formatted);
 
 				if (j < set.Length - 1)
-					sb.Append(isMultiSet ? ElementSeparator : SetSeparator);
+				{
+					rawStringBuilder.Append(isMultiSet ? ElementSeparator : SetSeparator);
+					formattedStringBuilder.Append(isMultiSet ? ElementSeparator : SetSeparator);
+				}
 			}
 
 			if (isMultiSet && isMultiElement)
-				sb.Append(EndArray);
+			{
+				rawStringBuilder.Append(EndArray);
+				formattedStringBuilder.Append(EndArray);
+			}
 
 			if (i < array.Length - 1)
-				sb.Append(SetSeparator);
+			{
+				rawStringBuilder.Append(SetSeparator);
+				formattedStringBuilder.Append(SetSeparator);
+			}
 		}
 
-		return sb.ToString();
+		return new FormatContext(rawStringBuilder.ToString(), formattedStringBuilder.ToString());
 	}
 
 //TEST: Coloring

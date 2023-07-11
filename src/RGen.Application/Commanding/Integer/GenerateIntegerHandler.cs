@@ -36,8 +36,8 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 	{
 //TODO: Refactor to be a chained process, e.g. generate -> format -> output
 
-//TODO: Validate boundaries (Set should be >= 1)
-//TODO: Validate boundaries (N should be >= 1)
+//TEST: Validate boundaries (Set should be >= 1)
+//TEST: Validate boundaries (N should be >= 1)
 
 		var sets = _generator.Set(N, Set);
 
@@ -45,12 +45,12 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 		var formatted = formatter.Format(sets);
 
 //TODO: Get CT from call-chain
-		var consoleResult = await WriteToConsole(formatted, CancellationToken.None);
+		var consoleResult = await WriteToConsole(formatted.Formatted, CancellationToken.None);
 		if (consoleResult != ExitCode.OK)
 			return consoleResult;
 
 //TODO: Get CT from call-chain
-		var outputResult = await WriteToOutput(formatted, Output, CancellationToken.None);
+		var outputResult = await WriteToOutput(formatted.Raw, Output, CancellationToken.None);
 		if (outputResult != ExitCode.OK)
 			return outputResult;
 

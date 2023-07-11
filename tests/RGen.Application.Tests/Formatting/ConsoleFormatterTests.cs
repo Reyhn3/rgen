@@ -86,5 +86,5 @@ public class ConsoleFormatterTests
 			.Dump()
 			.ShouldBe("[1, 2]\r\n[3, 4]");
 
-//TODO: Test coloring
+//TEST: Test coloring
 }
