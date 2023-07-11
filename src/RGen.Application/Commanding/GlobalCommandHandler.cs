@@ -20,7 +20,7 @@ public abstract class GlobalCommandHandler : ICommandHandler
 	{
 		try
 		{
-			return (int)await InvokeCoreAsync(context).ConfigureAwait(false);
+			return (int)await InvokeCoreAsync(context);
 		}
 		catch (Exception ex)
 		{

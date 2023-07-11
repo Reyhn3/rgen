@@ -1,11 +1,13 @@
 ﻿using System;
 using System.CommandLine.Invocation;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using RGen.Application.Formatting;
 using RGen.Application.Formatting.Console;
 using RGen.Application.Writing;
 using RGen.Application.Writing.Console;
+using RGen.Application.Writing.TextFile;
 using RGen.Domain.Generators;
 
 
@@ -43,9 +45,32 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 		var formatted = formatter.Format(sets);
 
 //TODO: Get CT from call-chain
-		var writer = _writerFactory.Create(new ConsoleWriterOptions());
-		var writeResult = await writer.WriteAsync(formatted, CancellationToken.None);
+		var consoleResult = await WriteToConsole(formatted, CancellationToken.None);
+		if (consoleResult != ExitCode.OK)
+			return consoleResult;
 
+//TODO: Get CT from call-chain
+		var outputResult = await WriteToOutput(formatted, Output, CancellationToken.None);
+		if (outputResult != ExitCode.OK)
+			return outputResult;
+
+		return ExitCode.OK;
+	}
+
+	private async Task<ExitCode> WriteToConsole(string content, CancellationToken cancellationToken)
+	{
+		var writer = _writerFactory.Create(new ConsoleWriterOptions());
+		var writeResult = await writer.WriteAsync(content, cancellationToken);
+		return writeResult;
+	}
+
+	private async Task<ExitCode> WriteToOutput(string content, FileInfo? output, CancellationToken cancellationToken)
+	{
+		if (output == null)
+			return ExitCode.OK;
+
+		var writer = _writerFactory.Create(new PlainTextFileWriterOptions(output));
+		var writeResult = await writer.WriteAsync(content, cancellationToken);
 		return writeResult;
 	}
 }

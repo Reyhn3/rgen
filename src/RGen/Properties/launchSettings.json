@@ -2,7 +2,8 @@
   "profiles": {
     "RGen": {
       "commandName": "Project",
-      "commandLineArgs": "int 3 --set 2 --silent"
+      //"commandLineArgs": "int 3 --set 2 --silent"
+      "commandLineArgs": "int 3 --set 2 --silent -o %TEMP%\\rgen\\output-0.txt"
     }
   }
 }
