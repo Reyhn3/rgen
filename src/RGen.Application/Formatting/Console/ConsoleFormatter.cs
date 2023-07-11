@@ -23,16 +23,29 @@ public class ConsoleFormatter : IFormatter
 
 	public FormatContext Format<T>(IEnumerable<IEnumerable<T>> sets)
 	{
-		var rawStringBuilder = new StringBuilder();
-		var formattedStringBuilder = new StringBuilder();
+		if (sets == null!)
+			return FormatContext.Empty;
 
-		var array = sets.Select(s => s.ToArray()).ToArray();
+		var array = sets
+			.Where(s => s != null!)
+			.Select(s => s.Where(IsValidElement).ToArray())
+			.Where(s => s.Any())
+			.ToArray();
+		if (!array.Any())
+			return FormatContext.Empty;
+
 		var isMultiSet = array.Length > 1;
 		var isMultiElement = array.First().Length > 1;
+
+		var rawStringBuilder = new StringBuilder();
+		var formattedStringBuilder = new StringBuilder();
 
 		for (var i = 0; i < array.Length; i++)
 		{
 			var set = array[i];
+			if (!set.Any())
+				continue;
+
 			if (isMultiSet && isMultiElement)
 			{
 				rawStringBuilder.Append(BeginArray);
@@ -42,7 +55,7 @@ public class ConsoleFormatter : IFormatter
 			for (var j = 0; j < set.Length; j++)
 			{
 				var element = set[j];
-				var formatted = Format(element, _isColoringDisabled);
+				var formatted = FormatElement(element, _isColoringDisabled);
 				rawStringBuilder.Append(element);
 				formattedStringBuilder.Append(formatted);
 
@@ -69,8 +82,18 @@ public class ConsoleFormatter : IFormatter
 		return new FormatContext(rawStringBuilder.ToString(), formattedStringBuilder.ToString());
 	}
 
-//TEST: Coloring
-	private static string Format<T>(T element, bool isColoringDisabled) =>
+	internal static bool IsValidElement<T>(T? element)
+	{
+		if (element is string s)
+			return !string.IsNullOrWhiteSpace(s);
+
+		if (element is null)
+			return false;
+
+		return true;
+	}
+
+	internal static string FormatElement<T>(T element, bool isColoringDisabled) =>
 		isColoringDisabled
 			? element.ToString()
 			: $"\x1b[1;32m{element}\x1b[0m";

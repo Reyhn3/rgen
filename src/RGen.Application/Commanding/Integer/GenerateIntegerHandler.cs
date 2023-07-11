@@ -41,6 +41,7 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 
 		var sets = _generator.Set(N, Set);
 
+//TODO: Handle exceptions and return proper exit code
 		var formatter = _formatterFactory.Create(new ConsoleFormatterOptions(NoColor));
 		var formatted = formatter.Format(sets);
 
