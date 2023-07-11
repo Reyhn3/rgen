@@ -9,10 +9,6 @@ public class ConsoleWriter : IWriter
 {
 	private readonly ConsoleWriterOptions _options;
 
-	public ConsoleWriter()
-		: this(new ConsoleWriterOptions())
-	{}
-
 	public ConsoleWriter(ConsoleWriterOptions options)
 	{
 		_options = options;
