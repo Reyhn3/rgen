@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using StdOut = System.Console;
 
 
 namespace RGen.Application.Writing.TextFile;
@@ -25,6 +26,12 @@ public class PlainTextFileWriter : IWriter
 		if (!await TryWriteContentToFileAsync(filename!, values, Encoding.UTF8, cancellationToken))
 			return ExitCode.OutputFileWriteError;
 
+		StdOut.WriteLine();
+		StdOut.WriteLine("Values exported to:");
+		StdOut.ForegroundColor = ConsoleColor.White;
+		StdOut.WriteLine(filename);
+		StdOut.ResetColor();
+
 		return ExitCode.OK;
 	}
 
@@ -37,9 +44,9 @@ public class PlainTextFileWriter : IWriter
 //TEST: Relative path
 //TEST: Path variables (like %TEMP%)
 //TEST: Not a path (like invalid characters)
-				filename = optionsFileName.ToString();
+				filename = Path.GetFullPath(optionsFileName.ToString());
 
-				var fullPath = Path.GetFullPath(Path.GetDirectoryName(filename));
+				var fullPath = Path.GetDirectoryName(filename);
 				Directory.CreateDirectory(fullPath);
 
 				return true;
