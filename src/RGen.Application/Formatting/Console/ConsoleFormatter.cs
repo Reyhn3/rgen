@@ -21,42 +21,79 @@ public class ConsoleFormatter : IFormatter
 		_isColoringDisabled = options.IsColoringDisabled;
 	}
 
-	public string Format<T>(IEnumerable<IEnumerable<T>> sets)
+	public FormatContext Format<T>(IEnumerable<IEnumerable<T>> sets)
 	{
-		var sb = new StringBuilder();
+		if (sets == null!)
+			return FormatContext.Empty;
 
-		var array = sets.Select(s => s.ToArray()).ToArray();
+		var array = sets
+			.Where(s => s != null!)
+			.Select(s => s.Where(IsValidElement).ToArray())
+			.Where(s => s.Any())
+			.ToArray();
+		if (!array.Any())
+			return FormatContext.Empty;
+
 		var isMultiSet = array.Length > 1;
 		var isMultiElement = array.First().Length > 1;
+
+		var rawStringBuilder = new StringBuilder();
+		var formattedStringBuilder = new StringBuilder();
 
 		for (var i = 0; i < array.Length; i++)
 		{
 			var set = array[i];
+			if (!set.Any())
+				continue;
+
 			if (isMultiSet && isMultiElement)
-				sb.Append(BeginArray);
+			{
+				rawStringBuilder.Append(BeginArray);
+				formattedStringBuilder.Append(BeginArray);
+			}
 
 			for (var j = 0; j < set.Length; j++)
 			{
 				var element = set[j];
-				var formatted = Format(element, _isColoringDisabled);
-				sb.Append(formatted);
+				var formatted = FormatElement(element, _isColoringDisabled);
+				rawStringBuilder.Append(element);
+				formattedStringBuilder.Append(formatted);
 
 				if (j < set.Length - 1)
-					sb.Append(isMultiSet ? ElementSeparator : SetSeparator);
+				{
+					rawStringBuilder.Append(isMultiSet ? ElementSeparator : SetSeparator);
+					formattedStringBuilder.Append(isMultiSet ? ElementSeparator : SetSeparator);
+				}
 			}
 
 			if (isMultiSet && isMultiElement)
-				sb.Append(EndArray);
+			{
+				rawStringBuilder.Append(EndArray);
+				formattedStringBuilder.Append(EndArray);
+			}
 
 			if (i < array.Length - 1)
-				sb.Append(SetSeparator);
+			{
+				rawStringBuilder.Append(SetSeparator);
+				formattedStringBuilder.Append(SetSeparator);
+			}
 		}
 
-		return sb.ToString();
+		return new FormatContext(rawStringBuilder.ToString(), formattedStringBuilder.ToString());
 	}
 
-//TEST: Coloring
-	private static string Format<T>(T element, bool isColoringDisabled) =>
+	internal static bool IsValidElement<T>(T? element)
+	{
+		if (element is string s)
+			return !string.IsNullOrWhiteSpace(s);
+
+		if (element is null)
+			return false;
+
+		return true;
+	}
+
+	internal static string FormatElement<T>(T element, bool isColoringDisabled) =>
 		isColoringDisabled
 			? element.ToString()
 			: $"\x1b[1;32m{element}\x1b[0m";

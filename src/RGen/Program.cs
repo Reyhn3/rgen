@@ -15,5 +15,5 @@ try
 catch (Exception ex)
 {
 	ConsoleHelper.PrintException(ex, "Unhandled exception");
-	return ExitCodes.UnhandledException;
+	return (int)ExitCode.UnhandledException;
 }

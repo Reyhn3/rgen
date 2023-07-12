@@ -1,11 +1,13 @@
 ﻿using System;
 using System.CommandLine.Invocation;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using RGen.Application.Formatting;
 using RGen.Application.Formatting.Console;
 using RGen.Application.Writing;
 using RGen.Application.Writing.Console;
+using RGen.Application.Writing.TextFile;
 using RGen.Domain.Generators;
 
 
@@ -30,22 +32,47 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 	public int N { get; set; }
 	public int Set { get; set; }
 
-	protected override async Task<int> InvokeCoreAsync(InvocationContext context)
+	protected override async Task<ExitCode> InvokeCoreAsync(InvocationContext context)
 	{
 //TODO: Refactor to be a chained process, e.g. generate -> format -> output
 
-//TODO: Validate boundaries (Set should be >= 1)
-//TODO: Validate boundaries (N should be >= 1)
+//TEST: Validate boundaries (Set should be >= 1)
+//TEST: Validate boundaries (N should be >= 1)
 
 		var sets = _generator.Set(N, Set);
 
 		var formatter = _formatterFactory.Create(new ConsoleFormatterOptions(NoColor));
 		var formatted = formatter.Format(sets);
+		if (formatted.IsEmpty)
+			return ExitCode.NoDataGenerated;
 
 //TODO: Get CT from call-chain
-		var writer = _writerFactory.Create(new ConsoleWriterOptions());
-		await writer.WriteAsync(formatted, CancellationToken.None);
+		var consoleResult = await WriteToConsole(formatted.Formatted, CancellationToken.None);
+		if (consoleResult != ExitCode.OK)
+			return consoleResult;
 
-		return ExitCodes.OK;
+//TODO: Get CT from call-chain
+		var outputResult = await WriteToOutput(formatted.Raw, Output, CancellationToken.None);
+		if (outputResult != ExitCode.OK)
+			return outputResult;
+
+		return ExitCode.OK;
+	}
+
+	private async Task<ExitCode> WriteToConsole(string content, CancellationToken cancellationToken)
+	{
+		var writer = _writerFactory.Create(new ConsoleWriterOptions());
+		var writeResult = await writer.WriteAsync(content, cancellationToken);
+		return writeResult;
+	}
+
+	private async Task<ExitCode> WriteToOutput(string content, FileInfo? output, CancellationToken cancellationToken)
+	{
+		if (output == null)
+			return ExitCode.OK;
+
+		var writer = _writerFactory.Create(new PlainTextFileWriterOptions(output));
+		var writeResult = await writer.WriteAsync(content, cancellationToken);
+		return writeResult;
 	}
 }

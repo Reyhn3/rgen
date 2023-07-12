@@ -5,5 +5,5 @@ namespace RGen.Application.Formatting;
 
 public interface IFormatter
 {
-	string Format<T>(IEnumerable<IEnumerable<T>> sets);
+	FormatContext Format<T>(IEnumerable<IEnumerable<T>> sets);
 }

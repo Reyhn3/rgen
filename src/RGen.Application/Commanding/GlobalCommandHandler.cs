@@ -1,5 +1,6 @@
 ﻿using System;
 using System.CommandLine.Invocation;
+using System.IO;
 using System.Threading.Tasks;
 
 
@@ -9,6 +10,7 @@ public abstract class GlobalCommandHandler : ICommandHandler
 {
 #region Global Options
 	public bool NoColor { get; set; }
+	public FileInfo? Output { get; set; }
 #endregion Global Options
 
 	public int Invoke(InvocationContext context) =>
@@ -18,14 +20,14 @@ public abstract class GlobalCommandHandler : ICommandHandler
 	{
 		try
 		{
-			return await InvokeCoreAsync(context).ConfigureAwait(false);
+			return (int)await InvokeCoreAsync(context);
 		}
 		catch (Exception ex)
 		{
 			ConsoleHelper.PrintException(ex, "Error executing command");
-			return ExitCodes.CommandExecutionException;
+			return (int)ExitCode.CommandExecutionException;
 		}
 	}
 
-	protected abstract Task<int> InvokeCoreAsync(InvocationContext context);
+	protected abstract Task<ExitCode> InvokeCoreAsync(InvocationContext context);
 }

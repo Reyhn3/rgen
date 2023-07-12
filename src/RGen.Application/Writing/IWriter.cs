@@ -6,5 +6,5 @@ namespace RGen.Application.Writing;
 
 public interface IWriter
 {
-	Task WriteAsync(string values, CancellationToken cancellationToken);
+	Task<ExitCode> WriteAsync(string values, CancellationToken cancellationToken);
 }
