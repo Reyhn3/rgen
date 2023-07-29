@@ -14,6 +14,13 @@ public static class ConsoleHelper
 		Console.ResetColor();
 	}
 
+	public static void PrintWarning(string message)
+	{
+		Console.ForegroundColor = ConsoleColor.DarkYellow;
+		Console.WriteLine("Warning: {0}", message);
+		Console.ResetColor();
+	}
+
 	public static void SetConsoleTitle(Assembly assembly)
 	{
 		try
