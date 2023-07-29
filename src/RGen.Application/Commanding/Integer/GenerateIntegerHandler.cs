@@ -36,9 +36,6 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 	{
 //TODO: Refactor to be a chained process, e.g. generate -> format -> output
 
-//TEST: Validate boundaries (Set should be >= 1)
-//TEST: Validate boundaries (N should be >= 1)
-
 		var sets = _generator.Set(N, Set);
 
 		var formatter = _formatterFactory.Create(new ConsoleFormatterOptions(NoColor));
