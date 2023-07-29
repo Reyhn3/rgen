@@ -5,6 +5,7 @@ using RGen;
 using RGen.Application;
 
 Console.InputEncoding = Console.OutputEncoding = Encoding.UTF8;
+ConsoleHelper.SetConsoleTitle(typeof(Program).Assembly);
 
 try
 {
