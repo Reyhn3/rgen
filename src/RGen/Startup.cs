@@ -8,6 +8,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RGen.Application;
 using RGen.Application.Commanding;
 using RGen.Application.Commanding.Integer;
 using RGen.Application.Formatting;
@@ -52,7 +53,7 @@ internal static class Startup
 
 	private static CommandLineBuilder BuildCommandLine()
 	{
-		var rootCommand = new RootCommand("Generate random values")
+		var rootCommand = new RootCommand(ConsoleHelper.GetProductName(typeof(Program).Assembly))
 			{
 				new GenerateIntegerCommand()
 			};
