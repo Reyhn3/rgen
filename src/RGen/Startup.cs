@@ -57,7 +57,6 @@ internal static class Startup
 				new GenerateIntegerCommand()
 			};
 
-		rootCommand.AddGlobalOption(GlobalSilentOption.Create());
 		rootCommand.AddGlobalOption(GlobalColorOption.Create());
 		rootCommand.AddGlobalOption(GlobalOutputOption.Create());
 
