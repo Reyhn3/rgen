@@ -1,8 +1,10 @@
 ﻿using System;
 using System.CommandLine;
 using System.CommandLine.Builder;
+using System.CommandLine.Help;
 using System.CommandLine.Hosting;
 using System.CommandLine.Parsing;
+using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -23,6 +25,13 @@ internal static class Startup
 	public static Parser BuildParser() =>
 		BuildCommandLine()
 			.UseDefaults()
+			.UseHelp(help => help
+				.HelpBuilder.CustomizeLayout(_ =>
+					HelpBuilder.Default
+						.GetLayout()
+						.Skip(1)
+						.Prepend(_ =>
+								Splash.Render())))
 			.UseHost(
 				Host.CreateDefaultBuilder,
 				host => host

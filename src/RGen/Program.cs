@@ -5,7 +5,6 @@ using RGen;
 using RGen.Application;
 
 Console.InputEncoding = Console.OutputEncoding = Encoding.UTF8;
-Greeter.Greet(args);
 
 try
 {
@@ -16,4 +15,8 @@ catch (Exception ex)
 {
 	ConsoleHelper.PrintException(ex, "Unhandled exception");
 	return (int)ExitCode.UnhandledException;
+}
+finally
+{
+	Console.ResetColor();
 }

@@ -1,22 +1,19 @@
 ﻿using System;
-using System.Linq;
-using RGen.Application.Commanding;
 using RGen.Properties;
 
 
 namespace RGen;
 
-internal static class Greeter
+internal static class Splash
 {
-	public static void Greet(string[] args)
+	public static void Render()
 	{
 		try
 		{
-			if (args.Any(a => string.Equals(a, GlobalSilentOption.SilentOption, StringComparison.OrdinalIgnoreCase)))
-				return;
-
 			var splashLines = Resources.splash.Split("\r\n");
+
 			Console.ForegroundColor = ConsoleColor.Cyan;
+
 			foreach (var splashLine in splashLines)
 				Console.WriteLine(splashLine);
 
