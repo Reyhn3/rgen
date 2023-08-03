@@ -37,7 +37,7 @@ public static class ConsoleHelper
 
 	public static string GetProductName(Assembly assembly)
 	{
-		const string fallback = "AES Crypt Tool";
+		const string fallback = "RGen";
 
 		try
 		{

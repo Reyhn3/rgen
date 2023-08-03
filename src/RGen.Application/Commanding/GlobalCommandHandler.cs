@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CommandLine.Invocation;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 
@@ -20,7 +21,7 @@ public abstract class GlobalCommandHandler : ICommandHandler
 	{
 		try
 		{
-			return (int)await InvokeCoreAsync(context);
+			return (int)await InvokeCoreAsync(context, context.GetCancellationToken());
 		}
 		catch (Exception ex)
 		{
@@ -29,5 +30,5 @@ public abstract class GlobalCommandHandler : ICommandHandler
 		}
 	}
 
-	protected abstract Task<ExitCode> InvokeCoreAsync(InvocationContext context);
+	protected abstract Task<ExitCode> InvokeCoreAsync(InvocationContext context, CancellationToken cancellationToken);
 }

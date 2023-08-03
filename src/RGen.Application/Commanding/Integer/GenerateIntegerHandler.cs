@@ -32,10 +32,12 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 	public int N { get; set; }
 	public int Set { get; set; }
 
-	protected override async Task<ExitCode> InvokeCoreAsync(InvocationContext context)
+	protected override async Task<ExitCode> InvokeCoreAsync(InvocationContext context, CancellationToken cancellationToken)
 	{
 //TODO: Refactor to be a chained process, e.g. generate -> format -> output
 
+//TODO: #12: If more than x number of total elements, display a progress bar
+//TODO: #11: If more than x number of total elements, run in parallel
 		var sets = _generator.Set(N, Set);
 
 		var formatter = _formatterFactory.Create(new ConsoleFormatterOptions(NoColor));
@@ -43,13 +45,11 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 		if (formatted.IsEmpty)
 			return ExitCode.NoDataGenerated;
 
-//TODO: Get CT from call-chain
-		var consoleResult = await WriteToConsole(formatted.Formatted, CancellationToken.None);
+		var consoleResult = await WriteToConsole(formatted.Formatted, cancellationToken);
 		if (consoleResult != ExitCode.OK)
 			return consoleResult;
 
-//TODO: Get CT from call-chain
-		var outputResult = await WriteToOutput(formatted.Raw, Output, CancellationToken.None);
+		var outputResult = await WriteToOutput(formatted.Raw, Output, cancellationToken);
 		if (outputResult != ExitCode.OK)
 			return outputResult;
 
