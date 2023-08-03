@@ -32,7 +32,7 @@ internal static class Startup
 						.GetLayout()
 						.Skip(1)
 						.Prepend(_ =>
-								Splash.Render())))
+							Splash.Render())))
 			.UseHost(
 				Host.CreateDefaultBuilder,
 				host => host
