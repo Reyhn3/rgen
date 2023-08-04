@@ -4,6 +4,9 @@ public enum ResultCode
 {
 	OK,
 
-	OutputFilePathError = -100,
-	OutputFileWriteError = -101
+	NoDataGenerated = -100,
+	WriteError = -101,
+
+	OutputFilePathError = -200,
+	OutputFileWriteError = -301
 }

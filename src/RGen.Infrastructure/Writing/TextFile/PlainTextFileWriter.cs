@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using RGen.Domain;
+using RGen.Domain.Formatting;
 using RGen.Domain.Writing;
 using StdOut = System.Console;
 
@@ -20,12 +21,12 @@ public class PlainTextFileWriter : IWriter
 		_options = options;
 	}
 
-	public async Task<IResult> WriteAsync(string values, CancellationToken cancellationToken)
+	public async Task<IResult> WriteAsync(FormatContext context, CancellationToken cancellationToken)
 	{
 		if (!TryGetOrCreateFileName(_options.FileName, out var filename))
 			return Result.Failure(ResultCode.OutputFilePathError);
 
-		if (!await TryWriteContentToFileAsync(filename!, values, Encoding.UTF8, cancellationToken))
+		if (!await TryWriteContentToFileAsync(filename!, context.Raw, Encoding.UTF8, cancellationToken))
 			return Result.Failure(ResultCode.OutputFileWriteError);
 
 		StdOut.WriteLine();
@@ -85,7 +86,7 @@ public class PlainTextFileWriter : IWriter
 
 	private static bool IsInvalidPath(string proposed)
 	{
-		FileInfo fileInfo = null;
+		FileInfo? fileInfo = null;
 
 		try
 		{

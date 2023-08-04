@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using RGen.Domain;
+using RGen.Domain.Formatting;
 using RGen.Domain.Writing;
 using StdOut = System.Console;
 
@@ -16,9 +17,9 @@ public class ConsoleWriter : IWriter
 		_options = options;
 	}
 
-	public Task<IResult> WriteAsync(string values, CancellationToken cancellationToken)
+	public Task<IResult> WriteAsync(FormatContext context, CancellationToken cancellationToken)
 	{
-		StdOut.WriteLine(values);
+		StdOut.WriteLine(context.Formatted);
 		return Task.FromResult(Result.OK);
 	}
 }

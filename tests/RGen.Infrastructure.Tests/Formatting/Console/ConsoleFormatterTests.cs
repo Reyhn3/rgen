@@ -10,7 +10,7 @@ namespace RGen.Infrastructure.Tests.Formatting.Console;
 
 public class ConsoleFormatterTests
 {
-	private ConsoleFormatter _sut;
+	private ConsoleFormatter _sut = null!;
 
 #region Sample Data
 	// @formatter:off
