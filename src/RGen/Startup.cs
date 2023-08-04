@@ -8,15 +8,17 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using RGen.Application;
 using RGen.Application.Commanding;
 using RGen.Application.Commanding.Integer;
 using RGen.Application.Formatting;
-using RGen.Application.Formatting.Console;
 using RGen.Application.Writing;
-using RGen.Application.Writing.Console;
-using RGen.Application.Writing.TextFile;
-using RGen.Domain.Generators;
+using RGen.Domain;
+using RGen.Domain.Generating;
+using RGen.Domain.Generating.Generators;
+using RGen.Infrastructure;
+using RGen.Infrastructure.Formatting.Console;
+using RGen.Infrastructure.Writing.Console;
+using RGen.Infrastructure.Writing.TextFile;
 
 
 namespace RGen;
@@ -40,7 +42,8 @@ internal static class Startup
 					.UseConsoleLifetime()
 					.UseContentRoot(AppContext.BaseDirectory)
 					.ConfigureServices(services => services
-						.AddSingleton<IIntegerGenerator, IntegerGenerator>()
+						.AddSingleton<IGeneratorService, GeneratorService>()
+						.AddSingleton<IntegerGenerator>()
 						.AddSingleton(_ =>
 							new FormatterFactory()
 								.Register<ConsoleFormatterOptions>(o => new ConsoleFormatter(o)))
