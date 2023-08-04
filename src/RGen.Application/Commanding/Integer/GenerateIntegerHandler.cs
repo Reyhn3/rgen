@@ -4,11 +4,11 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using RGen.Application.Formatting;
-using RGen.Application.Formatting.Console;
 using RGen.Application.Writing;
-using RGen.Application.Writing.Console;
-using RGen.Application.Writing.TextFile;
-using RGen.Domain.Generators;
+using RGen.Domain;
+using RGen.Domain.Generating.Generators;
+using RGen.Infrastructure.Writing.Console;
+using RGen.Infrastructure.Writing.TextFile;
 
 
 namespace RGen.Application.Commanding.Integer;
@@ -40,33 +40,33 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 //TODO: #11: If more than x number of total elements, run in parallel
 		var sets = _generator.Set(N, Set);
 
-		var formatter = _formatterFactory.Create(new ConsoleFormatterOptions(NoColor));
+		var formatter = _formatterFactory.Create(new RGen.Infrastructure.Formatting.Console.ConsoleFormatterOptions(NoColor));
 		var formatted = formatter.Format(sets);
 		if (formatted.IsEmpty)
 			return ExitCode.NoDataGenerated;
 
 		var consoleResult = await WriteToConsole(formatted.Formatted, cancellationToken);
-		if (consoleResult != ExitCode.OK)
-			return consoleResult;
+		if (!consoleResult.IsSuccessful)
+			return consoleResult.ToExitCode();
 
 		var outputResult = await WriteToOutput(formatted.Raw, Output, cancellationToken);
-		if (outputResult != ExitCode.OK)
-			return outputResult;
+		if (!outputResult.IsSuccessful)
+			return outputResult.ToExitCode();
 
 		return ExitCode.OK;
 	}
 
-	private async Task<ExitCode> WriteToConsole(string content, CancellationToken cancellationToken)
+	private async Task<IResult> WriteToConsole(string content, CancellationToken cancellationToken)
 	{
 		var writer = _writerFactory.Create(new ConsoleWriterOptions());
 		var writeResult = await writer.WriteAsync(content, cancellationToken);
 		return writeResult;
 	}
 
-	private async Task<ExitCode> WriteToOutput(string content, FileInfo? output, CancellationToken cancellationToken)
+	private async Task<IResult> WriteToOutput(string content, FileInfo? output, CancellationToken cancellationToken)
 	{
 		if (output == null)
-			return ExitCode.OK;
+			return Result.OK;
 
 		var writer = _writerFactory.Create(new PlainTextFileWriterOptions(output));
 		var writeResult = await writer.WriteAsync(content, cancellationToken);

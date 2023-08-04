@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RGen.Domain\RGen.Domain.csproj" />
+    <ProjectReference Include="..\RGen.Infrastructure\RGen.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

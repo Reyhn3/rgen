@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using RGen.Domain.Formatting;
 
 
 namespace RGen.Application.Formatting;

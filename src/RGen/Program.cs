@@ -3,6 +3,7 @@ using System.CommandLine.Parsing;
 using System.Text;
 using RGen;
 using RGen.Application;
+using RGen.Infrastructure;
 
 Console.InputEncoding = Console.OutputEncoding = Encoding.UTF8;
 ConsoleHelper.SetConsoleTitle(typeof(Program).Assembly);

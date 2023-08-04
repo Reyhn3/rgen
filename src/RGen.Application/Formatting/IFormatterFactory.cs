@@ -1,4 +1,7 @@
-﻿namespace RGen.Application.Formatting;
+﻿using RGen.Domain.Formatting;
+
+
+namespace RGen.Application.Formatting;
 
 public interface IFormatterFactory
 {

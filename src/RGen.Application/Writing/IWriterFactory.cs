@@ -1,4 +1,5 @@
 ﻿using System;
+using RGen.Domain.Writing;
 
 
 namespace RGen.Application.Writing;

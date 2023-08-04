@@ -3,6 +3,7 @@ using System.CommandLine.Invocation;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using RGen.Infrastructure;
 
 
 namespace RGen.Application.Commanding;
