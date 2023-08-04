@@ -1,6 +1,7 @@
 ﻿using FakeItEasy;
 using NUnit.Framework;
 using RGen.Domain.Formatting;
+using RGen.Domain.Generating;
 using RGen.Infrastructure.Formatting.Console;
 using Shouldly;
 
@@ -13,27 +14,27 @@ public class ConsoleFormatterTests
 
 #region Sample Data
 	// @formatter:off
-	private static readonly int[][] SingleSetSingleValue =
+	private static readonly IRandomValues<int> SingleSetSingleValue = RandomValues.Create(new[]
 		{
 			new[] { 1 }
-		};
+		});
 
-	private static readonly int[][] SingleSetMultipleValues =
+	private static readonly IRandomValues<int> SingleSetMultipleValues = RandomValues.Create(new[]
 		{
 			new[] { 1, 2 }
-		};
+		});
 
-	private static readonly int[][] MultipleSetsSingleValue =
+	private static readonly IRandomValues<int> MultipleSetsSingleValue = RandomValues.Create(new[]
 		{
 			new[] { 1 },
 			new[] { 2 }
-		};
+		});
 
-	private static readonly int[][] MultipleSetsMultipleValues =
+	private static readonly IRandomValues<int> MultipleSetsMultipleValues = RandomValues.Create(new[]
 		{
 			new[] { 1, 2 },
 			new[] { 3, 4 }
-		};
+		});
 	// @formatter:on
 #endregion Sample Data
 
@@ -45,11 +46,11 @@ public class ConsoleFormatterTests
 
 	[Test]
 	public void Format_shall_return_empty_if_sets_are_null() =>
-		_sut.Format<int>(null!).IsEmpty.ShouldBeTrue();
-
+		_sut.Format(null!).IsEmpty.ShouldBeTrue();
+	
 	[Test]
 	public void Format_shall_return_empty_result_if_sets_are_empty() =>
-		_sut.Format(new[]
+		_sut.Format(RandomValues.Create(new[]
 				{
 					new[]
 						{
@@ -60,13 +61,13 @@ public class ConsoleFormatterTests
 						{
 							(string?)null
 						}
-				}!)
+				}!))
 			.ShouldNotBeNull()
 			.ShouldBe(FormatContext.Empty);
-
+	
 	[Test]
 	public void Format_shall_exclude_null_sets() =>
-		_sut.Format(new[]
+		_sut.Format(RandomValues.Create(new[]
 				{
 					new[]
 						{
@@ -77,12 +78,12 @@ public class ConsoleFormatterTests
 						{
 							"c"
 						}
-				}!).Dump()?.Raw
+				}!)).Dump()?.Raw
 			.ShouldBe("a\r\nc");
 
 	[Test]
 	public void Format_shall_exclude_empty_sets() =>
-		_sut.Format(new[]
+		_sut.Format(RandomValues.Create(new[]
 				{
 					new[]
 						{
@@ -96,12 +97,12 @@ public class ConsoleFormatterTests
 						{
 							"c"
 						}
-				}).Dump()?.Raw
+				})).Dump()?.Raw
 			.ShouldBe("a\r\nc");
 
 	[Test]
 	public void Format_shall_exclude_null_values() =>
-		_sut.Format(new[]
+		_sut.Format(RandomValues.Create(new[]
 				{
 					new[]
 						{
@@ -115,12 +116,12 @@ public class ConsoleFormatterTests
 							null,
 							"f"
 						}
-				}).Dump()?.Raw
+				})).Dump()?.Raw
 			.ShouldBe("[a, c]\r\n[d, f]");
 
 	[Test]
 	public void Format_shall_exclude_empty_values() =>
-		_sut.Format(new[]
+		_sut.Format(RandomValues.Create(new[]
 				{
 					new[]
 						{
@@ -134,7 +135,7 @@ public class ConsoleFormatterTests
 							"\t",
 							"f"
 						}
-				}).Dump()?.Raw
+				})).Dump()?.Raw
 			.ShouldBe("[a, c]\r\n[d, f]");
 
 	[Test]

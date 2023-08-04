@@ -12,6 +12,7 @@ using RGen.Application.Commanding;
 using RGen.Application.Commanding.Integer;
 using RGen.Application.Formatting;
 using RGen.Application.Writing;
+using RGen.Domain.Generating;
 using RGen.Domain.Generating.Generators;
 using RGen.Infrastructure;
 using RGen.Infrastructure.Formatting.Console;
@@ -40,7 +41,7 @@ internal static class Startup
 					.UseConsoleLifetime()
 					.UseContentRoot(AppContext.BaseDirectory)
 					.ConfigureServices(services => services
-						.AddSingleton<IIntegerGenerator, IntegerGenerator>()
+						.AddSingleton<IGenerator, IntegerGenerator>()
 						.AddSingleton(_ =>
 							new FormatterFactory()
 								.Register<ConsoleFormatterOptions>(o => new ConsoleFormatter(o)))

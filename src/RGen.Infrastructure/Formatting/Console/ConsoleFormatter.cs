@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RGen.Domain.Formatting;
+using RGen.Domain.Generating;
 
 
 namespace RGen.Infrastructure.Formatting.Console;
@@ -22,12 +22,12 @@ public class ConsoleFormatter : IFormatter
 		_isColoringDisabled = options.IsColoringDisabled;
 	}
 
-	public FormatContext Format<T>(IEnumerable<IEnumerable<T>> sets)
+	public FormatContext Format(IRandomValues randomValues)
 	{
-		if (sets == null!)
+		if (randomValues?.ValueSets == null!)
 			return FormatContext.Empty;
 
-		var array = sets
+		var array = randomValues.ValueSets
 			.Where(s => s != null!)
 			.Select(s => s.Where(IsValidElement).ToArray())
 			.Where(s => s.Any())

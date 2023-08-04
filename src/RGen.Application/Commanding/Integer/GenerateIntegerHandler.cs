@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using RGen.Application.Formatting;
 using RGen.Application.Writing;
 using RGen.Domain;
-using RGen.Domain.Generating.Generators;
+using RGen.Domain.Generating;
+using RGen.Infrastructure.Formatting.Console;
 using RGen.Infrastructure.Writing.Console;
 using RGen.Infrastructure.Writing.TextFile;
 
@@ -15,13 +16,13 @@ namespace RGen.Application.Commanding.Integer;
 
 public class GenerateIntegerHandler : GlobalCommandHandler
 {
-	private readonly IIntegerGenerator _generator;
+	private readonly IGenerator _generator;
 	private readonly IFormatterFactory _formatterFactory;
 	private readonly IWriterFactory _writerFactory;
 
 	public GenerateIntegerHandler(
-		IIntegerGenerator generator, 
-		IFormatterFactory formatterFactory, 
+		IGenerator generator,
+		IFormatterFactory formatterFactory,
 		IWriterFactory writerFactory)
 	{
 		_generator = generator ?? throw new ArgumentNullException(nameof(generator));
@@ -38,9 +39,9 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 
 //TODO: #12: If more than x number of total elements, display a progress bar
 //TODO: #11: If more than x number of total elements, run in parallel
-		var sets = _generator.Set(N, Set);
+		var sets = _generator.Generate(N, Set);
 
-		var formatter = _formatterFactory.Create(new RGen.Infrastructure.Formatting.Console.ConsoleFormatterOptions(NoColor));
+		var formatter = _formatterFactory.Create(new ConsoleFormatterOptions(NoColor));
 		var formatted = formatter.Format(sets);
 		if (formatted.IsEmpty)
 			return ExitCode.NoDataGenerated;
