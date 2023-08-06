@@ -1,11 +1,11 @@
 ﻿using System.CommandLine;
 
 
-namespace RGen.Application.Commanding;
+namespace RGen.Application.Commanding.Globals;
 
 public static class GlobalColorOption
 {
-	public static Option<bool> Create() => new(
+	public static Option<bool> Color = new(
 			new[]
 				{
 					"--no-color"

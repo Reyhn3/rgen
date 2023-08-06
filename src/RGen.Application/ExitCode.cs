@@ -4,7 +4,7 @@ public enum ExitCode
 {
 	OK = 0,
 	UnhandledException = -1,
-	CommandExecutionException = -2,
+	UnhandledCommandException = -2,
 
-	NoDataGenerated = -10
+	NoDataGenerated = -100
 }

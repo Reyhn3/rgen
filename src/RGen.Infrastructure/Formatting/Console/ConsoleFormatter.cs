@@ -9,6 +9,7 @@ namespace RGen.Infrastructure.Formatting.Console;
 
 public class ConsoleFormatter : IFormatter
 {
+	private const string NullElement = "<null>";
 	private const char BeginArray = '[';
 	private const char EndArray = ']';
 
@@ -96,6 +97,6 @@ public class ConsoleFormatter : IFormatter
 
 	internal static string FormatElement<T>(T element, bool isColoringDisabled) =>
 		isColoringDisabled
-			? element.ToString()
+			? element?.ToString() ?? NullElement
 			: $"\x1b[1;32m{element}\x1b[0m";
 }
