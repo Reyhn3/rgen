@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using RGen.Domain;
 using RGen.Domain.Formatting;
 using RGen.Domain.Writing;
@@ -14,10 +15,12 @@ namespace RGen.Infrastructure.Writing.TextFile;
 
 public class PlainTextFileWriter : IWriter
 {
+	private readonly ILogger<PlainTextFileWriter> _logger;
 	private readonly PlainTextFileWriterOptions _options;
 
-	public PlainTextFileWriter(PlainTextFileWriterOptions options)
+	public PlainTextFileWriter(ILogger<PlainTextFileWriter> logger, PlainTextFileWriterOptions options)
 	{
+		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		_options = options;
 	}
 
@@ -38,7 +41,7 @@ public class PlainTextFileWriter : IWriter
 		return Result.OK;
 	}
 
-	internal static bool TryGetOrCreateFileName(FileInfo? optionsFileName, out string? filename)
+	internal bool TryGetOrCreateFileName(FileInfo? optionsFileName, out string? filename)
 	{
 		try
 		{
@@ -61,8 +64,8 @@ public class PlainTextFileWriter : IWriter
 		}
 		catch (Exception ex)
 		{
-			ConsoleHelper.PrintException(ex, "Specified file name and path is invalid");
-			TraceHelper.PrintException(ex, "Error when verifying user specified path '{0}'", optionsFileName!);
+			_logger.LogError(ex, "Specified file name and path is invalid");
+			ConsoleHelper.PrintExceptionDetails(ex);
 			filename = null;
 			return false;
 		}
@@ -77,8 +80,8 @@ public class PlainTextFileWriter : IWriter
 		}
 		catch (Exception ex)
 		{
-			ConsoleHelper.PrintException(ex, "Error constructing file path and name for output");
-			TraceHelper.PrintException(ex, "Error when creating temporary file");
+			_logger.LogError(ex, "Error constructing file path and name for output");
+			ConsoleHelper.PrintExceptionDetails(ex);
 			filename = null;
 			return false;
 		}
@@ -103,7 +106,7 @@ public class PlainTextFileWriter : IWriter
 		return ReferenceEquals(fileInfo, null);
 	}
 
-	private static async Task<bool> TryWriteContentToFileAsync(string filename, string content, Encoding encoding, CancellationToken cancellationToken)
+	private async Task<bool> TryWriteContentToFileAsync(string filename, string content, Encoding encoding, CancellationToken cancellationToken)
 	{
 		try
 		{
@@ -113,8 +116,8 @@ public class PlainTextFileWriter : IWriter
 		}
 		catch (Exception ex)
 		{
-			ConsoleHelper.PrintException(ex, $"Error writing to file {filename}");
-			TraceHelper.PrintException(ex, "Error writing to file {0}", filename);
+			_logger.LogError(ex, $"Error writing to file {filename}");
+			ConsoleHelper.PrintExceptionDetails(ex);
 			return false;
 		}
 	}

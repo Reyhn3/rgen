@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.CommandLine.Invocation;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using RGen.Application.Formatting;
 using RGen.Application.Writing;
 using RGen.Domain;
@@ -24,10 +25,12 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 	private readonly IWriterFactory _writerFactory;
 
 	public GenerateIntegerHandler(
+		ILogger<GenerateIntegerHandler> logger,
 		IGeneratorService generatorService,
 		IntegerGenerator generator,
 		IFormatterFactory formatterFactory,
 		IWriterFactory writerFactory)
+		: base(logger)
 	{
 		_generatorService = generatorService ?? throw new ArgumentNullException(nameof(generatorService));
 		_generator = generator ?? throw new ArgumentNullException(nameof(generator));
@@ -59,7 +62,6 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 
 	private IEnumerable<IWriter> CreateWriters()
 	{
-//TODO: #4: Don't use this if verbosity is quiet
 		yield return _writerFactory.Create(new ConsoleWriterOptions());
 
 		if (Output != null)

@@ -2,11 +2,11 @@
 using System.IO;
 
 
-namespace RGen.Application.Commanding;
+namespace RGen.Application.Commanding.Globals;
 
 public static class GlobalOutputOption
 {
-	public static Option<FileInfo?> Create() => new(
+	public static Option<FileInfo?> Output = new(
 			new[]
 				{
 					"-o",

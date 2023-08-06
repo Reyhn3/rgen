@@ -1,25 +1,20 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reflection;
+using RGen.Infrastructure.Logging;
+using Spectre.Console;
 
 
 namespace RGen.Infrastructure;
 
-//TODO: #4: Replace with ILogger and support for --verbosity
 public static class ConsoleHelper
 {
-	public static void PrintException(Exception ex, string label)
+	public static void PrintExceptionDetails(Exception ex)
 	{
-		Console.ForegroundColor = ConsoleColor.DarkRed;
-		Console.WriteLine("{0}: {1}", label, ex.Message);
-		Console.ResetColor();
-	}
-
-	public static void PrintWarning(string message)
-	{
-		Console.ForegroundColor = ConsoleColor.DarkYellow;
-		Console.WriteLine("Warning: {0}", message);
-		Console.ResetColor();
+		if (LogHelper.ShouldLog(LogLevel.Debug))
+			AnsiConsole.WriteException(ex, ExceptionFormats.ShortenTypes | ExceptionFormats.ShortenPaths);
+		else if (LogHelper.ShouldLog(LogLevel.Critical))
+			AnsiConsole.MarkupLine($"    [Red]{ex.Message}[/]");
 	}
 
 	public static void SetConsoleTitle(Assembly assembly)

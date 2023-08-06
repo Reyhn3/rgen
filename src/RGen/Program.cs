@@ -4,6 +4,7 @@ using System.Text;
 using RGen;
 using RGen.Application;
 using RGen.Infrastructure;
+using Spectre.Console;
 
 Console.InputEncoding = Console.OutputEncoding = Encoding.UTF8;
 ConsoleHelper.SetConsoleTitle(typeof(Program).Assembly);
@@ -15,7 +16,8 @@ try
 }
 catch (Exception ex)
 {
-	ConsoleHelper.PrintException(ex, "Unhandled exception");
+	AnsiConsole.MarkupLine("[bold Black on Red]ERROR:[/] [Red]Unhandled exception[/]");
+	AnsiConsole.WriteException(ex, ExceptionFormats.ShortenTypes | ExceptionFormats.ShortenPaths);
 	return (int)ExitCode.UnhandledException;
 }
 finally

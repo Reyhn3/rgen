@@ -3,6 +3,7 @@ using System.CommandLine.Invocation;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using RGen.Infrastructure;
 
 
@@ -10,6 +11,13 @@ namespace RGen.Application.Commanding;
 
 public abstract class GlobalCommandHandler : ICommandHandler
 {
+	protected GlobalCommandHandler(ILogger<GlobalCommandHandler> logger)
+	{
+		Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+	}
+
+	public ILogger<GlobalCommandHandler> Logger { get; }
+
 #region Global Options
 	public bool NoColor { get; set; }
 	public FileInfo? Output { get; set; }
@@ -26,8 +34,9 @@ public abstract class GlobalCommandHandler : ICommandHandler
 		}
 		catch (Exception ex)
 		{
-			ConsoleHelper.PrintException(ex, "Error executing command");
-			return (int)ExitCode.CommandExecutionException;
+			Logger.LogError(ex, "Unhandled exception when invoking command handler");
+			ConsoleHelper.PrintExceptionDetails(ex);
+			return (int)ExitCode.UnhandledCommandException;
 		}
 	}
 
