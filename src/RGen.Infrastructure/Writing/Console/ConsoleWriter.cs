@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using RGen.Domain;
 using RGen.Domain.Formatting;
 using RGen.Domain.Writing;
+using RGen.Infrastructure.Logging;
 using StdOut = System.Console;
 
 
@@ -19,6 +20,9 @@ public class ConsoleWriter : IWriter
 
 	public Task<IResult> WriteAsync(FormatContext context, CancellationToken cancellationToken)
 	{
+		if (LogHelper.IsQuiet)
+			return Task.FromResult(Result.OK);
+
 		StdOut.WriteLine(context.Formatted);
 		return Task.FromResult(Result.OK);
 	}

@@ -8,6 +8,7 @@ namespace RGen.Infrastructure.Logging;
 public static class LogHelper
 {
 	public static LoggingLevelSwitch Switch { get; } = new();
+	public static bool IsQuiet => Switch.MinimumLevel == LogEventLevel.Fatal;
 
 	public static LogEventLevel ToLogLevel(VerbosityLevel verbosityLevel) =>
 		verbosityLevel switch
