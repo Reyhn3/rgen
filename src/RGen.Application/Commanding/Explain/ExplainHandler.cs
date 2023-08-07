@@ -49,16 +49,9 @@ public class ExplainHandler : GlobalCommandHandler
 		}
 	}
 
-	private static string GetEnumDescription(ExitCode source)
+	private static string GetEnumDescription<TEnum>(TEnum source)
 	{
-		var field = source.GetType().GetField(source.ToString());
-		var attributes = (DescriptionAttribute[])(field?.GetCustomAttributes(typeof(DescriptionAttribute), false) ?? Array.Empty<DescriptionAttribute>());
-		return attributes is {Length: > 0} ? attributes[0].Description : source.ToString();
-	}
-
-	private static string GetEnumDescription(ResultCode source)
-	{
-		var field = source.GetType().GetField(source.ToString());
+		var field = typeof(TEnum).GetField(source.ToString());
 		var attributes = (DescriptionAttribute[])(field?.GetCustomAttributes(typeof(DescriptionAttribute), false) ?? Array.Empty<DescriptionAttribute>());
 		return attributes is {Length: > 0} ? attributes[0].Description : source.ToString();
 	}
