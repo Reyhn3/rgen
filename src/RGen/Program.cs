@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CommandLine.Parsing;
 using System.Text;
+using System.Threading;
 using RGen;
 using RGen.Application;
 using RGen.Infrastructure;
@@ -11,8 +12,17 @@ ConsoleHelper.SetConsoleTitle(typeof(Program).Assembly);
 
 try
 {
-	var parser = Startup.BuildParser();
-	return await parser.InvokeAsync(args);
+	using (new Mutex(false, "rgen", out var isFirstInstance))
+	{
+		if (!isFirstInstance)
+		{
+			AnsiConsole.MarkupLine("[Red]Another instance of the program is already running.[/]");
+			return (int)ExitCode.MultipleInstances;
+		}
+
+		var parser = Startup.BuildParser();
+		return await parser.InvokeAsync(args);
+	}
 }
 catch (Exception ex)
 {
