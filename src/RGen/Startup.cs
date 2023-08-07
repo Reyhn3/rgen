@@ -9,6 +9,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RGen.Application.Commanding.Explain;
 using RGen.Application.Commanding.Globals;
 using RGen.Application.Commanding.Integer;
 using RGen.Application.Formatting;
@@ -70,7 +71,8 @@ internal static class Startup
 								.Register<ConsoleWriterOptions>(o => new ConsoleWriter(o))
 								.Register<PlainTextFileWriterOptions>(o =>
 									new PlainTextFileWriter(sp.GetRequiredService<ILogger<PlainTextFileWriter>>(), o))))
-					.UseCommandHandler<GenerateIntegerCommand, GenerateIntegerHandler>())
+					.UseCommandHandler<GenerateIntegerCommand, GenerateIntegerHandler>()
+					.UseCommandHandler<ExplainCommand, ExplainHandler>())
 			.AddMiddleware(VerbosityLevelMiddleware.Instance, MiddlewareOrder.Configuration)
 			.Build();
 
@@ -78,7 +80,8 @@ internal static class Startup
 	{
 		var rootCommand = new RootCommand(ConsoleHelper.GetProductName(typeof(Program).Assembly))
 			{
-				new GenerateIntegerCommand()
+				new GenerateIntegerCommand(),
+				new ExplainCommand()
 			};
 
 		rootCommand.AddGlobalOption(GlobalVerbosityOption.Verbosity);

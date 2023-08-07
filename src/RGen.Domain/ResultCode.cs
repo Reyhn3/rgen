@@ -1,14 +1,23 @@
-﻿namespace RGen.Domain;
+﻿using System.ComponentModel;
+
+
+namespace RGen.Domain;
 
 public enum ResultCode
 {
 	OK,
 
-//IMPORTANT: These names and numbers must match ExitCode to provide correct user feedback
 
+	[Description("General: No data was generated")]
 	NoDataGenerated = -100,
+
+	[Description("Error when writing to output")]
 	WriteError = -101,
 
+
+	[Description("Output: There was a problem with the output file path")]
 	OutputFilePathError = -200,
+
+	[Description("Output: There was a problem writing to the output file path")]
 	OutputFileWriteError = -301
 }
