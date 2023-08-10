@@ -24,6 +24,7 @@ using RGen.Infrastructure.Writing.TextFile;
 using Serilog;
 using Serilog.Events;
 using Serilog.Filters;
+using Serilog.Sinks.SystemConsole.Themes;
 
 
 namespace RGen;
@@ -56,8 +57,10 @@ internal static class Startup
 						.ClearProviders()
 						.AddSerilog())
 					.UseSerilog((_, config) => config
-						.WriteTo.Console(outputTemplate: "{Level:u1} | {Message:lj}{NewLine}")
-						.MinimumLevel.ControlledBy(LogHelper.Switch)
+						.WriteTo.Console(
+							outputTemplate: "{Level:u1} | {Message:lj}{NewLine}",
+							theme: LogHelper.IsNoColorSet ? ConsoleTheme.None : AnsiConsoleTheme.Literate,
+							levelSwitch: LogHelper.Switch)
 						.Filter.ByExcluding(e => e.Level == LogEventLevel.Fatal)
 						.Filter.ByIncludingOnly(Matching.FromSource(typeof(Startup).Namespace!)))
 					.ConfigureServices(services => services
