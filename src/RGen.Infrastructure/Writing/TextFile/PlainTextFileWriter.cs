@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using RGen.Domain;
 using RGen.Domain.Formatting;
 using RGen.Domain.Writing;
+using RGen.Infrastructure.Logging;
 using StdOut = System.Console;
 
 
@@ -32,11 +33,7 @@ public class PlainTextFileWriter : IWriter
 		if (!await TryWriteContentToFileAsync(filename!, context.Raw, Encoding.UTF8, cancellationToken))
 			return Result.Failure(ResultCode.OutputFileWriteError);
 
-		StdOut.WriteLine();
-		StdOut.WriteLine("Values exported to:");
-		StdOut.ForegroundColor = ConsoleColor.White;
-		StdOut.WriteLine(filename);
-		StdOut.ResetColor();
+		_logger.LogInformation("Values exported to: {OutputFile}", filename);
 
 		return Result.OK;
 	}
@@ -74,7 +71,7 @@ public class PlainTextFileWriter : IWriter
 		{
 			var tempFileName = Path.GetTempFileName();
 			filename = Path.ChangeExtension(tempFileName, "txt");
-			Debug.WriteLine($"Created temporary file '{filename}'");
+			_logger.LogDebug("Created temporary file {TemporaryFileName}", filename);
 
 			return true;
 		}
@@ -111,7 +108,7 @@ public class PlainTextFileWriter : IWriter
 		try
 		{
 			await File.WriteAllTextAsync(filename, content, encoding, cancellationToken).ConfigureAwait(false);
-			Debug.WriteLine($"Wrote content to '{filename}'");
+			_logger.LogDebug("Wrote content to {OutputFileName}", filename);
 			return true;
 		}
 		catch (Exception ex)

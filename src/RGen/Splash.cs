@@ -1,4 +1,5 @@
 ﻿using System;
+using RGen.Infrastructure.Logging;
 using RGen.Properties;
 
 
@@ -12,12 +13,14 @@ internal static class Splash
 		{
 			var splashLines = Resources.splash.Split("\r\n");
 
-			Console.ForegroundColor = ConsoleColor.Cyan;
+			if (!LogHelper.IsNoColorSet)
+				Console.ForegroundColor = ConsoleColor.Cyan;
 
 			foreach (var splashLine in splashLines)
 				Console.WriteLine(splashLine);
 
-			Console.ResetColor();
+			if (!LogHelper.IsNoColorSet)
+				Console.ResetColor();
 		}
 		catch
 		{

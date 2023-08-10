@@ -5,7 +5,7 @@ using System.Threading;
 using RGen;
 using RGen.Application;
 using RGen.Infrastructure;
-using Spectre.Console;
+using RGen.Infrastructure.Logging;
 
 Console.InputEncoding = Console.OutputEncoding = Encoding.UTF8;
 ConsoleHelper.SetConsoleTitle(typeof(Program).Assembly);
@@ -16,7 +16,7 @@ try
 	{
 		if (!isFirstInstance)
 		{
-			AnsiConsole.MarkupLine("[Red]Another instance of the program is already running.[/]");
+			LogHelper.PreLog("Red", "Another instance of the program is already running.");
 			return (int)ExitCode.MultipleInstances;
 		}
 
@@ -26,8 +26,7 @@ try
 }
 catch (Exception ex)
 {
-	AnsiConsole.MarkupLine("[bold Black on Red]ERROR:[/] [Red]Unhandled exception[/]");
-	AnsiConsole.WriteException(ex, ExceptionFormats.ShortenTypes | ExceptionFormats.ShortenPaths);
+	LogHelper.PreLog(ex);
 	return (int)ExitCode.UnhandledException;
 }
 finally
