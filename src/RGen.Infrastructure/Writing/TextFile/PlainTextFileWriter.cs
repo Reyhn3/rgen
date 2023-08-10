@@ -65,7 +65,7 @@ public class PlainTextFileWriter : IWriter
 		catch (Exception ex)
 		{
 			_logger.LogError(ex, "Specified file name and path is invalid");
-			ConsoleHelper.PrintExceptionDetails(ex);
+			LogHelper.PrintExceptionDetails(ex);
 			filename = null;
 			return false;
 		}
@@ -81,7 +81,7 @@ public class PlainTextFileWriter : IWriter
 		catch (Exception ex)
 		{
 			_logger.LogError(ex, "Error constructing file path and name for output");
-			ConsoleHelper.PrintExceptionDetails(ex);
+			LogHelper.PrintExceptionDetails(ex);
 			filename = null;
 			return false;
 		}
@@ -117,7 +117,7 @@ public class PlainTextFileWriter : IWriter
 		catch (Exception ex)
 		{
 			_logger.LogError(ex, $"Error writing to file {filename}");
-			ConsoleHelper.PrintExceptionDetails(ex);
+			LogHelper.PrintExceptionDetails(ex);
 			return false;
 		}
 	}

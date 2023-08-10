@@ -1,22 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reflection;
-using RGen.Infrastructure.Logging;
-using Spectre.Console;
 
 
 namespace RGen.Infrastructure;
 
 public static class ConsoleHelper
 {
-	public static void PrintExceptionDetails(Exception ex)
-	{
-		if (LogHelper.ShouldLog(LogLevel.Debug))
-			AnsiConsole.WriteException(ex, ExceptionFormats.ShortenTypes | ExceptionFormats.ShortenPaths);
-		else if (LogHelper.ShouldLog(LogLevel.Critical))
-			AnsiConsole.MarkupLine($"    [Red]{ex.Message}[/]");
-	}
-
 	public static void SetConsoleTitle(Assembly assembly)
 	{
 		try

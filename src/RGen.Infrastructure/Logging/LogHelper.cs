@@ -35,4 +35,12 @@ public static class LogHelper
 				LogEventLevel.Verbose     => level is LogLevel.Critical or LogLevel.Warning or LogLevel.Information or LogLevel.Debug or LogLevel.Trace,
 				_                         => true
 			};
+
+	public static void PrintExceptionDetails(Exception ex)
+	{
+		if (ShouldLog(LogLevel.Debug))
+			AnsiConsole.WriteException(ex, ExceptionFormats.ShortenTypes | ExceptionFormats.ShortenPaths);
+		else if (ShouldLog(LogLevel.Critical))
+			AnsiConsole.MarkupLine($"    [Red]{ex.Message}[/]");
+	}
 }

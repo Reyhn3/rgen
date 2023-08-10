@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using RGen.Infrastructure;
+using RGen.Infrastructure.Logging;
 
 
 namespace RGen.Application.Commanding;
@@ -35,7 +36,7 @@ public abstract class GlobalCommandHandler : ICommandHandler
 		catch (Exception ex)
 		{
 			Logger.LogError(ex, "Unhandled exception when invoking command handler");
-			ConsoleHelper.PrintExceptionDetails(ex);
+			LogHelper.PrintExceptionDetails(ex);
 			return (int)ExitCode.UnhandledCommandException;
 		}
 	}
