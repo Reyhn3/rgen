@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using RGen.Domain.Formatting;
 using RGen.Domain.Generating;
+using RGen.Infrastructure.Logging;
 
 
 namespace RGen.Infrastructure.Formatting.Console;
@@ -20,7 +21,7 @@ public class ConsoleFormatter : IFormatter
 
 	public ConsoleFormatter(ConsoleFormatterOptions options)
 	{
-		_isColoringDisabled = options.IsColoringDisabled;
+		_isColoringDisabled = options.IsColoringDisabled || LogHelper.IsNoColorSet;
 	}
 
 	public FormatContext Format(IRandomValues randomValues)

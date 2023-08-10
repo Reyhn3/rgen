@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using RGen.Domain;
 using RGen.Infrastructure;
+using RGen.Infrastructure.Logging;
 
 
 namespace RGen.Application.Commanding.Explain;
@@ -44,7 +45,7 @@ public class ExplainHandler : GlobalCommandHandler
 		catch (Exception ex)
 		{
 			Logger.LogError(ex, "Unable to explain code {ExitCode}", Code);
-			ConsoleHelper.PrintExceptionDetails(ex);
+			LogHelper.PrintExceptionDetails(ex);
 			return Task.FromResult(ExitCode.UnhandledCommandException);
 		}
 	}
