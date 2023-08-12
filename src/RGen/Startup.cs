@@ -73,11 +73,12 @@ internal static class Startup
 				new ExplainCommand()
 			};
 
+		rootCommand.AddGlobalOption(GlobalOutputOption.Output);
+
 		rootCommand.AddGlobalOption(GlobalVerbosityOption.Verbosity);
 		rootCommand.AddGlobalOption(GlobalVerbosityOption.Quiet);
 		rootCommand.AddGlobalOption(GlobalVerbosityOption.Loud);
 		rootCommand.AddGlobalOption(GlobalColorOption.Color);
-		rootCommand.AddGlobalOption(GlobalOutputOption.Output);
 
 		return new CommandLineBuilder(rootCommand);
 	}
@@ -101,6 +102,14 @@ internal static class Startup
 					.CustomizeSymbol(
 						GlobalVerbosityOption.Verbosity,
 						"--verbosity <level>" + Environment.NewLine + "    " + string.Join(", ", Enum.GetValues<VerbosityLevel>().OrderBy(v => (int)v)));
+				help.HelpBuilder
+					.CustomizeSymbol(
+						GlobalVerbosityOption.Quiet,
+						"  -q");
+				help.HelpBuilder
+					.CustomizeSymbol(
+						GlobalVerbosityOption.Loud,
+						"  -v");
 			})
 		.AddMiddleware(VerbosityLevelMiddleware.Instance, MiddlewareOrder.Configuration)
 		.AddMiddleware(CommandTranscription.Instance);
