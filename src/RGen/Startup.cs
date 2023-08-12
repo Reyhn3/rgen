@@ -43,6 +43,7 @@ internal static class Startup
 						.ClearProviders()
 						.AddSerilog())
 					.UseSerilog((_, config) => config
+						.MinimumLevel.ControlledBy(LogHelper.Switch)
 						.WriteTo.Console(
 							outputTemplate: "{Level:u1} | {Message:lj}{NewLine}",
 							theme: LogHelper.IsNoColorSet ? ConsoleTheme.None : AnsiConsoleTheme.Literate,
