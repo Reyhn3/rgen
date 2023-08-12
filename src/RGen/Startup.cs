@@ -112,5 +112,5 @@ internal static class Startup
 						"  -v");
 			})
 		.AddMiddleware(VerbosityLevelMiddleware.Instance, MiddlewareOrder.Configuration)
-		.AddMiddleware(CommandTranscription.Instance);
+		.AddMiddleware(CommandTranscriber.Instance);
 }
