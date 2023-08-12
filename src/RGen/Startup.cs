@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using RGen.Application.Commanding.Explain;
 using RGen.Application.Commanding.Globals;
 using RGen.Application.Commanding.Integer;
+using RGen.Application.Commanding.Middlewares;
 using RGen.Application.Formatting;
 using RGen.Application.Writing;
 using RGen.Domain;
@@ -33,21 +34,6 @@ internal static class Startup
 {
 	public static Parser BuildParser() =>
 		BuildCommandLine()
-			.UseDefaults()
-			.UseHelp(help =>
-				{
-					help.HelpBuilder
-						.CustomizeLayout(_ =>
-							HelpBuilder.Default
-								.GetLayout()
-								.Skip(1)
-								.Prepend(_ =>
-									Splash.Render()));
-					help.HelpBuilder
-						.CustomizeSymbol(
-							GlobalVerbosityOption.Verbosity,
-							"--verbosity <level>" + Environment.NewLine + "    Quiet, Minimal, Normal, Detailed, Verbose");
-				})
 			.UseHost(
 				Host.CreateDefaultBuilder,
 				host => host
@@ -74,9 +60,8 @@ internal static class Startup
 								.Register<ConsoleWriterOptions>(o => new ConsoleWriter(o))
 								.Register<PlainTextFileWriterOptions>(o =>
 									new PlainTextFileWriter(sp.GetRequiredService<ILogger<PlainTextFileWriter>>(), o))))
-					.UseCommandHandler<GenerateIntegerCommand, GenerateIntegerHandler>()
-					.UseCommandHandler<ExplainCommand, ExplainHandler>())
-			.AddMiddleware(VerbosityLevelMiddleware.Instance, MiddlewareOrder.Configuration)
+					.UseCommandLine())
+			.ConfigureCommandLine() // IMPORTANT: This needs to be LAST (or it won't resolve services)
 			.Build();
 
 	private static CommandLineBuilder BuildCommandLine()
@@ -95,4 +80,27 @@ internal static class Startup
 
 		return new CommandLineBuilder(rootCommand);
 	}
+
+	public static IHostBuilder UseCommandLine(this IHostBuilder host) => host
+		.UseCommandHandler<GenerateIntegerCommand, GenerateIntegerHandler>()
+		.UseCommandHandler<ExplainCommand, ExplainHandler>();
+
+	public static CommandLineBuilder ConfigureCommandLine(this CommandLineBuilder builder) => builder
+		.UseDefaults()
+		.UseHelp(help =>
+			{
+				help.HelpBuilder
+					.CustomizeLayout(_ =>
+						HelpBuilder.Default
+							.GetLayout()
+							.Skip(1)
+							.Prepend(_ =>
+								Splash.Render()));
+				help.HelpBuilder
+					.CustomizeSymbol(
+						GlobalVerbosityOption.Verbosity,
+						"--verbosity <level>" + Environment.NewLine + "    " + string.Join(", ", Enum.GetValues<VerbosityLevel>().OrderBy(v => (int)v)));
+			})
+		.AddMiddleware(VerbosityLevelMiddleware.Instance, MiddlewareOrder.Configuration)
+		.AddMiddleware(CommandTranscription.Instance);
 }
