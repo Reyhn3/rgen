@@ -23,21 +23,6 @@ public static class LogHelper
 				_                       => throw new ArgumentOutOfRangeException(nameof(verbosityLevel), verbosityLevel, null)
 			};
 
-	//public static bool ShouldSkipLogging(LogLevel level) =>
-	//	!ShouldLog(level);
-
-	//public static bool ShouldLog(LogLevel level) =>
-	//	Switch.MinimumLevel switch
-	//		{
-	//			LogEventLevel.Fatal       => false,
-	//			LogEventLevel.Error       => level is LogLevel.Critical,
-	//			LogEventLevel.Warning     => level is LogLevel.Critical or LogLevel.Warning,
-	//			LogEventLevel.Information => level is LogLevel.Critical or LogLevel.Warning or LogLevel.Information,
-	//			LogEventLevel.Debug       => level is LogLevel.Critical or LogLevel.Warning or LogLevel.Information or LogLevel.Debug,
-	//			LogEventLevel.Verbose     => level is LogLevel.Critical or LogLevel.Warning or LogLevel.Information or LogLevel.Debug or LogLevel.Trace,
-	//			_                         => true
-	//		};
-
 	public static void PreLog(string color, string message)
 	{
 		if (IsNoColorSet)
@@ -66,19 +51,15 @@ public static class LogHelper
 	{
 		if (IsNoColorSet)
 		{
-			//if (ShouldLog(LogLevel.Debug))
 			if (Switch.MinimumLevel is LogEventLevel.Debug or LogEventLevel.Verbose)
 				Console.WriteLine(ex);
-			//else if (ShouldLog(LogLevel.Critical))
 			else if (Switch.MinimumLevel is LogEventLevel.Warning or LogEventLevel.Information)
 				Console.WriteLine($"    {ex.Message}");
 		}
 		else
 		{
-			//if (ShouldLog(LogLevel.Debug))
 			if (Switch.MinimumLevel is LogEventLevel.Debug or LogEventLevel.Verbose)
 				AnsiConsole.WriteException(ex, ExceptionFormats.ShortenTypes | ExceptionFormats.ShortenPaths);
-			//else if (ShouldLog(LogLevel.Critical))
 			else if (Switch.MinimumLevel is LogEventLevel.Warning or LogEventLevel.Information)
 				AnsiConsole.MarkupLine($"    [Red]{ex.Message}[/]");
 		}
