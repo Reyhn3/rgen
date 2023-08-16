@@ -15,6 +15,9 @@ internal static class Validate
 	{
 		foreach (var token in result.Tokens)
 		{
+			if (string.IsNullOrWhiteSpace(token.Value))
+				continue;
+
 			if (!int.TryParse(token.Value, out var value))
 				result.ErrorMessage = $"Token value '{token.Value}' could not be parsed as an int";
 

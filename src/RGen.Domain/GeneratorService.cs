@@ -17,9 +17,10 @@ public class GeneratorService : IGeneratorService
 		IEnumerable<IWriter> writers,
 		int numberOfElements,
 		int numberOfSets,
+		int? length,
 		CancellationToken cancellationToken = default)
 	{
-		var sets = generator.Generate(numberOfElements, numberOfSets);
+		var sets = generator.Generate(numberOfElements, numberOfSets, length);
 
 		var formatted = formatter.Format(sets);
 		if (formatted.IsEmpty)

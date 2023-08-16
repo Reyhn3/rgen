@@ -2,5 +2,5 @@
 
 public interface IGenerator
 {
-	IRandomValues Generate(int n, int o);
+	IRandomValues Generate(int n, int o, int? length);
 }

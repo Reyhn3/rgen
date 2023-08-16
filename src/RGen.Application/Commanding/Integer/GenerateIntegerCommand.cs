@@ -1,4 +1,5 @@
-﻿using System.CommandLine;
+﻿using System;
+using System.CommandLine;
 
 
 namespace RGen.Application.Commanding.Integer;
@@ -21,5 +22,12 @@ public class GenerateIntegerCommand : Command
 					() => 1,
 					"The number of sets to generate")
 				.InValidRangeOnly(1, ushort.MaxValue));
+
+		AddOption(
+			new Option<int?>(
+					"--length",
+					() => null,
+					"The length, in number of digits, of the generated number")
+				.InValidRangeOnly(1, (int)Math.Log10(int.MaxValue)));
 	}
 }
