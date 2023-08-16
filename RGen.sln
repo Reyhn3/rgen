@@ -9,11 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RGen.Application", "src\RGe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RGen.Domain", "src\RGen.Domain\RGen.Domain.csproj", "{062845EC-C16F-4568-87F0-DBEB25ACC80A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RGen.Infrastructure", "src\RGen.Infrastructure\RGen.Infrastructure.csproj", "{E8784228-E22D-4D06-B373-F45F524AB8C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RGen.Infrastructure", "src\RGen.Infrastructure\RGen.Infrastructure.csproj", "{E8784228-E22D-4D06-B373-F45F524AB8C5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{88520571-5D46-45F6-A75A-B24827507375}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RGen.Infrastructure.Tests", "tests\RGen.Infrastructure.Tests\RGen.Infrastructure.Tests.csproj", "{4E6E287C-00E3-40CF-8330-C3226E9A46BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RGen.Domain.Tests", "tests\RGen.Domain.Tests\RGen.Domain.Tests.csproj", "{40217B68-F7C0-4528-8063-9A28D76380AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,12 +43,17 @@ Global
 		{4E6E287C-00E3-40CF-8330-C3226E9A46BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E6E287C-00E3-40CF-8330-C3226E9A46BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E6E287C-00E3-40CF-8330-C3226E9A46BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40217B68-F7C0-4528-8063-9A28D76380AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40217B68-F7C0-4528-8063-9A28D76380AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40217B68-F7C0-4528-8063-9A28D76380AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40217B68-F7C0-4528-8063-9A28D76380AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4E6E287C-00E3-40CF-8330-C3226E9A46BC} = {88520571-5D46-45F6-A75A-B24827507375}
+		{40217B68-F7C0-4528-8063-9A28D76380AB} = {88520571-5D46-45F6-A75A-B24827507375}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FAD38701-2CD3-4493-8416-EA2FB2BE4241}

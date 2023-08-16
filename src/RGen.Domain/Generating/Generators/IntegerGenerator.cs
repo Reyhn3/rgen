@@ -8,25 +8,34 @@ namespace RGen.Domain.Generating.Generators;
 
 public class IntegerGenerator : IGenerator
 {
-	public IRandomValues Generate(int n, int o, int? length)
+	public IRandomValues Generate(int numberOfElements, int numberOfSets, int? lengthOfElement)
 	{
+		if (numberOfElements < 1)
+			throw new ArgumentOutOfRangeException(nameof(numberOfElements), numberOfElements, "The number of elements to generate must be 1 or greater");
+
+		if (numberOfSets < 1)
+			throw new ArgumentOutOfRangeException(nameof(numberOfSets), numberOfSets, "The number of sets to generate must be 1 or greater");
+
+		if (lengthOfElement is < 1)
+			throw new ArgumentOutOfRangeException(nameof(lengthOfElement), lengthOfElement, "The length of the generated element must be 1 or greater");
+
 		IEnumerable<IEnumerable<int>> values;
 
 		int? max = null;
 		int? min = null;
 
-		if (length.HasValue)
+		if (lengthOfElement.HasValue)
 		{
-			min = (int)Math.Pow(10, length.Value - 1);
-			max = (int)Math.Pow(10, length.Value) - 1;
+			min = (int)Math.Pow(10, lengthOfElement.Value - 1);
+			max = (int)Math.Pow(10, lengthOfElement.Value) - 1;
 		}
 
-		if (o > 1)
-			values = Set(n, o, min, max);
-		else if (n > 1)
+		if (numberOfSets > 1)
+			values = Set(numberOfElements, numberOfSets, min, max);
+		else if (numberOfElements > 1)
 			values = new[]
 				{
-					Multiple(n, min, max)
+					Multiple(numberOfElements, min, max)
 				};
 		else
 			values = new[]
