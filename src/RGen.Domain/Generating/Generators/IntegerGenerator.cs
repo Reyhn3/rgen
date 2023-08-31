@@ -20,8 +20,11 @@ public class IntegerGenerator : IGenerator
 		if (lengthOfElement is < 1 or > 19)
 			throw new ArgumentOutOfRangeException(nameof(lengthOfElement), lengthOfElement, "The length of the generated element must be 1 to 19");
 
+		if (min >= max)
+			throw new ArgumentOutOfRangeException(nameof(min), min, "The minimum value is greater than or equal to the maximum value");
+
 //TODO: This has to take the format (dec, hex) into consideration
-		var (minValue, maxValue) = DetermineMinAndMaxBasedOnLength(lengthOfElement);
+		var (minValue, maxValue) = DetermineMinAndMax(lengthOfElement, min, max);
 
 		// Check that min/max don't contradict lengthOfElement
 		if (min > minValue || maxValue < max)
@@ -67,16 +70,39 @@ public class IntegerGenerator : IGenerator
 	private static IEnumerable<IEnumerable<int>> Set(int n, int o, long? min, long? max) =>
 		Enumerable.Range(0, o).Select(_ => Multiple(n, min, max));
 
-	internal static (long? minValue, long? maxValue) DetermineMinAndMaxBasedOnLength(int? requestedLength)
+	internal static (long? minValue, long? maxValue) DetermineMinAndMax(int? lengthOfElement, long? min, long? max)
 	{
-		if (!requestedLength.HasValue)
+		if (lengthOfElement == null && min == null && max == null)
 			return (null, null);
 
-		if (requestedLength == 1)
-			return (0, 9);
+		if (min >= max)
+			throw new ArgumentOutOfRangeException(nameof(min), min, "The minimum value is greater than or equal to the maximum value");
 
-		var minValue = (long)Math.Pow(10, requestedLength.Value - 1);
-		var maxValue = (long)Math.Pow(10, requestedLength.Value) - 1;
+		if (!lengthOfElement.HasValue)
+			return (min, max);
+
+		int? requiredLengthForMin = min.HasValue ? MathUtils.CountNumberOfDecimalDigits(min.Value) : null;
+		int? requiredLengthForMax = max.HasValue ? MathUtils.CountNumberOfDecimalDigits(max.Value) : null;
+
+		// Verify that min/max doesn't conflict with the length
+		if (requiredLengthForMin > lengthOfElement)
+			throw new InvalidOperationException(
+				$"The specified maximum digit length {lengthOfElement} is less than the required length for the specified minimum value {requiredLengthForMin}");
+
+		if (requiredLengthForMax > lengthOfElement)
+			throw new InvalidOperationException(
+				$"The specified maximum digit length {lengthOfElement} is less than the required length for the specified maximum value {requiredLengthForMax}");
+
+		if (requiredLengthForMin < lengthOfElement)
+			throw new InvalidOperationException(
+				$"The specified maximum digit length {lengthOfElement} is less than the required length for the specified maximum value {requiredLengthForMin}");
+
+		if (requiredLengthForMax < lengthOfElement)
+			throw new InvalidOperationException(
+				$"The specified maximum digit length {lengthOfElement} is greater than the required length for the specified maximum value {requiredLengthForMax}");
+
+		var minValue = min ?? (lengthOfElement == 1 ? 0 : (long)Math.Pow(10, lengthOfElement.Value - 1));
+		var maxValue = max ?? (lengthOfElement == 1 ? 9 : (long)Math.Pow(10, lengthOfElement.Value) - 1);
 		return (minValue, maxValue);
 	}
 }

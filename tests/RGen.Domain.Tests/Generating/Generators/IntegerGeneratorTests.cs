@@ -48,14 +48,6 @@ public class IntegerGeneratorTests
 		result.ValueSets.First().First().ToString()!.Length.ShouldBe(numberOfDigits);
 	}
 
-	[Test]
-	public void DetermineMinAndMaxBasedOnLength_should_return_null_if_requested_length_is_null()
-	{
-		var (resultMin, resultMax) = IntegerGenerator.DetermineMinAndMaxBasedOnLength(null);
-		resultMin.ShouldBeNull();
-		resultMax.ShouldBeNull();
-	}
-
 	[TestCase(1, 0, 9)]
 	[TestCase(2, 10, 99)]
 	[TestCase(3, 100, 999)]
@@ -75,13 +67,117 @@ public class IntegerGeneratorTests
 	[TestCase(17, 10000000000000000, 99999999999999999)]
 	[TestCase(18, 100000000000000000, 999999999999999999)]
 	[TestCase(19, 1000000000000000000, long.MaxValue)]
-	public void DetermineMinAndMaxBasedOnLength_should_return_boundary_values_if_requested_length_is_not_null(int requested, long? expectedMin, long? expectedMax)
+	public void DetermineMinAndMax_should_return_boundary_values_if_requested_length_is_not_null(int requested, long? expectedMin, long? expectedMax)
 	{
-		var (resultMin, resultMax) = IntegerGenerator.DetermineMinAndMaxBasedOnLength(requested);
+		var (resultMin, resultMax) = IntegerGenerator.DetermineMinAndMax(requested, null, null);
 		resultMin.ShouldBe(expectedMin);
 		resultMax.ShouldBe(expectedMax);
 	}
 #endregion Length of element
+
+#region Clamping
+	[Test]
+	public void Generate_with_min_and_max_shall_throw_exception_if_min_is_greater_than_or_equal_to_max() =>
+		Should.Throw<ArgumentOutOfRangeException>(() =>
+			_sut.Generate(1, 1, null, 1, 1));
+
+	[Test(Description = "Restrict only the lower boundary")]
+	public void DetermineMinAndMax_shall_use_only_min_if_max_is_null()
+	{
+		var (minResult, maxResult) = IntegerGenerator.DetermineMinAndMax(null, 1, null);
+		minResult.ShouldBe(1);
+		maxResult.ShouldBeNull();
+	}
+
+	[Test(Description = "Restrict only the upper boundary")]
+	public void DetermineMinAndMax_shall_use_only_max_if_min_is_null()
+	{
+		var (minResult, maxResult) = IntegerGenerator.DetermineMinAndMax(null, null, 1);
+		minResult.ShouldBeNull();
+		maxResult.ShouldBe(1);
+	}
+
+	[Test(Description = "No restrictions on generated values")]
+	public void DetermineMinAndMax_shall_return_null_if_length_and_min_and_max_are_null()
+	{
+		var (minResult, maxResult) = IntegerGenerator.DetermineMinAndMax(null, null, null);
+		minResult.ShouldBeNull();
+		maxResult.ShouldBeNull();
+	}
+
+	[Test(Description = "Calculate the boundaries based on number of digits")]
+	public void DetermineMinAndMax_shall_return_length_based_boundaries_if_length_is_not_null_but_min_and_max_are_null()
+	{
+		var (minResult, maxResult) = IntegerGenerator.DetermineMinAndMax(1, null, null);
+		minResult.ShouldBe(0); // The smallest 1-digit number
+		maxResult.ShouldBe(9); // The largest 1-digit number
+	}
+
+	[Test(Description = "Length is set to one digit, making valid values 0-9, but min is set to 2 so use that value instead")]
+	public void DetermineMinAndMax_shall_return_min_if_length_is_not_null_but_min_is_also_not_null()
+	{
+		var (minResult, maxResult) = IntegerGenerator.DetermineMinAndMax(1, 2, null);
+		minResult.ShouldBe(2); // Not 0
+		maxResult.ShouldBe(9); // Because length is specified
+	}
+
+	[Test(Description = "Length is set to one digit, making valid values 0-9, but max is set to 2 so use that value instead")]
+	public void DetermineMinAndMax_shall_return_max_if_length_is_not_null_but_max_is_also_not_null()
+	{
+		var (minResult, maxResult) = IntegerGenerator.DetermineMinAndMax(1, null, 2);
+		minResult.ShouldBe(0); // Because length is specified
+		maxResult.ShouldBe(2); // Not 9
+	}
+
+	[Test(Description = "Length is two digits, making valid values 10-99, but min is set to < 10")]
+	public void DetermineMinAndMax_shall_throw_exception_if_length_is_specified_but_min_is_smaller() =>
+		Should.Throw<InvalidOperationException>(() =>
+			IntegerGenerator.DetermineMinAndMax(2, 9, null));
+
+	[Test(Description = "Length is two digits, making valid values 10-99, but min is set to > 99")]
+	public void DetermineMinAndMax_shall_throw_exception_if_length_is_specified_but_min_is_greater() =>
+		Should.Throw<InvalidOperationException>(() =>
+			IntegerGenerator.DetermineMinAndMax(2, 100, null));
+
+	[Test(Description = "Length is two digits, making valid values 10-99, but min is set to > 99")]
+	public void DetermineMinAndMax_shall_throw_exception_if_length_is_specified_but_max_is_greater() =>
+		Should.Throw<InvalidOperationException>(() =>
+			IntegerGenerator.DetermineMinAndMax(2, null, 100));
+
+	[Test(Description = "Length is two digits, making valid values 10-99, but min is set to < 10")]
+	public void DetermineMinAndMax_shall_throw_exception_if_length_is_specified_but_max_is_smaller() =>
+		Should.Throw<InvalidOperationException>(() =>
+			IntegerGenerator.DetermineMinAndMax(2, null, 9));
+
+	[TestCase(null, null, null, null, null)]
+	[TestCase(1, null, null, 0, 9)]
+	[TestCase(2, null, null, 10, 99)]
+	[TestCase(2, 50, null, 50, 99)]
+	[TestCase(2, null, 50, 10, 50)]
+	[TestCase(2, 50, 75, 50, 75)]
+	[TestCase(null, 127, null, 127, null, Description = "Only lower boundary")]
+	[TestCase(null, null, 255, null, 255, Description = "Only upper boundary")]
+	[TestCase(null, 127, 255, 127, 255, Description = "Lower and upper boundary")]
+	[TestCase(3, null, null, 100, 999, Description = "Only length")]
+	[TestCase(3, 127, null, 127, 999, Description = "Length with lower boundary")]
+	[TestCase(3, null, 255, 100, 255, Description = "Length with upper boundary")]
+	[TestCase(3, 127, 255, 127, 255, Description = "Length with lower and upper boundary")]
+	public void DetermineMinAndMax_cases_that_should_be_valid(int? length, long? min, long? max, long? expectedMin, long? expectedMax)
+	{
+		var (minResult, maxResult) = IntegerGenerator.DetermineMinAndMax(length, min, max);
+		minResult.ShouldBe(expectedMin);
+		maxResult.ShouldBe(expectedMax);
+	}
+
+	[TestCase(null, 1, 1)]
+	[TestCase(null, 2, 1)]
+	[TestCase(2, 9, null)]
+	[TestCase(2, null, 100)]
+	[TestCase(2, 9, 100)]
+	public void DetermineMinAndMax_cases_that_should_throw_exceptions(int? length, long? min, long? max) =>
+		Should.Throw<Exception>(() =>
+			IntegerGenerator.DetermineMinAndMax(length, min, max));
+#endregion Clamping
 
 	[Test]
 	public void Generate_single_value_in_single_set_should_generate_a_single_value_in_a_single_set()
@@ -118,16 +214,4 @@ public class IntegerGeneratorTests
 		resultSets.Length.ShouldBe(3);
 		resultSets.ShouldAllBe(s => s.Count() == 2);
 	}
-
-	[Test]
-	public void Generate_with_both_length_and_min_shall_throw_exception_if_min_has_more_digits_than_length() =>
-		Should.Throw<InvalidOperationException>(() => _sut.Generate(1, 1, 1, 10, A.Dummy<int>()));
-
-	[Test]
-	public void Generate_with_both_length_and_max_shall_throw_exception_if_max_has_more_digits_than_length() =>
-		Should.Throw<InvalidOperationException>(() => _sut.Generate(1, 1, 1, A.Dummy<int>(), 10));
-
-	[Test]
-	public void Generate_with_both_length_and_min_and_max_shall_throw_exception_if_min_or_max_has_more_digits_than_length() =>
-		Should.Throw<InvalidOperationException>(() => _sut.Generate(1, 1, 1, 10, 10));
 }
