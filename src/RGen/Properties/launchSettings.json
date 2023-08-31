@@ -4,14 +4,16 @@
       "commandName": "Project",
       "workingDirectory": "$(SolutionDir)",
 
-      //"commandLineArgs": "\"@rsp\\int-invalid-n.rsp\""
-      //"commandLineArgs": "\"@rsp\\int-invalid-set.rsp\""
+      "commandLineArgs": "\"@rsp\\int.rsp\""
+//      "commandLineArgs": "\"@rsp\\int-set.rsp\""
 
-      //"commandLineArgs": "\"@rsp\\int.rsp\""
-      "commandLineArgs": "\"@rsp\\int-set.rsp\""
+//      "commandLineArgs": "int --min 127 --max 255"
+      
+//      "commandLineArgs": "int 3 --set 2"
+//      "commandLineArgs": "int 3 --set 2 -o %TEMP%\\rgen\\output-0.txt"
 
-      //"commandLineArgs": "int 3 --set 2"
-      //"commandLineArgs": "int 3 --set 2 -o %TEMP%\\rgen\\output-0.txt"
+//      "commandLineArgs": "\"@rsp\\int-invalid-n.rsp\""
+//      "commandLineArgs": "\"@rsp\\int-invalid-set.rsp\""
     }
   }
 }

@@ -29,5 +29,17 @@ public class GenerateIntegerCommand : Command
 					() => null,
 					"The length, in number of digits, of the generated number")
 				.InValidRangeOnly(1, (int)Math.Log10(int.MaxValue)));
+
+		AddOption(
+			new Option<int?>(
+					"--min",
+					() => null,
+					"The minimum value to allow"));
+
+		AddOption(
+			new Option<int?>(
+					"--max",
+					() => null,
+					"The maximum value to allow"));
 	}
 }

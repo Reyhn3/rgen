@@ -41,6 +41,8 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 	public int N { get; set; }
 	public int Set { get; set; }
 	public int? Length { get; set; }
+	public int? Min { get; set; }
+	public int? Max { get; set; }
 
 	protected override async Task<ExitCode> InvokeCoreAsync(InvocationContext context, CancellationToken cancellationToken)
 	{
@@ -57,6 +59,8 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 			N,
 			Set,
 			Length,
+			Min,
+			Max,
 			cancellationToken);
 
 		return result.ToExitCode();
