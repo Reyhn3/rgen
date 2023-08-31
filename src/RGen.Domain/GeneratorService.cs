@@ -18,9 +18,11 @@ public class GeneratorService : IGeneratorService
 		int numberOfElements,
 		int numberOfSets,
 		int? length,
+		int? min,
+		int? max,
 		CancellationToken cancellationToken = default)
 	{
-		var sets = generator.Generate(numberOfElements, numberOfSets, length);
+		var sets = generator.Generate(numberOfElements, numberOfSets, length, min, max);
 
 		var formatted = formatter.Format(sets);
 		if (formatted.IsEmpty)
