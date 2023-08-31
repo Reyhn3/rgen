@@ -48,11 +48,16 @@ public class IntegerGenerator : IGenerator
 	private static long Single(long? min, long? max)
 	{
 //TODO: Refactor to support long
-		if (!(min.HasValue && max.HasValue))
-			return RandomNumberGenerator.GetInt32(int.MaxValue);
 
-//TODO: Refactor to support long
-		return (int)Math.Abs(Math.Floor(new Random().NextDouble() * (max.Value - min.Value + 1d) + (double)min));
+//TODO: Make boundaries inclusive
+		if (min.HasValue && max.HasValue)
+			return RandomNumberGenerator.GetInt32((int)min, (int)max);
+		if (!min.HasValue && max.HasValue)
+			return RandomNumberGenerator.GetInt32((int)max);
+		if (min.HasValue && !max.HasValue)
+			return RandomNumberGenerator.GetInt32((int)min, int.MaxValue);
+
+		return RandomNumberGenerator.GetInt32(int.MaxValue);
 	}
 
 	internal static (long? minValue, long? maxValue) DetermineMinAndMax(int? lengthOfElement, long? min, long? max)
