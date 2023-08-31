@@ -8,11 +8,14 @@ namespace RGen.Domain.Generating.Generators;
 
 public class IntegerGenerator : IGenerator
 {
+//TODO: Extract base class and move checks, Set, Multiple etc. up.
 	public IRandomValues Generate(int numberOfElements, int numberOfSets, int? lengthOfElement, int? min, int? max)
 	{
+//TODO: Consider limit the max number of elements (in each set)
 		if (numberOfElements < 1)
 			throw new ArgumentOutOfRangeException(nameof(numberOfElements), numberOfElements, "The number of elements to generate must be 1 or greater");
 
+//TODO: Consider limit the max number of sets
 		if (numberOfSets < 1)
 			throw new ArgumentOutOfRangeException(nameof(numberOfSets), numberOfSets, "The number of sets to generate must be 1 or greater");
 
@@ -32,29 +35,17 @@ public class IntegerGenerator : IGenerator
 				$"The parameters {nameof(min)} ({min}) and/or {nameof(max)} ({max}) have values with more digits than the parameter {nameof(lengthOfElement)} which is specified to limit results to contain {lengthOfElement} digits");
 
 //TODO: Refactor to support both positive and negative values
-//TODO: Refactor to support long
-		IEnumerable<IEnumerable<int>> values;
-
-		if (numberOfSets > 1)
-			values = Set(numberOfElements, numberOfSets, minValue, maxValue);
-		else if (numberOfElements > 1)
-			values = new[]
-				{
-					Multiple(numberOfElements, minValue, maxValue)
-				};
-		else
-			values = new[]
-				{
-					new[]
-						{
-							Single(minValue, maxValue)
-						}
-				};
-
-		return new RandomValues<int>(values);
+		var values = Set(numberOfElements, numberOfSets, minValue, maxValue);
+		return new RandomValues<long>(values);
 	}
 
-	private static int Single(long? min, long? max)
+	private static IEnumerable<IEnumerable<long>> Set(int n, int o, long? min, long? max) => Enumerable
+		.Range(0, o).Select(_ => Multiple(n, min, max));
+
+	private static IEnumerable<long> Multiple(int n, long? min, long? max) =>
+		Enumerable.Range(0, n).Select(_ => Single(min, max));
+
+	private static long Single(long? min, long? max)
 	{
 //TODO: Refactor to support long
 		if (!(min.HasValue && max.HasValue))
@@ -63,12 +54,6 @@ public class IntegerGenerator : IGenerator
 //TODO: Refactor to support long
 		return (int)Math.Abs(Math.Floor(new Random().NextDouble() * (max.Value - min.Value + 1d) + (double)min));
 	}
-
-	private static IEnumerable<int> Multiple(int n, long? min, long? max) =>
-		Enumerable.Range(0, n).Select(_ => Single(min, max));
-
-	private static IEnumerable<IEnumerable<int>> Set(int n, int o, long? min, long? max) =>
-		Enumerable.Range(0, o).Select(_ => Multiple(n, min, max));
 
 	internal static (long? minValue, long? maxValue) DetermineMinAndMax(int? lengthOfElement, long? min, long? max)
 	{
