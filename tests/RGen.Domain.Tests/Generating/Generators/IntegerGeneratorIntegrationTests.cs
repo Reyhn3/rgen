@@ -16,6 +16,8 @@ public class IntegerGeneratorIntegrationTests
 		_sut = new IntegerGenerator();
 	}
 
+//TODO: Add tests to assert a reasonable statistically distributed random confidence
+
 	[Test]
 	public void Generate_shall_produce_materialized_enumerable_values()
 	{

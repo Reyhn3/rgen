@@ -40,53 +40,43 @@ public class IntegerGenerator : IGenerator
 		return new RandomValues<long>(materialized);
 	}
 
-	private static IEnumerable<IEnumerable<long>> Set(int n, int o, long? min, long? max) => Enumerable
+	private static IEnumerable<IEnumerable<long>> Set(int n, int o, long min, long max) => Enumerable
 		.Range(0, o).Select(_ => Multiple(n, min, max));
 
 //TODO: #39: Consider doing this more efficient, by e.g. generating a bigger byte array and create numbers from subsets of it
-	private static IEnumerable<long> Multiple(int n, long? min, long? max) =>
+	private static IEnumerable<long> Multiple(int n, long min, long max) =>
 		Enumerable.Range(0, n).Select(_ => Single(min, max));
 
-	internal static long Single(long? min, long? max)
+	internal static long Single(long min, long max)
 	{
 //TODO: #38: Consider using Intel's rdrand instruction set (see https://github.com/JebteK/RdRand)
 //TODO: Make upper boundary inclusive
 
 		// Use simple generation if limited to Int32
-		if (max.HasValue && max <= int.MaxValue)
-			return min.HasValue
-				? RandomNumberGenerator.GetInt32((int)min, (int)max)
-				: RandomNumberGenerator.GetInt32((int)max);
+		if (max <= int.MaxValue)
+			return RandomNumberGenerator.GetInt32((int)min, (int)max);
 
-		if (min.HasValue || max.HasValue)
+		return GenerateInt64InRange(min, max);
+
+
+		long GenerateInt64InRange(long umin, long umax)
 		{
-			const int maxRetryCount = 10;
-			var retryCount = 0;
+			// Inspired by StackOverflow: https://stackoverflow.com/a/13095144/68955
 
-//TODO: Use a more scientific / mathematical approach to generate clamped values
-			while (retryCount++ <= maxRetryCount)
+			const int maxRetries = 10;
+			var retries = 0;
+			var range = (ulong)(umax - umin);
+			ulong proposed;
+
+			do
 			{
-				var proposed = GenerateLongFromRandomBytes();
+				if (retries++ > maxRetries)
+					throw new Exception("Retry count reached when generating clamped integer");
 
-				if (min.HasValue && proposed < min)
-					continue;
+				proposed = (ulong)BitConverter.ToInt64(RandomNumberGenerator.GetBytes(8));
+			} while (proposed > ulong.MaxValue - ((ulong.MaxValue % range) + 1) % range);
 
-				if (max.HasValue && proposed > max)
-					continue;
-
-				return proposed;
-			}
-
-			throw new Exception("Retry count reached when generating clamped integer");
-		}
-
-		return GenerateLongFromRandomBytes();
-
-		
-		long GenerateLongFromRandomBytes()
-		{
-			var bytes = RandomNumberGenerator.GetBytes(8);
-			return BitConverter.ToInt64(bytes);
+			return (long)(proposed % range) + umin;
 		}
 	}
 

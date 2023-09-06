@@ -182,16 +182,24 @@ public class IntegerGeneratorTests
 #region Generation
 	[Test]
 	public void Single_shall_generate_a_long_value() =>
-		IntegerGenerator.Single(null, null).ShouldBeOfType<long>();
-	
-	[Test]
-	public void Single_shall_generate_a_Int32_if_max_is_less_than_or_equal_to_Int32_MaxValue() =>
-		IntegerGenerator.Single(null, int.MaxValue).ShouldBeLessThanOrEqualTo(int.MaxValue);
+		IntegerGenerator.Single(long.MinValue, long.MaxValue).ShouldBeOfType<long>();
 
 	[Test]
-	public void Single_shall_not_retry_forever_if_the_clamped_value_is_out_of_range() =>
-		Should.Throw<Exception>(() => IntegerGenerator.Single(long.MaxValue - 1, null));
+	public void Single_shall_generate_a_Int32_if_max_is_less_than_or_equal_to_Int32_MaxValue() =>
+		IntegerGenerator.Single(long.MinValue, int.MaxValue).ShouldBeLessThanOrEqualTo(int.MaxValue);
 #endregion Generation
+
+#region Known edge cases
+	[Test]
+	public void Single_shall_handle_known_edge_case_with_min_and_max() =>
+		IntegerGenerator.Single(long.MinValue, long.MaxValue)
+			.ShouldNotBe(-9223372036854775808);
+
+	[Test]
+	public void Single_shall_handle_known_edge_case_with_sub_9() =>
+		IntegerGenerator.Single(0, 5)
+			.ShouldBeInRange(0, 5);
+#endregion Known edge cases
 
 	[Test]
 	public void Generate_single_value_in_single_set_should_generate_a_single_value_in_a_single_set()
