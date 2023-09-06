@@ -179,6 +179,20 @@ public class IntegerGeneratorTests
 			IntegerGenerator.DetermineMinAndMax(length, min, max));
 #endregion Clamping
 
+#region Generation
+	[Test]
+	public void Single_shall_generate_a_long_value() =>
+		IntegerGenerator.Single(null, null).ShouldBeOfType<long>();
+	
+	[Test]
+	public void Single_shall_generate_a_Int32_if_max_is_less_than_or_equal_to_Int32_MaxValue() =>
+		IntegerGenerator.Single(null, int.MaxValue).ShouldBeLessThanOrEqualTo(int.MaxValue);
+
+	[Test]
+	public void Single_shall_not_retry_forever_if_the_clamped_value_is_out_of_range() =>
+		Should.Throw<Exception>(() => IntegerGenerator.Single(long.MaxValue - 1, null));
+#endregion Generation
+
 	[Test]
 	public void Generate_single_value_in_single_set_should_generate_a_single_value_in_a_single_set()
 	{

@@ -45,11 +45,40 @@ public class IntegerGenerator : IGenerator
 	private static IEnumerable<long> Multiple(int n, long? min, long? max) =>
 		Enumerable.Range(0, n).Select(_ => Single(min, max));
 
-	private static long Single(long? min, long? max)
+	internal static long Single(long? min, long? max)
 	{
-//TODO: Refactor to support long
+//TODO: Make upper boundary inclusive
 
-//TODO: Make boundaries inclusive
+		// Use simple generation if limited to Int32
+		if (max.HasValue && max <= int.MaxValue)
+			return min.HasValue
+				? RandomNumberGenerator.GetInt32((int)min, (int)max)
+				: RandomNumberGenerator.GetInt32((int)max);
+
+		if (min.HasValue || max.HasValue)
+		{
+			const int maxRetryCount = 10;
+			var retryCount = 0;
+
+//TODO: Use a more scientific / mathematical approach to generate clamped values
+			while (retryCount++ <= maxRetryCount)
+			{
+				var proposed = GenerateLongFromRandomBytes();
+
+				if (min.HasValue && proposed < min)
+					continue;
+
+				if (max.HasValue && proposed > max)
+					continue;
+
+				return proposed;
+			}
+
+			throw new Exception("Retry count reached when generating clamped integer");
+		}
+
+		return GenerateLongFromRandomBytes();
+
 		if (min.HasValue && max.HasValue)
 			return RandomNumberGenerator.GetInt32((int)min, (int)max);
 		if (!min.HasValue && max.HasValue)
@@ -58,6 +87,13 @@ public class IntegerGenerator : IGenerator
 			return RandomNumberGenerator.GetInt32((int)min, int.MaxValue);
 
 		return RandomNumberGenerator.GetInt32(int.MaxValue);
+
+
+		long GenerateLongFromRandomBytes()
+		{
+			var bytes = RandomNumberGenerator.GetBytes(8);
+			return BitConverter.ToInt64(bytes);
+		}
 	}
 
 	internal static (long? minValue, long? maxValue) DetermineMinAndMax(int? lengthOfElement, long? min, long? max)
