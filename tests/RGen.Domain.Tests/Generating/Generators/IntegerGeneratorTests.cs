@@ -67,7 +67,7 @@ public class IntegerGeneratorTests
 	[TestCase(17, 10000000000000000, 99999999999999999)]
 	[TestCase(18, 100000000000000000, 999999999999999999)]
 	[TestCase(19, 1000000000000000000, long.MaxValue)]
-	public void DetermineMinAndMax_should_return_boundary_values_if_requested_length_is_not_null(int requested, long? expectedMin, long? expectedMax)
+	public void DetermineMinAndMax_should_return_boundary_values_if_requested_length_is_not_null(int requested, long expectedMin, long expectedMax)
 	{
 		var (resultMin, resultMax) = IntegerGenerator.DetermineMinAndMax(requested, null, null);
 		resultMin.ShouldBe(expectedMin);
@@ -86,14 +86,14 @@ public class IntegerGeneratorTests
 	{
 		var (minResult, maxResult) = IntegerGenerator.DetermineMinAndMax(null, 1, null);
 		minResult.ShouldBe(1);
-		maxResult.ShouldBeNull();
+		maxResult.ShouldBe(long.MaxValue);
 	}
 
 	[Test(Description = "Restrict only the upper boundary")]
 	public void DetermineMinAndMax_shall_use_only_max_if_min_is_null()
 	{
 		var (minResult, maxResult) = IntegerGenerator.DetermineMinAndMax(null, null, 1);
-		minResult.ShouldBeNull();
+		minResult.ShouldBe(long.MinValue);
 		maxResult.ShouldBe(1);
 	}
 
@@ -101,8 +101,8 @@ public class IntegerGeneratorTests
 	public void DetermineMinAndMax_shall_return_null_if_length_and_min_and_max_are_null()
 	{
 		var (minResult, maxResult) = IntegerGenerator.DetermineMinAndMax(null, null, null);
-		minResult.ShouldBeNull();
-		maxResult.ShouldBeNull();
+		minResult.ShouldBe(long.MinValue);
+		maxResult.ShouldBe(long.MaxValue);
 	}
 
 	[Test(Description = "Calculate the boundaries based on number of digits")]
@@ -149,20 +149,20 @@ public class IntegerGeneratorTests
 		Should.Throw<InvalidOperationException>(() =>
 			IntegerGenerator.DetermineMinAndMax(2, null, 9));
 
-	[TestCase(null, null, null, null, null)]
+	[TestCase(null, null, null, long.MinValue, long.MaxValue)]
 	[TestCase(1, null, null, 0, 9)]
 	[TestCase(2, null, null, 10, 99)]
 	[TestCase(2, 50, null, 50, 99)]
 	[TestCase(2, null, 50, 10, 50)]
 	[TestCase(2, 50, 75, 50, 75)]
-	[TestCase(null, 127, null, 127, null, Description = "Only lower boundary")]
-	[TestCase(null, null, 255, null, 255, Description = "Only upper boundary")]
+	[TestCase(null, 127, null, 127, long.MaxValue, Description = "Only lower boundary")]
+	[TestCase(null, null, 255, long.MinValue, 255, Description = "Only upper boundary")]
 	[TestCase(null, 127, 255, 127, 255, Description = "Lower and upper boundary")]
 	[TestCase(3, null, null, 100, 999, Description = "Only length")]
 	[TestCase(3, 127, null, 127, 999, Description = "Length with lower boundary")]
 	[TestCase(3, null, 255, 100, 255, Description = "Length with upper boundary")]
 	[TestCase(3, 127, 255, 127, 255, Description = "Length with lower and upper boundary")]
-	public void DetermineMinAndMax_cases_that_should_be_valid(int? length, long? min, long? max, long? expectedMin, long? expectedMax)
+	public void DetermineMinAndMax_cases_that_should_be_valid(int? length, long? min, long? max, long expectedMin, long expectedMax)
 	{
 		var (minResult, maxResult) = IntegerGenerator.DetermineMinAndMax(length, min, max);
 		minResult.ShouldBe(expectedMin);

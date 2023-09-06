@@ -82,16 +82,7 @@ public class IntegerGenerator : IGenerator
 
 		return GenerateLongFromRandomBytes();
 
-		if (min.HasValue && max.HasValue)
-			return RandomNumberGenerator.GetInt32((int)min, (int)max);
-		if (!min.HasValue && max.HasValue)
-			return RandomNumberGenerator.GetInt32((int)max);
-		if (min.HasValue && !max.HasValue)
-			return RandomNumberGenerator.GetInt32((int)min, int.MaxValue);
-
-		return RandomNumberGenerator.GetInt32(int.MaxValue);
-
-
+		
 		long GenerateLongFromRandomBytes()
 		{
 			var bytes = RandomNumberGenerator.GetBytes(8);
@@ -99,16 +90,17 @@ public class IntegerGenerator : IGenerator
 		}
 	}
 
-	internal static (long? minValue, long? maxValue) DetermineMinAndMax(int? lengthOfElement, long? min, long? max)
+	internal static (long minValue, long maxValue) DetermineMinAndMax(int? lengthOfElement, long? min, long? max)
 	{
+//TODO: #34: Refactor to support both positive and negative values
 		if (lengthOfElement == null && min == null && max == null)
-			return (null, null);
+			return (long.MinValue, long.MaxValue);
 
 		if (min >= max)
 			throw new ArgumentOutOfRangeException(nameof(min), min, "The minimum value is greater than or equal to the maximum value");
 
 		if (!lengthOfElement.HasValue)
-			return (min, max);
+			return (min ?? long.MinValue, max ?? long.MaxValue);
 
 		int? requiredLengthForMin = min.HasValue ? MathUtils.CountNumberOfDecimalDigits(min.Value) : null;
 		int? requiredLengthForMax = max.HasValue ? MathUtils.CountNumberOfDecimalDigits(max.Value) : null;
