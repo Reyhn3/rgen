@@ -17,7 +17,17 @@ public class IntegerGeneratorIntegrationTests
 	}
 
 	[Test]
-	public void IntegerGenerator_shall_generate_a_single_value_in_a_single_set()
+	public void Generate_shall_produce_materialized_enumerable_values()
+	{
+		var result = _sut.Generate(1, 1, null, null, null);
+
+		var first = result.ValueSets.Single().Single();
+		var second = result.ValueSets.Single().Single();
+		first.ShouldBe(second);
+	}
+
+	[Test]
+	public void Generate_shall_generate_a_single_value_in_a_single_set()
 	{
 		var result = _sut.Generate(1, 1, null, null, null);
 		GeneratorUtils.PrintSets(result);
@@ -29,7 +39,7 @@ public class IntegerGeneratorIntegrationTests
 	}
 
 	[Test]
-	public void IntegerGenerator_shall_generate_a_single_value_in_every_set()
+	public void Generate_shall_generate_a_single_value_in_every_set()
 	{
 		var result = _sut.Generate(1, 2, null, null, null);
 		GeneratorUtils.PrintSets(result);
@@ -43,7 +53,7 @@ public class IntegerGeneratorIntegrationTests
 	}
 
 	[Test]
-	public void IntegerGenerator_shall_generate_many_values_in_a_single_set()
+	public void Generate_shall_generate_many_values_in_a_single_set()
 	{
 		var result = _sut.Generate(100, 1, null, null, null);
 		GeneratorUtils.PrintSets(result);
@@ -55,7 +65,7 @@ public class IntegerGeneratorIntegrationTests
 	}
 
 	[Test]
-	public void IntegerGenerator_shall_generate_many_values_in_many_sets()
+	public void Generate_shall_generate_many_values_in_many_sets()
 	{
 		var result = _sut.Generate(100, 100, null, null, null);
 		GeneratorUtils.PrintSets(result);

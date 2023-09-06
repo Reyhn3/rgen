@@ -26,7 +26,7 @@ public class IntegerGenerator : IGenerator
 		if (min >= max)
 			throw new ArgumentOutOfRangeException(nameof(min), min, "The minimum value is greater than or equal to the maximum value");
 
-//TODO: This has to take the format (dec, hex) into consideration
+//TODO: #19: This has to take the format (dec, hex) into consideration
 		var (minValue, maxValue) = DetermineMinAndMax(lengthOfElement, min, max);
 
 		// Check that min/max don't contradict lengthOfElement
@@ -34,19 +34,22 @@ public class IntegerGenerator : IGenerator
 			throw new InvalidOperationException(
 				$"The parameters {nameof(min)} ({min}) and/or {nameof(max)} ({max}) have values with more digits than the parameter {nameof(lengthOfElement)} which is specified to limit results to contain {lengthOfElement} digits");
 
-//TODO: Refactor to support both positive and negative values
+//TODO: #34: Refactor to support both positive and negative values
 		var values = Set(numberOfElements, numberOfSets, minValue, maxValue);
-		return new RandomValues<long>(values);
+		var materialized = values.Select(s => s.ToArray()).ToArray();
+		return new RandomValues<long>(materialized);
 	}
 
 	private static IEnumerable<IEnumerable<long>> Set(int n, int o, long? min, long? max) => Enumerable
 		.Range(0, o).Select(_ => Multiple(n, min, max));
 
+//TODO: #39: Consider doing this more efficient, by e.g. generating a bigger byte array and create numbers from subsets of it
 	private static IEnumerable<long> Multiple(int n, long? min, long? max) =>
 		Enumerable.Range(0, n).Select(_ => Single(min, max));
 
 	internal static long Single(long? min, long? max)
 	{
+//TODO: #38: Consider using Intel's rdrand instruction set (see https://github.com/JebteK/RdRand)
 //TODO: Make upper boundary inclusive
 
 		// Use simple generation if limited to Int32
