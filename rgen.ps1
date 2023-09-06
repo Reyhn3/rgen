@@ -1,0 +1,1 @@
+& .\src\RGen\bin\Debug\net7.0\rgen.exe $args
