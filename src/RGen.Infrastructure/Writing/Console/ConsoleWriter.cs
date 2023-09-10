@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using RGen.Domain;
-using RGen.Domain.Formatting;
+using RGen.Domain.Rendering;
 using RGen.Domain.Writing;
 using RGen.Infrastructure.Logging;
 using StdOut = System.Console;
@@ -18,12 +18,12 @@ public class ConsoleWriter : IWriter
 		_options = options;
 	}
 
-	public Task<IResult> WriteAsync(FormatContext context, CancellationToken cancellationToken)
+	public Task<IResult> WriteAsync(RenderContext context, CancellationToken cancellationToken)
 	{
 		if (LogHelper.IsQuiet)
 			return Task.FromResult(Result.OK);
 
-		StdOut.WriteLine(context.Formatted);
+		StdOut.WriteLine(context.Rendered);
 		return Task.FromResult(Result.OK);
 	}
 }

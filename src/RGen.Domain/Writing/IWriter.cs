@@ -1,11 +1,11 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using RGen.Domain.Formatting;
+using RGen.Domain.Rendering;
 
 
 namespace RGen.Domain.Writing;
 
 public interface IWriter
 {
-	Task<IResult> WriteAsync(FormatContext context, CancellationToken cancellationToken);
+	Task<IResult> WriteAsync(RenderContext context, CancellationToken cancellationToken);
 }

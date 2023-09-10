@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using RGen.Domain.Formatting;
 using RGen.Domain.Generating;
+using RGen.Domain.Rendering;
 using RGen.Infrastructure.Logging;
 
 
-namespace RGen.Infrastructure.Formatting.Console;
+namespace RGen.Infrastructure.Rendering.Console;
 
-public class ConsoleFormatter : IFormatter
+
+public class ConsoleRenderer : IRenderer
 {
 	private const string NullElement = "<null>";
 	private const char BeginArray = '[';
@@ -19,15 +20,15 @@ public class ConsoleFormatter : IFormatter
 
 	private readonly bool _isColoringDisabled;
 
-	public ConsoleFormatter(ConsoleFormatterOptions options)
+	public ConsoleRenderer(ConsoleRendererOptions options)
 	{
 		_isColoringDisabled = options.IsColoringDisabled || LogHelper.IsNoColorSet;
 	}
 
-	public FormatContext Format(IRandomValues randomValues)
+	public RenderContext Render(IRandomValues randomValues)
 	{
 		if (randomValues?.ValueSets == null!)
-			return FormatContext.Empty;
+			return RenderContext.Empty;
 
 		var array = randomValues.ValueSets
 			.Where(s => s != null!)
@@ -35,13 +36,13 @@ public class ConsoleFormatter : IFormatter
 			.Where(s => s.Any())
 			.ToArray();
 		if (!array.Any())
-			return FormatContext.Empty;
+			return RenderContext.Empty;
 
 		var isMultiSet = array.Length > 1;
 		var isMultiElement = array.First().Length > 1;
 
 		var rawStringBuilder = new StringBuilder();
-		var formattedStringBuilder = new StringBuilder();
+		var renderedStringBuilder = new StringBuilder();
 
 		for (var i = 0; i < array.Length; i++)
 		{
@@ -52,37 +53,37 @@ public class ConsoleFormatter : IFormatter
 			if (isMultiSet && isMultiElement)
 			{
 				rawStringBuilder.Append(BeginArray);
-				formattedStringBuilder.Append(BeginArray);
+				renderedStringBuilder.Append(BeginArray);
 			}
 
 			for (var j = 0; j < set.Length; j++)
 			{
 				var element = set[j];
-				var formatted = FormatElement(element, _isColoringDisabled);
+				var rendered = RenderElement(element, _isColoringDisabled);
 				rawStringBuilder.Append(element);
-				formattedStringBuilder.Append(formatted);
+				renderedStringBuilder.Append(rendered);
 
 				if (j < set.Length - 1)
 				{
 					rawStringBuilder.Append(isMultiSet ? ElementSeparator : SetSeparator);
-					formattedStringBuilder.Append(isMultiSet ? ElementSeparator : SetSeparator);
+					renderedStringBuilder.Append(isMultiSet ? ElementSeparator : SetSeparator);
 				}
 			}
 
 			if (isMultiSet && isMultiElement)
 			{
 				rawStringBuilder.Append(EndArray);
-				formattedStringBuilder.Append(EndArray);
+				renderedStringBuilder.Append(EndArray);
 			}
 
 			if (i < array.Length - 1)
 			{
 				rawStringBuilder.Append(SetSeparator);
-				formattedStringBuilder.Append(SetSeparator);
+				renderedStringBuilder.Append(SetSeparator);
 			}
 		}
 
-		return new FormatContext(rawStringBuilder.ToString(), formattedStringBuilder.ToString());
+		return new RenderContext(rawStringBuilder.ToString(), renderedStringBuilder.ToString());
 	}
 
 	internal static bool IsValidElement<T>(T? element)
@@ -96,7 +97,7 @@ public class ConsoleFormatter : IFormatter
 		return true;
 	}
 
-	internal static string FormatElement<T>(T element, bool isColoringDisabled) =>
+	internal static string RenderElement<T>(T element, bool isColoringDisabled) =>
 		isColoringDisabled
 			? element?.ToString() ?? NullElement
 			: $"\x1b[1;32m{element}\x1b[0m";

@@ -4,13 +4,13 @@ using System.CommandLine.Invocation;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using RGen.Application.Formatting;
+using RGen.Application.Rendering;
 using RGen.Application.Writing;
 using RGen.Domain;
 using RGen.Domain.Generating;
 using RGen.Domain.Generating.Generators;
 using RGen.Domain.Writing;
-using RGen.Infrastructure.Formatting.Console;
+using RGen.Infrastructure.Rendering.Console;
 using RGen.Infrastructure.Writing.Console;
 using RGen.Infrastructure.Writing.TextFile;
 
@@ -21,20 +21,20 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 {
 	private readonly IGeneratorService _generatorService;
 	private readonly IGenerator _generator;
-	private readonly IFormatterFactory _formatterFactory;
+	private readonly IRendererFactory _rendererFactory;
 	private readonly IWriterFactory _writerFactory;
 
 	public GenerateIntegerHandler(
 		ILogger<GenerateIntegerHandler> logger,
 		IGeneratorService generatorService,
 		IntegerGenerator generator,
-		IFormatterFactory formatterFactory,
+		IRendererFactory rendererFactory,
 		IWriterFactory writerFactory)
 		: base(logger)
 	{
 		_generatorService = generatorService ?? throw new ArgumentNullException(nameof(generatorService));
 		_generator = generator ?? throw new ArgumentNullException(nameof(generator));
-		_formatterFactory = formatterFactory ?? throw new ArgumentNullException(nameof(formatterFactory));
+		_rendererFactory = rendererFactory ?? throw new ArgumentNullException(nameof(rendererFactory));
 		_writerFactory = writerFactory ?? throw new ArgumentNullException(nameof(writerFactory));
 	}
 
@@ -50,12 +50,12 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 //TODO: #12: If more than x number of total elements, display a progress bar
 //TODO: #11: If more than x number of total elements, run in parallel
 
-		var formatter = _formatterFactory.Create(new ConsoleFormatterOptions(NoColor));
+		var renderer = _rendererFactory.Create(new ConsoleRendererOptions(NoColor));
 		var writers = CreateWriters();
 
 		var result = await _generatorService.GenerateAsync(
 			_generator,
-			formatter,
+			renderer,
 			writers,
 			N,
 			Set,

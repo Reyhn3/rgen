@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using RGen.Domain;
-using RGen.Domain.Formatting;
+using RGen.Domain.Rendering;
 using RGen.Domain.Writing;
 using RGen.Infrastructure.Logging;
 using StdOut = System.Console;
@@ -25,7 +25,7 @@ public class PlainTextFileWriter : IWriter
 		_options = options;
 	}
 
-	public async Task<IResult> WriteAsync(FormatContext context, CancellationToken cancellationToken)
+	public async Task<IResult> WriteAsync(RenderContext context, CancellationToken cancellationToken)
 	{
 		if (!TryGetOrCreateFileName(_options.FileName, out var filename))
 			return Result.Failure(ResultCode.OutputFilePathError);

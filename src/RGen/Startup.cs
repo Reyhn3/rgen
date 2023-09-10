@@ -13,13 +13,13 @@ using RGen.Application.Commanding.Explain;
 using RGen.Application.Commanding.Globals;
 using RGen.Application.Commanding.Integer;
 using RGen.Application.Commanding.Middlewares;
-using RGen.Application.Formatting;
+using RGen.Application.Rendering;
 using RGen.Application.Writing;
 using RGen.Domain;
 using RGen.Domain.Generating.Generators;
 using RGen.Infrastructure;
-using RGen.Infrastructure.Formatting.Console;
 using RGen.Infrastructure.Logging;
+using RGen.Infrastructure.Rendering.Console;
 using RGen.Infrastructure.Writing.Console;
 using RGen.Infrastructure.Writing.TextFile;
 using Serilog;
@@ -54,8 +54,8 @@ internal static class Startup
 						.AddSingleton<IGeneratorService, GeneratorService>()
 						.AddSingleton<IntegerGenerator>()
 						.AddSingleton(_ =>
-							new FormatterFactory()
-								.Register<ConsoleFormatterOptions>(o => new ConsoleFormatter(o)))
+							new RendererFactory()
+								.Register<ConsoleRendererOptions>(o => new ConsoleRenderer(o)))
 						.AddSingleton(sp =>
 							new WriterFactory()
 								.Register<ConsoleWriterOptions>(o => new ConsoleWriter(o))
