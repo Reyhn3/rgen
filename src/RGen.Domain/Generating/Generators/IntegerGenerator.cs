@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 
 namespace RGen.Domain.Generating.Generators;
 
+
 public class IntegerGenerator : IGenerator
 {
 //TODO: Extract base class and move checks, Set, Multiple etc. up.
@@ -74,7 +75,7 @@ public class IntegerGenerator : IGenerator
 					throw new Exception("Retry count reached when generating clamped integer");
 
 				proposed = (ulong)BitConverter.ToInt64(RandomNumberGenerator.GetBytes(8));
-			} while (proposed > ulong.MaxValue - ((ulong.MaxValue % range) + 1) % range);
+			} while (proposed > ulong.MaxValue - (ulong.MaxValue % range + 1) % range);
 
 			return (long)(proposed % range) + umin;
 		}

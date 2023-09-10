@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using RGen.Domain.Formatting;
 using RGen.Domain.Generating;
+using RGen.Domain.Generating.Generators;
 using RGen.Domain.Writing;
 
 
@@ -20,9 +21,10 @@ public class GeneratorService : IGeneratorService
 		int? length,
 		int? min,
 		int? max,
+		IntegerFormat format,
 		CancellationToken cancellationToken = default)
 	{
-		var sets = generator.Generate(numberOfElements, numberOfSets, length, min, max);
+		var sets = generator.Generate(numberOfElements, numberOfSets, length, min, max, format);
 
 		var formatted = formatter.Format(sets);
 		if (formatted.IsEmpty)

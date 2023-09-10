@@ -43,6 +43,7 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 	public int? Length { get; set; }
 	public int? Min { get; set; }
 	public int? Max { get; set; }
+	public IntegerFormat Format { get; set; }
 
 	protected override async Task<ExitCode> InvokeCoreAsync(InvocationContext context, CancellationToken cancellationToken)
 	{
@@ -61,6 +62,7 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 			Length,
 			Min,
 			Max,
+			Format,
 			cancellationToken);
 
 		return result.ToExitCode();

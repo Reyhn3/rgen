@@ -1,5 +1,6 @@
 ﻿using System;
 using System.CommandLine;
+using RGen.Domain.Generating.Generators;
 
 
 namespace RGen.Application.Commanding.Integer;
@@ -41,5 +42,12 @@ public class GenerateIntegerCommand : Command
 					"--max",
 					() => null,
 					"The maximum value to allow"));
+
+//TODO: Maybe this is not "format" but "base" (as in 2, 8, 10, 16), and format should be e.g. prefixed/capitals etc.? 
+		AddOption(
+			new Option<IntegerFormat>(
+					"--format",
+					() => IntegerFormat.Decimal,
+					"The representation to use"));
 	}
 }
