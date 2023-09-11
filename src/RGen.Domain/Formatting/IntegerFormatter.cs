@@ -26,7 +26,7 @@ public class IntegerFormatter : IFormatter
 			{
 				IntegerBase.Decimal     => element.ToString("D"),
 				IntegerBase.Hexadecimal => element.ToString("x"),
-				IntegerBase.Binary      => Convert.ToString(element, 2).PadLeft((int)(Math.Ceiling(Math.Log2(element) / 8) * 8), '0'),
+				IntegerBase.Binary      => Convert.ToString(element, 2).PadLeft((int)(Math.Max(1, Math.Ceiling(Math.Log2(element) / 8)) * 8), '0'),
 				_                       => element.ToString()
 			};
 }
