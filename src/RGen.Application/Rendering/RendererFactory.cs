@@ -5,6 +5,7 @@ using RGen.Domain.Rendering;
 
 namespace RGen.Application.Rendering;
 
+
 public class RendererFactory : IRendererFactory
 {
 	private readonly Dictionary<Type, Func<IRendererOptions, IRenderer>> _map = new();

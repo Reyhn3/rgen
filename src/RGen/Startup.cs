@@ -13,9 +13,11 @@ using RGen.Application.Commanding.Explain;
 using RGen.Application.Commanding.Globals;
 using RGen.Application.Commanding.Integer;
 using RGen.Application.Commanding.Middlewares;
+using RGen.Application.Formatting;
 using RGen.Application.Rendering;
 using RGen.Application.Writing;
 using RGen.Domain;
+using RGen.Domain.Formatting;
 using RGen.Domain.Generating.Generators;
 using RGen.Infrastructure;
 using RGen.Infrastructure.Logging;
@@ -51,6 +53,7 @@ internal static class Startup
 						.Filter.ByExcluding(e => e.Level == LogEventLevel.Fatal)
 						.Filter.ByIncludingOnly(Matching.FromSource(typeof(Startup).Namespace!)))
 					.ConfigureServices(services => services
+//TODO: #43: Move to module in .Application
 						.AddSingleton<IGeneratorService, GeneratorService>()
 						.AddSingleton<IntegerGenerator>()
 						.AddSingleton(_ =>
@@ -65,6 +68,7 @@ internal static class Startup
 			.ConfigureCommandLine() // IMPORTANT: This needs to be LAST (or it won't resolve services)
 			.Build();
 
+//TODO: #43: Move everything below to CLI-class
 	private static CommandLineBuilder BuildCommandLine()
 	{
 		var rootCommand = new RootCommand(ConsoleHelper.GetProductName(typeof(Program).Assembly))

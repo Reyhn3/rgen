@@ -3,6 +3,7 @@
 
 namespace RGen.Application.Rendering;
 
+
 public interface IRendererFactory
 {
 	IRenderer Create<TOptions>(TOptions options)

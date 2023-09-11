@@ -37,6 +37,7 @@ public class IntegerGenerator : IGenerator
 
 //TODO: #34: Refactor to support both positive and negative values
 		var values = Set(numberOfElements, numberOfSets, minValue, maxValue);
+//TODO: #44: Materialize or not? Investigate if IEnumerable can be used all the way to the end without re-running the generator
 		var materialized = values.Select(s => s.ToArray()).ToArray();
 		return new RandomValues<long>(materialized);
 	}

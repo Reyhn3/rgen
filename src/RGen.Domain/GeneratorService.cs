@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using RGen.Domain.Formatting;
 using RGen.Domain.Generating;
-using RGen.Domain.Generating.Generators;
 using RGen.Domain.Rendering;
 using RGen.Domain.Writing;
 
@@ -14,6 +14,7 @@ public class GeneratorService : IGeneratorService
 {
 	public async Task<IResult> GenerateAsync(
 		IGenerator generator,
+		IFormatter formatter,
 		IRenderer renderer,
 		IEnumerable<IWriter> writers,
 		int numberOfElements,
@@ -21,14 +22,11 @@ public class GeneratorService : IGeneratorService
 		int? length,
 		int? min,
 		int? max,
-		IntegerFormat format,
 		CancellationToken cancellationToken = default)
 	{
 		var sets = generator.Generate(numberOfElements, numberOfSets, length, min, max);
-		
-//TODO: Format generated values
-
-		var rendered = renderer.Render(sets);
+		var formatted = formatter.Format(sets);
+		var rendered = renderer.Render(formatted);
 		if (rendered.IsEmpty)
 			return Result.Failure(ResultCode.NoDataGenerated);
 
