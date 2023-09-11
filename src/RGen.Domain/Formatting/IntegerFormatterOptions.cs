@@ -6,10 +6,10 @@ namespace RGen.Domain.Formatting;
 
 public class IntegerFormatterOptions : IFormatterOptions
 {
-	public IntegerFormatterOptions(IntegerFormat format)
+	public IntegerFormatterOptions(IntegerBase @base)
 	{
-		Format = format;
+		Base = @base;
 	}
 
-	public IntegerFormat Format { get; }
+	public IntegerBase Base { get; }
 }

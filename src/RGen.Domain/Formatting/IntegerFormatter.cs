@@ -18,14 +18,15 @@ public class IntegerFormatter : IFormatter
 
 //TODO: This shouldn't have to create a new IRV and box types etc...
 	public IRandomValues<string> Format(IRandomValues randomValues) =>
-		new RandomValues<string>(randomValues.ValueSets.Select(s => s.Select(e => FormatElement(_options.Format, (long)e))));
+		new RandomValues<string>(randomValues.ValueSets.Select(s => s.Select(e => FormatElement(_options.Base, (long)e))));
 
-	internal static string FormatElement(IntegerFormat format, long element) =>
+//TODO: Optimize with string.Create() and spans
+	internal static string FormatElement(IntegerBase format, long element) =>
 		format switch
 			{
-				IntegerFormat.Decimal     => element.ToString("D"),
-				IntegerFormat.Hexadecimal => element.ToString("x"),
-				IntegerFormat.Binary      => Convert.ToString(element, 2),
-				_                         => element.ToString()
+				IntegerBase.Decimal     => element.ToString("D"),
+				IntegerBase.Hexadecimal => element.ToString("x"),
+				IntegerBase.Binary      => Convert.ToString(element, 2).PadLeft((int)(Math.Ceiling(Math.Log2(element) / 8) * 8), '0'),
+				_                       => element.ToString()
 			};
 }

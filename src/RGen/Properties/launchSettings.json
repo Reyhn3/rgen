@@ -4,7 +4,7 @@
       "commandName": "Project",
       "workingDirectory": "$(SolutionDir)",
 
-      "commandLineArgs": "\"@rsp\\int.rsp\""
+      "commandLineArgs": "\"@rsp\\int.rsp\" --base bin"
 //      "commandLineArgs": "\"@rsp\\int-set.rsp\""
 
 //      "commandLineArgs": "int --min 127 --max 255"

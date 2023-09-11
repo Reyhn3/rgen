@@ -5,6 +5,7 @@ using RGen.Domain.Generating.Generators;
 
 namespace RGen.Application.Commanding.Integer;
 
+
 public class GenerateIntegerCommand : Command
 {
 	public GenerateIntegerCommand()
@@ -33,21 +34,22 @@ public class GenerateIntegerCommand : Command
 
 		AddOption(
 			new Option<int?>(
-					"--min",
-					() => null,
-					"The minimum value to allow"));
+				"--min",
+				() => null,
+				"The minimum value to allow"));
 
 		AddOption(
 			new Option<int?>(
-					"--max",
-					() => null,
-					"The maximum value to allow"));
+				"--max",
+				() => null,
+				"The maximum value to allow"));
 
-//TODO: Maybe this is not "format" but "base" (as in 2, 8, 10, 16), and format should be e.g. prefixed/capitals etc.? 
 		AddOption(
-			new Option<IntegerFormat>(
-					"--format",
-					() => IntegerFormat.Decimal,
-					"The representation to use"));
+			new Option<IntegerBase>(
+				"--base",
+				() => IntegerBase.Decimal,
+				"The representation to use"));
+		
+//TODO: Add "--format" for e.g. leading zeros, capitals, hex-prefix etc.
 	}
 }

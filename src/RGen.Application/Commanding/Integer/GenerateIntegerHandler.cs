@@ -49,14 +49,14 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 	public int? Length { get; set; }
 	public int? Min { get; set; }
 	public int? Max { get; set; }
-	public IntegerFormat Format { get; set; }
+	public IntegerBase Base { get; set; }
 
 	protected override async Task<ExitCode> InvokeCoreAsync(InvocationContext context, CancellationToken cancellationToken)
 	{
 //TODO: #12: If more than x number of total elements, display a progress bar
 //TODO: #11: If more than x number of total elements, run in parallel
 
-		var formatter = _formatterFactory.Create(new IntegerFormatterOptions(Format));
+		var formatter = _formatterFactory.Create(new IntegerFormatterOptions(Base));
 		var renderer = _rendererFactory.Create(new ConsoleRendererOptions(NoColor));
 		var writers = CreateWriters();
 
