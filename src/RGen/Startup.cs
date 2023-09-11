@@ -57,6 +57,9 @@ internal static class Startup
 						.AddSingleton<IGeneratorService, GeneratorService>()
 						.AddSingleton<IntegerGenerator>()
 						.AddSingleton(_ =>
+							new FormatterFactory()
+								.Register<IntegerFormatterOptions>(o => new IntegerFormatter(o)))
+						.AddSingleton(_ =>
 							new RendererFactory()
 								.Register<ConsoleRendererOptions>(o => new ConsoleRenderer(o)))
 						.AddSingleton(sp =>
