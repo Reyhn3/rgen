@@ -56,9 +56,9 @@ internal static class Startup
 //TODO: #43: Move to module in .Application
 						.AddSingleton<IGeneratorService, GeneratorService>()
 						.AddSingleton<IntegerGenerator>()
-						.AddSingleton(_ =>
+						.AddSingleton(sp =>
 							new FormatterFactory()
-								.Register<IntegerFormatterOptions>(o => new IntegerFormatter(o)))
+								.Register<IntegerFormatterOptions>(o => new IntegerFormatter(sp.GetRequiredService<ILogger<IntegerFormatter>>(), o)))
 						.AddSingleton(_ =>
 							new RendererFactory()
 								.Register<ConsoleRendererOptions>(o => new ConsoleRenderer(o)))

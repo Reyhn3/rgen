@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using FakeItEasy;
+using Microsoft.Extensions.Logging;
+using NUnit.Framework;
 using RGen.Domain.Formatting;
 using RGen.Domain.Generating.Generators;
 using Shouldly;
@@ -9,16 +11,35 @@ namespace RGen.Domain.Tests.Formatting;
 
 public class IntegerFormatterTests
 {
+	private IntegerFormatter _sut;
+
+	[SetUp]
+	public void PreRun()
+	{
+		_sut = new IntegerFormatter(A.Dummy<ILogger<IntegerFormatter>>(), A.Dummy<IntegerFormatterOptions>());
+	}
+
 	[Test]
 	public void FormatElement_should_return_plain_element_if_format_is_unrecognized() =>
-		IntegerFormatter.FormatElement((IntegerBase)(-1), 42).ShouldBe("42");
+		_sut.FormatElement((IntegerBase)(-1), 42).ShouldBe("42");
 
-	[TestCase(IntegerBase.Decimal, 7357, "7357")]
-	[TestCase(IntegerBase.Hexadecimal, 7357, "1cbd")]
-	[TestCase(IntegerBase.Binary, 7357, "0001110010111101")]
-	[TestCase(IntegerBase.Binary, 1, "00000001", Description = "Binaries should be padded to the smallest amount of bytes")]
-	[TestCase(IntegerBase.Binary, 131071, "000000011111111111111111", Description = "Binaries should be padded to the smallest amount of bytes")]
-	[TestCase(IntegerBase.Binary, 33554431, "00000001111111111111111111111111", Description = "Binaries should be padded to the smallest amount of bytes")]
-	public void FormatElement_should_return_the_number_correctly_formatted(IntegerBase format, long value, string expected) =>
-		IntegerFormatter.FormatElement(format, value).ShouldBe(expected);
+	[TestCase(7357UL, "7357")]
+	public void FormatElement_should_correctly_format_decimal_numbers(ulong value, string expected) =>
+		_sut.FormatElement(IntegerBase.Decimal, value).ShouldBe(expected);
+
+	[TestCase(7357UL, "1cbd")]
+	public void FormatElement_should_correctly_format_hexadecimal_numbers(ulong value, string expected) =>
+		_sut.FormatElement(IntegerBase.Hexadecimal, value).ShouldBe(expected);
+
+	[TestCase(7357UL, "0001110010111101")]
+	[TestCase(1UL, "00000001")]
+	[TestCase(511UL, "0000000111111111")]
+	[TestCase(131071UL, "000000011111111111111111")]
+	[TestCase(33554431UL, "00000001111111111111111111111111")]
+	public void FormatElement_should_correctly_format_binary_numbers(ulong value, string expected) =>
+		_sut.FormatElement(IntegerBase.Binary, value).ShouldBe(expected);
+
+	[Test]
+	public void FormatAsBitString_shall_use_the_next_largest_multiple_of_8() =>
+		IntegerFormatter.FormatAsBitString(7357).ShouldBe("0001110010111101");
 }

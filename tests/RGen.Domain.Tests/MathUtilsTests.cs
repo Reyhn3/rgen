@@ -74,4 +74,8 @@ public class MathUtilsTests
 	[TestCase(20, ulong.MaxValue)]
 	public void CountNumberOfDecimalDigits_for_long_should_return_the_correct_number_of_decimal_digits_for_positive_values(int expected, ulong value) =>
 		MathUtils.CountNumberOfDecimalDigits(value).ShouldBe(expected);
+
+	[Test]
+	public void CountNumberOfBits_should_return_the_number_of_bits() =>
+		MathUtils.CountNumberOfBits(7357).ShouldBe(13);
 }

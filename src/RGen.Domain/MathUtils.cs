@@ -36,4 +36,17 @@ public static class MathUtils
 				_                        => 20
 			};
 	}
+
+	public static int CountNumberOfBits(ulong n)
+	{
+		// The mathematical log2 is a decimal number,
+		// but the Log2-method floors it to an int.
+		// To get the actual number of bits,
+		// add 1 if it is too small.
+		var floor = BitOperations.Log2(n);
+		if ((1UL << floor) < n)
+			return floor + 1;
+
+		return floor;
+	}
 }
