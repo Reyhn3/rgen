@@ -21,12 +21,25 @@ public class IntegerFormatter : IFormatter
 		new RandomValues<string>(randomValues.ValueSets.Select(s => s.Select(e => FormatElement(_options.Base, (long)e))));
 
 //TODO: Optimize with string.Create() and spans
-	internal static string FormatElement(IntegerBase format, long element) =>
-		format switch
-			{
-				IntegerBase.Decimal     => element.ToString("D"),
-				IntegerBase.Hexadecimal => element.ToString("x"),
-				IntegerBase.Binary      => Convert.ToString(element, 2).PadLeft((int)(Math.Max(1, Math.Ceiling(Math.Log2(element) / 8)) * 8), '0'),
-				_                       => element.ToString()
-			};
+	internal static string FormatElement(IntegerBase format, long element)
+	{
+		try
+		{
+			return format switch
+				{
+					IntegerBase.Decimal     => element.ToString("D"),
+					IntegerBase.Hexadecimal => element.ToString("x"),
+					IntegerBase.Binary      => Convert.ToString(element, 2).PadLeft((int)(Math.Max(1, Math.Ceiling(Math.Log2(element) / 8)) * 8), '0'),
+					_                       => element.ToString()
+				};
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(element);
+			Console.WriteLine((int)(Math.Max(1, Math.Ceiling(Math.Log2(Math.Abs(element)) / 8)) * 8));
+			Console.WriteLine(e);
+			throw;
+		}
+	}
+	
 }

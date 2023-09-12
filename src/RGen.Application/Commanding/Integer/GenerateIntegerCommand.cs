@@ -33,13 +33,13 @@ public class GenerateIntegerCommand : Command
 				.InValidRangeOnly(1, (int)Math.Log10(int.MaxValue)));
 
 		AddOption(
-			new Option<int?>(
+			new Option<ulong?>(
 				"--min",
 				() => null,
 				"The minimum value to allow"));
 
 		AddOption(
-			new Option<int?>(
+			new Option<ulong?>(
 				"--max",
 				() => null,
 				"The maximum value to allow"));

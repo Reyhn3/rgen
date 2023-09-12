@@ -8,6 +8,6 @@ public interface IGenerator
 		int numberOfElements,
 		int numberOfSets,
 		int? lengthOfElement,
-		int? min,
-		int? max);
+		ulong? min,
+		ulong? max);
 }

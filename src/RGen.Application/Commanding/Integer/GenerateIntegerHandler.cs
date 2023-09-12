@@ -47,8 +47,8 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 	public int N { get; set; }
 	public int Set { get; set; }
 	public int? Length { get; set; }
-	public int? Min { get; set; }
-	public int? Max { get; set; }
+	public ulong? Min { get; set; }
+	public ulong? Max { get; set; }
 	public IntegerBase Base { get; set; }
 
 	protected override async Task<ExitCode> InvokeCoreAsync(InvocationContext context, CancellationToken cancellationToken)

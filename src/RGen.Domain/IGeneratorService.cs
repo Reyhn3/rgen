@@ -21,7 +21,7 @@ public interface IGeneratorService
 		int numberOfElements,
 		int numberOfSets,
 		int? length,
-		int? min,
-		int? max,
+		ulong? min,
+		ulong? max,
 		CancellationToken cancellationToken = default);
 }
