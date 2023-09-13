@@ -24,11 +24,11 @@ public class IntegerFormatter : IFormatter
 		new RandomValues<string>(randomValues.ValueSets.Select(s => s.Select(e => FormatElement(_options.Base, (ulong)e))));
 
 //TODO: Optimize with string.Create() and spans
-	internal string FormatElement(IntegerBase format, ulong element)
+	internal string FormatElement(IntegerBase @base, ulong element)
 	{
 		try
 		{
-			return format switch
+			return @base switch
 				{
 					IntegerBase.Decimal     => element.ToString("D"),
 					IntegerBase.Hexadecimal => element.ToString("x"),
@@ -38,7 +38,7 @@ public class IntegerFormatter : IFormatter
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError(ex, "Failed to format {Value} as {Format}", element, format);
+			_logger.LogError(ex, "Failed to format {Value} as {Base}", element, @base);
 			return element.ToString();
 		}
 	}
