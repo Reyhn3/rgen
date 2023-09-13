@@ -1,5 +1,5 @@
 ﻿using System;
-using RGen.Domain.Formatting;
+using RGen.Domain.Rendering;
 
 
 namespace RGen.Infrastructure.Tests;
@@ -8,7 +8,7 @@ internal static class Helpers
 {
 	private const string NullValue = "<null>";
 
-	public static FormatContext? Dump(this FormatContext? item)
+	public static RenderContext? Dump(this RenderContext? item)
 	{
 		if (item == null)
 		{
@@ -17,7 +17,7 @@ internal static class Helpers
 		}
 
 		Console.WriteLine("Raw:\t\t\t{0}", item.Raw);
-		Console.WriteLine("Formatted:\t{0}", item.Formatted);
+		Console.WriteLine("Formatted:\t{0}", item.Rendered);
 		return item;
 	}
 

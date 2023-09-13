@@ -12,4 +12,5 @@
     <ProjectReference Include="..\..\src\RGen.Domain\RGen.Domain.csproj" />
   </ItemGroup>
 
+
 </Project>

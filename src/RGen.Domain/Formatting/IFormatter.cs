@@ -3,7 +3,8 @@
 
 namespace RGen.Domain.Formatting;
 
+
 public interface IFormatter
 {
-	FormatContext Format(IRandomValues randomValues);
+	IRandomValues<string> Format(IRandomValues randomValues);
 }

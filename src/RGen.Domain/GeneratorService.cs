@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using RGen.Domain.Formatting;
 using RGen.Domain.Generating;
+using RGen.Domain.Rendering;
 using RGen.Domain.Writing;
 
 
@@ -14,24 +15,25 @@ public class GeneratorService : IGeneratorService
 	public async Task<IResult> GenerateAsync(
 		IGenerator generator,
 		IFormatter formatter,
+		IRenderer renderer,
 		IEnumerable<IWriter> writers,
 		int numberOfElements,
 		int numberOfSets,
 		int? length,
-		int? min,
-		int? max,
+		ulong? min,
+		ulong? max,
 		CancellationToken cancellationToken = default)
 	{
 		var sets = generator.Generate(numberOfElements, numberOfSets, length, min, max);
-
 		var formatted = formatter.Format(sets);
-		if (formatted.IsEmpty)
+		var rendered = renderer.Render(formatted);
+		if (rendered.IsEmpty)
 			return Result.Failure(ResultCode.NoDataGenerated);
 
 		var failedWriteResults = new List<IResult>();
 		foreach (var writer in writers)
 		{
-			var writeResult = await writer.WriteAsync(formatted, cancellationToken);
+			var writeResult = await writer.WriteAsync(rendered, cancellationToken);
 			if (!writeResult.IsSuccessful)
 				failedWriteResults.Add(writeResult);
 		}
