@@ -61,7 +61,7 @@ public static class LogHelper
 			if (Switch.MinimumLevel is LogEventLevel.Debug or LogEventLevel.Verbose)
 				AnsiConsole.WriteException(ex, ExceptionFormats.ShortenTypes | ExceptionFormats.ShortenPaths);
 			else if (Switch.MinimumLevel is LogEventLevel.Warning or LogEventLevel.Information)
-				AnsiConsole.MarkupLine($"    [Red]{ex.Message}[/]");
+				AnsiConsole.MarkupLine($"    [Red]{ex.Message.EscapeMarkup()}[/]");
 		}
 	}
 }

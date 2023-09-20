@@ -43,9 +43,9 @@ public class IntegerGeneratorTests
 	public void Generate_with_length_specified_should_generate_number_containing_the_specified_number_of_digits()
 	{
 		const int numberOfDigits = 5;
-		var result = _sut.Generate(1, 1, numberOfDigits, A.Dummy<ulong?>(), A.Dummy<ulong?>());
+		var result = _sut.Generate(1, 1, numberOfDigits, A.Dummy<ulong?>(), A.Dummy<ulong?>()).ToArray();
 		GeneratorUtils.PrintSets(result);
-		result.ValueSets.First().First().ToString()!.Length.ShouldBe(numberOfDigits);
+		result.Single().ToString().Length.ShouldBe(numberOfDigits);
 	}
 
 	[TestCase(1, 0UL, 9UL)]
@@ -205,36 +205,28 @@ public class IntegerGeneratorTests
 	[Test]
 	public void Generate_single_value_in_single_set_should_generate_a_single_value_in_a_single_set()
 	{
-		var result = _sut.Generate(1, 1, A.Dummy<int?>(), A.Dummy<ulong?>(), A.Dummy<ulong?>());
-		var resultSets = result.ValueSets.ToArray();
-		resultSets.Length.ShouldBe(1);
-		resultSets[0].Count().ShouldBe(1);
+		var result = _sut.Generate(1, 1, A.Dummy<int?>(), A.Dummy<ulong?>(), A.Dummy<ulong?>()).ToArray();
+		result.Length.ShouldBe(1);
 	}
 
 	[Test]
 	public void Generate_single_value_multiple_sets_should_generate_single_values_in_multiple_sets()
 	{
-		var result = _sut.Generate(1, 2, A.Dummy<int?>(), A.Dummy<ulong?>(), A.Dummy<ulong?>());
-		var resultSets = result.ValueSets.ToArray();
-		resultSets.Length.ShouldBe(2);
-		resultSets.ShouldAllBe(s => s.Count() == 1);
+		var result = _sut.Generate(1, 2, A.Dummy<int?>(), A.Dummy<ulong?>(), A.Dummy<ulong?>()).ToArray();
+		result.Length.ShouldBe(2);
 	}
 
 	[Test]
 	public void Generate_multiple_values_in_single_set_should_generate_multiple_values_in_a_single_set()
 	{
-		var result = _sut.Generate(2, 1, A.Dummy<int?>(), A.Dummy<ulong?>(), A.Dummy<ulong?>());
-		var resultSets = result.ValueSets.ToArray();
-		resultSets.Length.ShouldBe(1);
-		resultSets[0].Count().ShouldBe(2);
+		var result = _sut.Generate(2, 1, A.Dummy<int?>(), A.Dummy<ulong?>(), A.Dummy<ulong?>()).ToArray();
+		result.Length.ShouldBe(2 * 1);
 	}
 
 	[Test]
 	public void Generate_multiple_values_in_multiple_sets_should_generate_multiple_values_in_multiple_sets()
 	{
-		var result = _sut.Generate(2, 3, A.Dummy<int?>(), A.Dummy<ulong?>(), A.Dummy<ulong?>());
-		var resultSets = result.ValueSets.ToArray();
-		resultSets.Length.ShouldBe(3);
-		resultSets.ShouldAllBe(s => s.Count() == 2);
+		var result = _sut.Generate(2, 3, A.Dummy<int?>(), A.Dummy<ulong?>(), A.Dummy<ulong?>()).ToArray();
+		result.Length.ShouldBe(2 * 3);
 	}
 }

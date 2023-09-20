@@ -1,4 +1,5 @@
-﻿using RGen.Domain.Generating;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 
 namespace RGen.Domain.Formatting;
@@ -6,5 +7,11 @@ namespace RGen.Domain.Formatting;
 
 public interface IFormatter
 {
-	IRandomValues<string> Format(IRandomValues randomValues);
+	IEnumerable<FormattedRandomValue> Format(IEnumerable randomValues);
+}
+
+
+public interface IFormatter<in T> : IFormatter
+{
+	IEnumerable<FormattedRandomValue> Format(IEnumerable<T> randomValues);
 }

@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using RGen.Domain.Generating;
+using RGen.Domain.Formatting;
 using RGen.Domain.Rendering;
 using RGen.Infrastructure.Logging;
 
@@ -25,28 +26,21 @@ public class ConsoleRenderer : IRenderer
 		_isColoringDisabled = options.IsColoringDisabled || LogHelper.IsNoColorSet;
 	}
 
-	public RenderContext Render(IRandomValues randomValues)
+	public RenderContext Render(int numberOfElementsPerSet, IEnumerable<FormattedRandomValue> randomValues)
 	{
-		if (randomValues?.ValueSets == null!)
-			return RenderContext.Empty;
-
-		var array = randomValues.ValueSets
-			.Where(s => s != null!)
-			.Select(s => s.Where(IsValidElement).ToArray())
-			.Where(s => s.Any())
-			.ToArray();
+		var array = (randomValues?.Where(IsValidElement) ?? Enumerable.Empty<FormattedRandomValue>()).ToArray();
 		if (!array.Any())
 			return RenderContext.Empty;
 
-		var isMultiSet = array.Length > 1;
-		var isMultiElement = array.First().Length > 1;
+		var isMultiSet = Math.Ceiling(array.Length / (decimal)numberOfElementsPerSet) > 1;
+		var isMultiElement = numberOfElementsPerSet > 1;
 
 		var rawStringBuilder = new StringBuilder();
 		var renderedStringBuilder = new StringBuilder();
 
-		for (var i = 0; i < array.Length; i++)
+		for (var i = 0; i < array.Length; i += numberOfElementsPerSet)
 		{
-			var set = array[i];
+			var set = array[i..(Math.Min(array.Length, i + numberOfElementsPerSet))];
 			if (!set.Any())
 				continue;
 
@@ -59,8 +53,9 @@ public class ConsoleRenderer : IRenderer
 			for (var j = 0; j < set.Length; j++)
 			{
 				var element = set[j];
-				var rendered = RenderElement(element, _isColoringDisabled);
-				rawStringBuilder.Append(element);
+				var formatted = element.Formatted;
+				var rendered = RenderElement(formatted, _isColoringDisabled);
+				rawStringBuilder.Append(formatted);
 				renderedStringBuilder.Append(rendered);
 
 				if (j < set.Length - 1)
@@ -76,7 +71,7 @@ public class ConsoleRenderer : IRenderer
 				renderedStringBuilder.Append(EndArray);
 			}
 
-			if (i < array.Length - 1)
+			if (i + set.Length < array.Length)
 			{
 				rawStringBuilder.Append(SetSeparator);
 				renderedStringBuilder.Append(SetSeparator);
@@ -86,15 +81,12 @@ public class ConsoleRenderer : IRenderer
 		return new RenderContext(rawStringBuilder.ToString(), renderedStringBuilder.ToString());
 	}
 
-	internal static bool IsValidElement<T>(T? element)
+	internal static bool IsValidElement(FormattedRandomValue element)
 	{
-		if (element is string s)
-			return !string.IsNullOrWhiteSpace(s);
-
 		if (element is null)
 			return false;
 
-		return true;
+		return !string.IsNullOrWhiteSpace(element.Formatted);
 	}
 
 	internal static string RenderElement<T>(T element, bool isColoringDisabled) =>

@@ -6,6 +6,7 @@ using Shouldly;
 
 namespace RGen.Domain.Tests.Generating.Generators;
 
+
 public class IntegerGeneratorIntegrationTests
 {
 	private IntegerGenerator _sut;
@@ -19,61 +20,56 @@ public class IntegerGeneratorIntegrationTests
 //TODO: Add tests to assert a reasonable statistically distributed random confidence
 
 	[Test]
-	public void Generate_shall_produce_materialized_enumerable_values()
+	public void Generate_shall_produce_enumerable_values_each_time_the_enumerable_is_iterated()
 	{
 		var result = _sut.Generate(1, 1, null, null, null);
 
-		var first = result.ValueSets.Single().Single();
-		var second = result.ValueSets.Single().Single();
-		first.ShouldBe(second);
+		// The sequence should create new random values each time it is iterated
+		var firstMaterialization = result.Single();
+		var secondMaterialization = result.Single();
+		firstMaterialization.ShouldNotBe(secondMaterialization);
 	}
 
 	[Test]
-	public void Generate_shall_generate_a_single_value_in_a_single_set()
+	public void Generate_shall_produce_enumerable_values_that_can_be_materialized()
 	{
-		var result = _sut.Generate(1, 1, null, null, null);
-		GeneratorUtils.PrintSets(result);
+		var result = _sut.Generate(1, 1, null, null, null).ToArray();
 
-		var resultArray = result.ValueSets.ToArray();
-		resultArray.Length.ShouldBe(1);
-		var resultSet = resultArray[0].ToArray();
-		resultSet.Length.ShouldBe(1);
+		// The sequence should not be reiterated
+		var firstMaterialization = result.Single();
+		var secondMaterialization = result.Single();
+		firstMaterialization.ShouldBe(secondMaterialization);
 	}
 
 	[Test]
-	public void Generate_shall_generate_a_single_value_in_every_set()
+	public void Generate_shall_generate_a_single_value()
 	{
-		var result = _sut.Generate(1, 2, null, null, null);
+		var result = _sut.Generate(1, 1, null, null, null).ToArray();
 		GeneratorUtils.PrintSets(result);
-
-		var resultArray = result.ValueSets.ToArray();
-		resultArray.Length.ShouldBe(2);
-		var resultSet0 = resultArray[0].ToArray();
-		resultSet0.Length.ShouldBe(1);
-		var resultSet1 = resultArray[1].ToArray();
-		resultSet1.Length.ShouldBe(1);
+		result.Length.ShouldBe(1);
 	}
 
 	[Test]
-	public void Generate_shall_generate_many_values_in_a_single_set()
+	public void Generate_shall_generate_a_stream_with_the_length_of_the_sets_multiplied_with_set_length()
 	{
-		var result = _sut.Generate(100, 1, null, null, null);
+		var result = _sut.Generate(1, 2, null, null, null).ToArray();
 		GeneratorUtils.PrintSets(result);
-
-		var resultArray = result.ValueSets.ToArray();
-		resultArray.Length.ShouldBe(1);
-		var resultSet = resultArray[0].ToArray();
-		resultSet.Length.ShouldBe(100);
+		result.Length.ShouldBe(1 * 2);
 	}
 
 	[Test]
-	public void Generate_shall_generate_many_values_in_many_sets()
+	public void Generate_shall_generate_many_values()
 	{
-		var result = _sut.Generate(100, 100, null, null, null);
+		var result = _sut.Generate(100, 1, null, null, null).ToArray();
 		GeneratorUtils.PrintSets(result);
+		result.Length.ShouldBe(100 * 1);
+	}
 
-		var resultArray = result.ValueSets.ToArray();
-		resultArray.Length.ShouldBe(100);
-		resultArray.ShouldAllBe(s => s.Count() == 100);
+	[Test]
+	public void Generate_shall_generate_very_many_values()
+	{
+		var result = _sut.Generate(100, 100, null, null, null).ToArray();
+		GeneratorUtils.PrintSets(result);
+		result.Length.ShouldBe(100 * 100);
 	}
 }
