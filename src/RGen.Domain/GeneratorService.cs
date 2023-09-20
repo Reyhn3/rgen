@@ -26,7 +26,7 @@ public class GeneratorService : IGeneratorService
 	{
 		var sets = generator.Generate(numberOfElements, numberOfSets, length, min, max);
 		var formatted = formatter.Format(sets);
-		var rendered = renderer.Render(formatted);
+		var rendered = renderer.Render(numberOfSets, formatted);
 		if (rendered.IsEmpty)
 			return Result.Failure(ResultCode.NoDataGenerated);
 

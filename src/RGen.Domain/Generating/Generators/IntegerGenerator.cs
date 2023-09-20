@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -7,10 +8,34 @@ using System.Security.Cryptography;
 namespace RGen.Domain.Generating.Generators;
 
 
-public class IntegerGenerator : IGenerator
+public abstract class Generator<T> : IGenerator<T>
+{
+	IEnumerable IGenerator.Generate(
+		int numberOfElements,
+		int numberOfSets,
+		int? lengthOfElement,
+		ulong? min,
+		ulong? max) =>
+		Generate(
+				numberOfElements,
+				numberOfSets,
+				lengthOfElement,
+				min,
+				max);
+
+	public abstract IEnumerable<T> Generate(
+		int numberOfElements,
+		int numberOfSets,
+		int? lengthOfElement,
+		ulong? min,
+		ulong? max);
+}
+
+
+public class IntegerGenerator : Generator<ulong>
 {
 //TODO: Extract base class and move checks, Set, Multiple etc. up.
-	public IRandomValues Generate(int numberOfElements, int numberOfSets, int? lengthOfElement, ulong? min, ulong? max)
+	public override IEnumerable<ulong> Generate(int numberOfElements, int numberOfSets, int? lengthOfElement, ulong? min, ulong? max)
 	{
 //TODO: Consider limit the max number of elements (in each set)
 		if (numberOfElements < 1)
@@ -37,17 +62,13 @@ public class IntegerGenerator : IGenerator
 
 //TODO: #34: Refactor to support both positive and negative values
 		var values = Set(numberOfElements, numberOfSets, minValue, maxValue);
-//TODO: #44: Materialize or not? Investigate if IEnumerable can be used all the way to the end without re-running the generator
-		var materialized = values.Select(s => s.ToArray()).ToArray();
-		return new RandomValues<ulong>(materialized);
+		return values;
 	}
 
-	private static IEnumerable<IEnumerable<ulong>> Set(int n, int o, ulong min, ulong max) => Enumerable
-		.Range(0, o).Select(_ => Multiple(n, min, max));
-
 //TODO: #39: Consider doing this more efficient, by e.g. generating a bigger byte array and create numbers from subsets of it
-	private static IEnumerable<ulong> Multiple(int n, ulong min, ulong max) =>
-		Enumerable.Range(0, n).Select(_ => Single(min, max));
+	private static IEnumerable<ulong> Set(int numberOfElements, int numberOfSets, ulong min, ulong max) => Enumerable
+		.Range(0, numberOfSets * numberOfElements)
+		.Select(x => Single(min, max));
 
 	internal static ulong Single(ulong min, ulong max)
 	{
