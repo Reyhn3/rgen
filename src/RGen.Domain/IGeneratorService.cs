@@ -12,7 +12,6 @@ namespace RGen.Domain;
 
 public interface IGeneratorService
 {
-//TODO: #42: Refactor to use parameter-object instead of list of parameters
 	Task<IResult> GenerateAsync(
 		IGenerator generator,
 		IFormatter formatter,
@@ -20,8 +19,6 @@ public interface IGeneratorService
 		IEnumerable<IWriter> writers,
 		int numberOfElements,
 		int numberOfSets,
-		int? length,
-		ulong? min,
-		ulong? max,
+		object? parameters,
 		CancellationToken cancellationToken = default);
 }

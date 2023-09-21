@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -8,34 +7,10 @@ using System.Security.Cryptography;
 namespace RGen.Domain.Generating.Generators;
 
 
-public abstract class Generator<T> : IGenerator<T>
-{
-	IEnumerable IGenerator.Generate(
-		int numberOfElements,
-		int numberOfSets,
-		int? lengthOfElement,
-		ulong? min,
-		ulong? max) =>
-		Generate(
-				numberOfElements,
-				numberOfSets,
-				lengthOfElement,
-				min,
-				max);
-
-	public abstract IEnumerable<T> Generate(
-		int numberOfElements,
-		int numberOfSets,
-		int? lengthOfElement,
-		ulong? min,
-		ulong? max);
-}
-
-
-public class IntegerGenerator : Generator<ulong>
+public class IntegerGenerator : Generator<ulong, IntegerParameters>
 {
 //TODO: Extract base class and move checks, Set, Multiple etc. up.
-	public override IEnumerable<ulong> Generate(int numberOfElements, int numberOfSets, int? lengthOfElement, ulong? min, ulong? max)
+	public override IEnumerable<ulong> Generate(int numberOfElements, int numberOfSets, IntegerParameters parameters)
 	{
 //TODO: Consider limit the max number of elements (in each set)
 		if (numberOfElements < 1)
@@ -46,19 +21,19 @@ public class IntegerGenerator : Generator<ulong>
 			throw new ArgumentOutOfRangeException(nameof(numberOfSets), numberOfSets, "The number of sets to generate must be 1 or greater");
 
 		// Int64 has 19 digits, excluding the sign
-		if (lengthOfElement is < 1 or > 19)
-			throw new ArgumentOutOfRangeException(nameof(lengthOfElement), lengthOfElement, "The length of the generated element must be 1 to 19");
+		if (parameters.LengthOfElement is < 1 or > 19)
+			throw new ArgumentOutOfRangeException(nameof(parameters.LengthOfElement), parameters.LengthOfElement, "The length of the generated element must be 1 to 19");
 
-		if (min >= max)
-			throw new ArgumentOutOfRangeException(nameof(min), min, "The minimum value is greater than or equal to the maximum value");
+		if (parameters.Min >= parameters.Max)
+			throw new ArgumentOutOfRangeException(nameof(parameters.Min), parameters.Min, "The minimum value is greater than or equal to the maximum value");
 
 //TODO: #19: This has to take the format (dec, hex) into consideration
-		var (minValue, maxValue) = DetermineMinAndMax(lengthOfElement, min, max);
+		var (minValue, maxValue) = DetermineMinAndMax(parameters.LengthOfElement, parameters.Min, parameters.Max);
 
 		// Check that min/max don't contradict lengthOfElement
-		if (min > minValue || maxValue < max)
+		if (parameters.Min > minValue || maxValue < parameters.Max)
 			throw new InvalidOperationException(
-				$"The parameters {nameof(min)} ({min}) and/or {nameof(max)} ({max}) have values with more digits than the parameter {nameof(lengthOfElement)} which is specified to limit results to contain {lengthOfElement} digits");
+				$"The parameters {nameof(parameters.Min)} ({parameters.Min}) and/or {nameof(parameters.Max)} ({parameters.Max}) have values with more digits than the parameter {nameof(parameters.LengthOfElement)} which is specified to limit results to contain {parameters.LengthOfElement} digits");
 
 //TODO: #34: Refactor to support both positive and negative values
 		var values = Set(numberOfElements, numberOfSets, minValue, maxValue);

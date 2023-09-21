@@ -8,28 +8,31 @@ using Shouldly;
 
 namespace RGen.Domain.Tests.Generating.Generators;
 
+
 public class IntegerGeneratorTests
 {
 	private IntegerGenerator _sut = null!;
+	private IntegerParameters _default;
 
 	[SetUp]
 	public void PreRun()
 	{
 		_sut = new IntegerGenerator();
+		_default = new IntegerParameters(A.Dummy<int?>(), A.Dummy<ulong?>(), A.Dummy<ulong?>());
 	}
 
 #region Number of elements
 	[TestCase(-1)]
 	[TestCase(0)]
 	public void Generate_should_throw_exception_if_NumberOfElements_is_out_of_range(int numberOfElements) =>
-		Should.Throw<ArgumentOutOfRangeException>(() => _sut.Generate(numberOfElements, 1, A.Dummy<int?>(), A.Dummy<ulong?>(), A.Dummy<ulong?>()));
+		Should.Throw<ArgumentOutOfRangeException>(() => _sut.Generate(numberOfElements, 1, _default));
 #endregion Number of elements
 
 #region Number of sets
 	[TestCase(-1)]
 	[TestCase(0)]
 	public void Generate_should_throw_exception_if_NumberOfSets_is_out_of_range(int numberOfSets) =>
-		Should.Throw<ArgumentOutOfRangeException>(() => _sut.Generate(1, numberOfSets, A.Dummy<int?>(), A.Dummy<ulong?>(), A.Dummy<ulong?>()));
+		Should.Throw<ArgumentOutOfRangeException>(() => _sut.Generate(1, numberOfSets, _default));
 #endregion Number of sets
 
 #region Length of element
@@ -37,13 +40,13 @@ public class IntegerGeneratorTests
 	[TestCase(0)]
 	[TestCase(20, Description = "long has 19 digits, excluding any sign")]
 	public void Generate_should_throw_exception_if_Length_is_out_of_range(int length) =>
-		Should.Throw<ArgumentOutOfRangeException>(() => _sut.Generate(1, 1, length, A.Dummy<ulong?>(), A.Dummy<ulong?>()));
+		Should.Throw<ArgumentOutOfRangeException>(() => _sut.Generate(1, 1, new IntegerParameters(length, A.Dummy<ulong?>(), A.Dummy<ulong?>())));
 
 	[Test]
 	public void Generate_with_length_specified_should_generate_number_containing_the_specified_number_of_digits()
 	{
 		const int numberOfDigits = 5;
-		var result = _sut.Generate(1, 1, numberOfDigits, A.Dummy<ulong?>(), A.Dummy<ulong?>()).ToArray();
+		var result = _sut.Generate(1, 1, new IntegerParameters(numberOfDigits, A.Dummy<ulong?>(), A.Dummy<ulong?>())).ToArray();
 		GeneratorUtils.PrintSets(result);
 		result.Single().ToString().Length.ShouldBe(numberOfDigits);
 	}
@@ -80,7 +83,7 @@ public class IntegerGeneratorTests
 	[Test]
 	public void Generate_with_min_and_max_shall_throw_exception_if_min_is_greater_than_or_equal_to_max() =>
 		Should.Throw<ArgumentOutOfRangeException>(() =>
-			_sut.Generate(1, 1, null, 1, 1));
+			_sut.Generate(1, 1, new IntegerParameters(null, 1, 1)));
 
 	[Test(Description = "Restrict only the lower boundary")]
 	public void DetermineMinAndMax_shall_use_only_min_if_max_is_null()
@@ -205,28 +208,28 @@ public class IntegerGeneratorTests
 	[Test]
 	public void Generate_single_value_in_single_set_should_generate_a_single_value_in_a_single_set()
 	{
-		var result = _sut.Generate(1, 1, A.Dummy<int?>(), A.Dummy<ulong?>(), A.Dummy<ulong?>()).ToArray();
+		var result = _sut.Generate(1, 1, _default).ToArray();
 		result.Length.ShouldBe(1);
 	}
 
 	[Test]
 	public void Generate_single_value_multiple_sets_should_generate_single_values_in_multiple_sets()
 	{
-		var result = _sut.Generate(1, 2, A.Dummy<int?>(), A.Dummy<ulong?>(), A.Dummy<ulong?>()).ToArray();
+		var result = _sut.Generate(1, 2, _default).ToArray();
 		result.Length.ShouldBe(2);
 	}
 
 	[Test]
 	public void Generate_multiple_values_in_single_set_should_generate_multiple_values_in_a_single_set()
 	{
-		var result = _sut.Generate(2, 1, A.Dummy<int?>(), A.Dummy<ulong?>(), A.Dummy<ulong?>()).ToArray();
+		var result = _sut.Generate(2, 1, _default).ToArray();
 		result.Length.ShouldBe(2 * 1);
 	}
 
 	[Test]
 	public void Generate_multiple_values_in_multiple_sets_should_generate_multiple_values_in_multiple_sets()
 	{
-		var result = _sut.Generate(2, 3, A.Dummy<int?>(), A.Dummy<ulong?>(), A.Dummy<ulong?>()).ToArray();
+		var result = _sut.Generate(2, 3, _default).ToArray();
 		result.Length.ShouldBe(2 * 3);
 	}
 }
