@@ -99,7 +99,7 @@ public class ConsoleRendererTests
 				new[]
 					{
 						new FormattedRandomValue(A.Dummy<object>(), "a"),
-						new FormattedRandomValue(A.Dummy<object>(), null),
+						new FormattedRandomValue(A.Dummy<object>(), null!),
 						new FormattedRandomValue(A.Dummy<object>(), "c")
 					}!).Dump()?.Raw
 			.ShouldBe("a\r\nc");

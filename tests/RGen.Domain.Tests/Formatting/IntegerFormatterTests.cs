@@ -11,7 +11,7 @@ namespace RGen.Domain.Tests.Formatting;
 
 public class IntegerFormatterTests
 {
-	private IntegerFormatter _sut;
+	private IntegerFormatter _sut = null!;
 
 	[SetUp]
 	public void PreRun()
