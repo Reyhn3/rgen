@@ -1,35 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 
 
 namespace RGen.Domain.Generating.Generators;
-
-
-public abstract class Generator<T> : IGenerator<T>
-{
-	IEnumerable IGenerator.Generate(
-		int numberOfElements,
-		int numberOfSets,
-		int? lengthOfElement,
-		ulong? min,
-		ulong? max) =>
-		Generate(
-				numberOfElements,
-				numberOfSets,
-				lengthOfElement,
-				min,
-				max);
-
-	public abstract IEnumerable<T> Generate(
-		int numberOfElements,
-		int numberOfSets,
-		int? lengthOfElement,
-		ulong? min,
-		ulong? max);
-}
 
 
 public class IntegerGenerator : Generator<ulong>
