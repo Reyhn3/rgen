@@ -10,6 +10,7 @@ using RGen.Domain.Writing;
 
 namespace RGen.Domain;
 
+
 public class GeneratorService : IGeneratorService
 {
 	public async Task<IResult> GenerateAsync(
@@ -19,12 +20,10 @@ public class GeneratorService : IGeneratorService
 		IEnumerable<IWriter> writers,
 		int numberOfElements,
 		int numberOfSets,
-		int? length,
-		ulong? min,
-		ulong? max,
+		object? parameters,
 		CancellationToken cancellationToken = default)
 	{
-		var sets = generator.Generate(numberOfElements, numberOfSets, length, min, max);
+		var sets = generator.Generate(numberOfElements, numberOfSets, parameters);
 		var formatted = formatter.Format(sets);
 		var rendered = renderer.Render(numberOfSets, formatted);
 		if (rendered.IsEmpty)

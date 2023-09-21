@@ -7,23 +7,18 @@ namespace RGen.Domain.Generating;
 
 public interface IGenerator
 {
-//TODO: #42: Refactor to use parameter-object instead of list of parameters
 	IEnumerable Generate(
 		int numberOfElements,
 		int numberOfSets,
-		int? lengthOfElement,
-		ulong? min,
-		ulong? max);
+		object? parameters);
 }
 
 
-public interface IGenerator<out T> : IGenerator
+public interface IGenerator<out TElement, in TParams> : IGenerator
+	where TParams : struct
 {
-//TODO: #42: Refactor to use parameter-object instead of list of parameters
-	new IEnumerable<T> Generate(
+	IEnumerable<TElement> Generate(
 		int numberOfElements,
 		int numberOfSets,
-		int? lengthOfElement,
-		ulong? min,
-		ulong? max);
+		TParams parameters);
 }

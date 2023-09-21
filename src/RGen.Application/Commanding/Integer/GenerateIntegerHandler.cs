@@ -59,6 +59,7 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 		var formatter = _formatterFactory.Create(new IntegerFormatterOptions(Base));
 		var renderer = _rendererFactory.Create(new ConsoleRendererOptions(NoColor));
 		var writers = CreateWriters();
+		var parameters = new IntegerParameters(Length, Min, Max);
 
 		var result = await _generatorService.GenerateAsync(
 			_generator,
@@ -67,9 +68,7 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 			writers,
 			N,
 			Set,
-			Length,
-			Min,
-			Max,
+			parameters,
 			cancellationToken);
 
 		return result.ToExitCode();

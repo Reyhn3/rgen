@@ -5,25 +5,20 @@ using System.Collections.Generic;
 namespace RGen.Domain.Generating;
 
 
-public abstract class Generator<T> : IGenerator<T>
+public abstract class Generator<TElement, TParams> : IGenerator<TElement, TParams>
+	where TParams : struct
 {
 	IEnumerable IGenerator.Generate(
 		int numberOfElements,
 		int numberOfSets,
-		int? lengthOfElement,
-		ulong? min,
-		ulong? max) =>
+		object? parameters) =>
 		Generate(
 			numberOfElements,
 			numberOfSets,
-			lengthOfElement,
-			min,
-			max);
+			(TParams)(parameters ?? default(TParams)));
 
-	public abstract IEnumerable<T> Generate(
+	public abstract IEnumerable<TElement> Generate(
 		int numberOfElements,
 		int numberOfSets,
-		int? lengthOfElement,
-		ulong? min,
-		ulong? max);
+		TParams parameters);
 }
