@@ -11,9 +11,12 @@ using Microsoft.Extensions.Logging;
 
 namespace RGen.Application.Commanding.Middlewares;
 
+
 public class CommandTranscriber
 {
-	public static InvocationMiddleware Instance =
+	private const string NA = "N/A";
+
+	public static readonly InvocationMiddleware Instance =
 		async (context, next) =>
 			{
 				var host = context.BindingContext.GetService(typeof(IHost)) as IHost;
@@ -132,7 +135,7 @@ public class CommandTranscriber
 	private static void WriteSingle(ref StringBuilder sb, ref List<object> fmt, string valueName, object value)
 	{
 		sb.AppendFormat("{{{0}}}", valueName);
-		fmt.Add(value.ToString());
+		fmt.Add(value?.ToString() ?? NA);
 	}
 
 	private static void WriteArray(ref StringBuilder sb, ref List<object> fmt, string valueName, int nameLength, IEnumerable<object> values)
@@ -145,7 +148,7 @@ public class CommandTranscriber
 			var paddingLength = i == 0 ? 0 : nameLength + 4 + 1;
 			var padding = paddingLength == 0 ? string.Empty : new string(' ', paddingLength);
 			sb.AppendFormat("{0}{{{1}}}", padding, elementName);
-			fmt.Add(elementValue.ToString());
+			fmt.Add(elementValue?.ToString() ?? NA);
 
 			if (i + 1 < array.Length)
 				sb.AppendLine();

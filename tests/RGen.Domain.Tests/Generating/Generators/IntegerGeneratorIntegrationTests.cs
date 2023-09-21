@@ -9,7 +9,7 @@ namespace RGen.Domain.Tests.Generating.Generators;
 
 public class IntegerGeneratorIntegrationTests
 {
-	private IntegerGenerator _sut;
+	private IntegerGenerator _sut = null!;
 
 	[SetUp]
 	public void PreRun()

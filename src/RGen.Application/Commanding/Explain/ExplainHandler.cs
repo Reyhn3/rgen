@@ -5,11 +5,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using RGen.Domain;
-using RGen.Infrastructure;
 using RGen.Infrastructure.Logging;
 
 
 namespace RGen.Application.Commanding.Explain;
+
 
 public class ExplainHandler : GlobalCommandHandler
 {
@@ -51,9 +51,10 @@ public class ExplainHandler : GlobalCommandHandler
 	}
 
 	private static string GetEnumDescription<TEnum>(TEnum source)
+		where TEnum : struct
 	{
-		var field = typeof(TEnum).GetField(source.ToString());
+		var field = typeof(TEnum).GetField(source.ToString()!);
 		var attributes = (DescriptionAttribute[])(field?.GetCustomAttributes(typeof(DescriptionAttribute), false) ?? Array.Empty<DescriptionAttribute>());
-		return attributes is {Length: > 0} ? attributes[0].Description : source.ToString();
+		return attributes is {Length: > 0} ? attributes[0].Description : source.ToString()!;
 	}
 }
