@@ -18,9 +18,9 @@ public class GenerateIntegerCommand : Command
 					"The number of values to generate")
 				.InValidRangeOnly(1, 1_000_000));
 
-		AddOption(
-			new Option<int>(
-					"--set",
+		AddArgument(
+			new Argument<int>(
+					"s",
 					() => 1,
 					"The number of sets to generate")
 				.InValidRangeOnly(1, ushort.MaxValue));

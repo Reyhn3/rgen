@@ -8,8 +8,8 @@
 
 //      "commandLineArgs": "int --min 127 --max 255"
       
-//      "commandLineArgs": "int 3 --set 2"
-//      "commandLineArgs": "int 3 --set 2 -o %TEMP%\\rgen\\output-0.txt"
+//      "commandLineArgs": "int 3 2"
+//      "commandLineArgs": "int 3 -o %TEMP%\\rgen\\output-0.txt"
 
 //      "commandLineArgs": "\"@rsp\\int.rsp\" --base bin"
 //      "commandLineArgs": "\"@rsp\\int.rsp\" --base hex"

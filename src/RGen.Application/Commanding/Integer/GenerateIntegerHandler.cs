@@ -45,7 +45,7 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 	}
 
 	public int N { get; set; }
-	public int Set { get; set; }
+	public int S { get; set; }
 	public int? Length { get; set; }
 	public ulong? Min { get; set; }
 	public ulong? Max { get; set; }
@@ -67,7 +67,7 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 			renderer,
 			writers,
 			N,
-			Set,
+			S,
 			parameters,
 			cancellationToken);
 
