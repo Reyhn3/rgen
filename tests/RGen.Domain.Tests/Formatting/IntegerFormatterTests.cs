@@ -16,7 +16,7 @@ public class IntegerFormatterTests
 	[SetUp]
 	public void PreRun()
 	{
-		_sut = new IntegerFormatter(A.Dummy<ILogger<IntegerFormatter>>(), A.Dummy<IntegerFormatterOptions>());
+		_sut = new IntegerFormatter(A.Dummy<ILogger<IntegerFormatter>>());
 	}
 
 	[Test]

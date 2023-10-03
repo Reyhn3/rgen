@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RGen.Application.Formatting;
+using RGen.Application.Generating;
 using RGen.Application.Rendering;
 using RGen.Application.Writing;
 using RGen.Domain;
@@ -21,13 +22,19 @@ public static class Module
 		services.AddSingleton<IntegerGenerator>();
 		services.AddSingleton<IGeneratorService, GeneratorService>();
 
+		services.AddSingleton(_ =>
+			new GeneratorFactory()
+				.Register<IntegerGeneratorOptions>(_ =>
+					new IntegerGenerator()));
+
 		services.AddSingleton(sp =>
 			new FormatterFactory()
-				.Register<IntegerFormatterOptions>(o => new IntegerFormatter(sp.GetRequiredService<ILogger<IntegerFormatter>>(), o)));
+				.Register<IntegerFormatterOptions>(_ =>
+					new IntegerFormatter(sp.GetRequiredService<ILogger<IntegerFormatter>>())));
 
 		services.AddSingleton(_ =>
 			new RendererFactory()
-				.Register<ConsoleRendererOptions>(o => new ConsoleRenderer(o)));
+				.Register<ConsoleRendererOptions>(_ => new ConsoleRenderer()));
 
 		services.AddSingleton(sp =>
 			new WriterFactory()

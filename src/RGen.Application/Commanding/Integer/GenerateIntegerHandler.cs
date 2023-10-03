@@ -5,11 +5,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using RGen.Application.Formatting;
+using RGen.Application.Generating;
 using RGen.Application.Rendering;
 using RGen.Application.Writing;
 using RGen.Domain;
 using RGen.Domain.Formatting;
-using RGen.Domain.Generating;
 using RGen.Domain.Generating.Generators;
 using RGen.Domain.Writing;
 using RGen.Infrastructure.Rendering.Console;
@@ -23,29 +23,29 @@ namespace RGen.Application.Commanding.Integer;
 public class GenerateIntegerHandler : GlobalCommandHandler
 {
 	private readonly IGeneratorService _generatorService;
+	private readonly IGeneratorFactory _generatorFactory;
 	private readonly IFormatterFactory _formatterFactory;
-	private readonly IGenerator _generator;
 	private readonly IRendererFactory _rendererFactory;
 	private readonly IWriterFactory _writerFactory;
 
 	public GenerateIntegerHandler(
 		ILogger<GenerateIntegerHandler> logger,
-		IntegerGenerator generator,
 		IGeneratorService generatorService,
+		IGeneratorFactory generatorFactory,
 		IFormatterFactory formatterFactory,
 		IRendererFactory rendererFactory,
 		IWriterFactory writerFactory)
 		: base(logger)
 	{
 		_generatorService = generatorService ?? throw new ArgumentNullException(nameof(generatorService));
+		_generatorFactory = generatorFactory ?? throw new ArgumentNullException(nameof(generatorFactory));
 		_formatterFactory = formatterFactory ?? throw new ArgumentNullException(nameof(formatterFactory));
-		_generator = generator ?? throw new ArgumentNullException(nameof(generator));
 		_rendererFactory = rendererFactory ?? throw new ArgumentNullException(nameof(rendererFactory));
 		_writerFactory = writerFactory ?? throw new ArgumentNullException(nameof(writerFactory));
 	}
 
 	public int N { get; set; }
-	public int Set { get; set; }
+	public int S { get; set; }
 	public int? Length { get; set; }
 	public ulong? Min { get; set; }
 	public ulong? Max { get; set; }
@@ -56,19 +56,21 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 //TODO: #12: If more than x number of total elements, display a progress bar
 //TODO: #11: If more than x number of total elements, run in parallel
 
+		var generator = _generatorFactory.Create(new IntegerGeneratorOptions(Length, Min, Max));
 		var formatter = _formatterFactory.Create(new IntegerFormatterOptions(Base));
 		var renderer = _rendererFactory.Create(new ConsoleRendererOptions(NoColor));
 		var writers = CreateWriters();
-		var parameters = new IntegerParameters(Length, Min, Max);
 
 		var result = await _generatorService.GenerateAsync(
-			_generator,
+			generator,
 			formatter,
 			renderer,
 			writers,
 			N,
-			Set,
-			parameters,
+			S,
+			new IntegerGeneratorOptions(Length, Min, Max),
+			new IntegerFormatterOptions(Base),
+			new ConsoleRendererOptions(NoColor),
 			cancellationToken);
 
 		return result.ToExitCode();

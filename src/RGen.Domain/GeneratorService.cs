@@ -20,12 +20,14 @@ public class GeneratorService : IGeneratorService
 		IEnumerable<IWriter> writers,
 		int numberOfElements,
 		int numberOfSets,
-		object? parameters,
+		object? generatorParameters,
+		object? formatterParameters,
+		object? rendererParameters,
 		CancellationToken cancellationToken = default)
 	{
-		var sets = generator.Generate(numberOfElements, numberOfSets, parameters);
-		var formatted = formatter.Format(sets);
-		var rendered = renderer.Render(numberOfSets, formatted);
+		var sets = generator.Generate(numberOfElements, numberOfSets, generatorParameters);
+		var formatted = formatter.Format(sets, formatterParameters);
+		var rendered = renderer.Render(numberOfElements, formatted, rendererParameters);
 		if (rendered.IsEmpty)
 			return Result.Failure(ResultCode.NoDataGenerated);
 

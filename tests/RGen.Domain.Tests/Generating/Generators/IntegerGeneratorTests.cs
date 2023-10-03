@@ -12,13 +12,13 @@ namespace RGen.Domain.Tests.Generating.Generators;
 public class IntegerGeneratorTests
 {
 	private IntegerGenerator _sut = null!;
-	private IntegerParameters _default;
+	private IntegerGeneratorOptions _default;
 
 	[SetUp]
 	public void PreRun()
 	{
 		_sut = new IntegerGenerator();
-		_default = new IntegerParameters(A.Dummy<int?>(), A.Dummy<ulong?>(), A.Dummy<ulong?>());
+		_default = new IntegerGeneratorOptions(A.Dummy<int?>(), A.Dummy<ulong?>(), A.Dummy<ulong?>());
 	}
 
 #region Number of elements
@@ -40,13 +40,13 @@ public class IntegerGeneratorTests
 	[TestCase(0)]
 	[TestCase(20, Description = "long has 19 digits, excluding any sign")]
 	public void Generate_should_throw_exception_if_Length_is_out_of_range(int length) =>
-		Should.Throw<ArgumentOutOfRangeException>(() => _sut.Generate(1, 1, new IntegerParameters(length, A.Dummy<ulong?>(), A.Dummy<ulong?>())));
+		Should.Throw<ArgumentOutOfRangeException>(() => _sut.Generate(1, 1, new IntegerGeneratorOptions(length, A.Dummy<ulong?>(), A.Dummy<ulong?>())));
 
 	[Test]
 	public void Generate_with_length_specified_should_generate_number_containing_the_specified_number_of_digits()
 	{
 		const int numberOfDigits = 5;
-		var result = _sut.Generate(1, 1, new IntegerParameters(numberOfDigits, A.Dummy<ulong?>(), A.Dummy<ulong?>())).ToArray();
+		var result = _sut.Generate(1, 1, new IntegerGeneratorOptions(numberOfDigits, A.Dummy<ulong?>(), A.Dummy<ulong?>())).ToArray();
 		GeneratorUtils.PrintSets(result);
 		result.Single().ToString().Length.ShouldBe(numberOfDigits);
 	}
@@ -83,7 +83,7 @@ public class IntegerGeneratorTests
 	[Test]
 	public void Generate_with_min_and_max_shall_throw_exception_if_min_is_greater_than_or_equal_to_max() =>
 		Should.Throw<ArgumentOutOfRangeException>(() =>
-			_sut.Generate(1, 1, new IntegerParameters(null, 1, 1)));
+			_sut.Generate(1, 1, new IntegerGeneratorOptions(null, 1, 1)));
 
 	[Test(Description = "Restrict only the lower boundary")]
 	public void DetermineMinAndMax_shall_use_only_min_if_max_is_null()

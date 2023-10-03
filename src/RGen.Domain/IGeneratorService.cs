@@ -19,6 +19,8 @@ public interface IGeneratorService
 		IEnumerable<IWriter> writers,
 		int numberOfElements,
 		int numberOfSets,
-		object? parameters,
+		object? generatorParameters,
+		object? formatterParameters,
+		object? rendererParameters,
 		CancellationToken cancellationToken = default);
 }
