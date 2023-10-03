@@ -34,7 +34,7 @@ public static class Module
 
 		services.AddSingleton(_ =>
 			new RendererFactory()
-				.Register<ConsoleRendererOptions>(o => new ConsoleRenderer(o)));
+				.Register<ConsoleRendererOptions>(_ => new ConsoleRenderer()));
 
 		services.AddSingleton(sp =>
 			new WriterFactory()

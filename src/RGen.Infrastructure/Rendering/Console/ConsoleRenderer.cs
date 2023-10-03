@@ -10,7 +10,7 @@ using RGen.Infrastructure.Logging;
 namespace RGen.Infrastructure.Rendering.Console;
 
 
-public class ConsoleRenderer : IRenderer
+public class ConsoleRenderer : Renderer<ConsoleRendererOptions>
 {
 	private const string NullElement = "<null>";
 	private const char BeginArray = '[';
@@ -19,14 +19,7 @@ public class ConsoleRenderer : IRenderer
 	private static readonly string SetSeparator = Environment.NewLine;
 	private static readonly string ElementSeparator = ", ";
 
-	private readonly bool _isColoringDisabled;
-
-	public ConsoleRenderer(ConsoleRendererOptions options)
-	{
-		_isColoringDisabled = options.IsColoringDisabled || LogHelper.IsNoColorSet;
-	}
-
-	public RenderContext Render(int numberOfElementsPerSet, IEnumerable<FormattedRandomValue> randomValues)
+	public override RenderContext Render(int numberOfElementsPerSet, IEnumerable<FormattedRandomValue> randomValues, ConsoleRendererOptions options)
 	{
 		var array = (randomValues?.Where(IsValidElement) ?? Enumerable.Empty<FormattedRandomValue>()).ToArray();
 		if (!array.Any())
@@ -38,9 +31,12 @@ public class ConsoleRenderer : IRenderer
 		var rawStringBuilder = new StringBuilder();
 		var renderedStringBuilder = new StringBuilder();
 
+		var isColoringDisabled = options.IsColoringDisabled || LogHelper.IsNoColorSet;
+
+
 		for (var i = 0; i < array.Length; i += numberOfElementsPerSet)
 		{
-			var set = array[i..(Math.Min(array.Length, i + numberOfElementsPerSet))];
+			var set = array[i..Math.Min(array.Length, i + numberOfElementsPerSet)];
 			if (!set.Any())
 				continue;
 
@@ -54,7 +50,7 @@ public class ConsoleRenderer : IRenderer
 			{
 				var element = set[j];
 				var formatted = element.Formatted;
-				var rendered = RenderElement(formatted, _isColoringDisabled);
+				var rendered = RenderElement(formatted, isColoringDisabled);
 				rawStringBuilder.Append(formatted);
 				renderedStringBuilder.Append(rendered);
 

@@ -70,6 +70,7 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 			S,
 			new IntegerGeneratorOptions(Length, Min, Max),
 			new IntegerFormatterOptions(Base),
+			new ConsoleRendererOptions(NoColor),
 			cancellationToken);
 
 		return result.ToExitCode();

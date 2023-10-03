@@ -21,5 +21,6 @@ public interface IGeneratorService
 		int numberOfSets,
 		object? generatorParameters,
 		object? formatterParameters,
+		object? rendererParameters,
 		CancellationToken cancellationToken = default);
 }
