@@ -69,6 +69,7 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 			N,
 			S,
 			new IntegerGeneratorOptions(Length, Min, Max),
+			new IntegerFormatterOptions(Base),
 			cancellationToken);
 
 		return result.ToExitCode();

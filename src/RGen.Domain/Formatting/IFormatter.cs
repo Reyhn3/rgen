@@ -7,11 +7,12 @@ namespace RGen.Domain.Formatting;
 
 public interface IFormatter
 {
-	IEnumerable<FormattedRandomValue> Format(IEnumerable randomValues);
+	IEnumerable<FormattedRandomValue> Format(IEnumerable randomValues, object? parameters);
 }
 
 
-public interface IFormatter<in T> : IFormatter
+public interface IFormatter<in TElement, in TParams> : IFormatter
+	where TParams : struct
 {
-	IEnumerable<FormattedRandomValue> Format(IEnumerable<T> randomValues);
+	IEnumerable<FormattedRandomValue> Format(IEnumerable<TElement> randomValues, TParams parameters);
 }

@@ -29,8 +29,8 @@ public static class Module
 
 		services.AddSingleton(sp =>
 			new FormatterFactory()
-				.Register<IntegerFormatterOptions>(o =>
-					new IntegerFormatter(sp.GetRequiredService<ILogger<IntegerFormatter>>(), o)));
+				.Register<IntegerFormatterOptions>(_ =>
+					new IntegerFormatter(sp.GetRequiredService<ILogger<IntegerFormatter>>())));
 
 		services.AddSingleton(_ =>
 			new RendererFactory()

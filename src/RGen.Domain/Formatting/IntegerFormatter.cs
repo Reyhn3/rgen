@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
@@ -9,22 +8,17 @@ using RGen.Domain.Generating.Generators;
 namespace RGen.Domain.Formatting;
 
 
-public class IntegerFormatter : IFormatter<ulong>
+public class IntegerFormatter : Formatter<ulong, IntegerFormatterOptions>
 {
 	private readonly ILogger<IntegerFormatter> _logger;
-	private readonly IntegerFormatterOptions _options;
 
-	public IntegerFormatter(ILogger<IntegerFormatter> logger, IntegerFormatterOptions options)
+	public IntegerFormatter(ILogger<IntegerFormatter> logger)
 	{
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-		_options = options ?? throw new ArgumentNullException(nameof(options));
 	}
 
-	IEnumerable<FormattedRandomValue> IFormatter.Format(IEnumerable randomValues) =>
-		Format(randomValues.Cast<ulong>());
-
-	public IEnumerable<FormattedRandomValue> Format(IEnumerable<ulong> randomValues) =>
-		randomValues.Select(v => new FormattedRandomValue(v, FormatElement(_options.Base, v)));
+	public override IEnumerable<FormattedRandomValue> Format(IEnumerable<ulong> randomValues, IntegerFormatterOptions parameters) =>
+		randomValues.Select(v => new FormattedRandomValue(v, FormatElement(parameters.Base, v)));
 
 
 //TODO: Optimize with string.Create() and spans
