@@ -1,8 +1,9 @@
 ﻿using System.CommandLine.Invocation;
+using RGen.Application.Commanding.Globals;
 using RGen.Infrastructure.Logging;
 
 
-namespace RGen.Application.Commanding.Globals;
+namespace RGen.Application.Commanding.Middlewares;
 
 public static class VerbosityLevelMiddleware
 {
