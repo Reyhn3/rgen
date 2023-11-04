@@ -81,6 +81,6 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 		yield return _writerFactory.Create(new ConsoleWriterOptions());
 
 		if (Output != null)
-			yield return _writerFactory.Create(new PlainTextFileWriterOptions(Output));
+			yield return _writerFactory.Create(new TextFileWriterOptions(Output));
 	}
 }

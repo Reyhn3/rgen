@@ -12,12 +12,12 @@ namespace RGen.Infrastructure.Tests.Writing.TextFile;
 
 public class PlainTextFileWriterTests
 {
-	private PlainTextFileWriter _sut = null!;
+	private TextFileWriter _sut = null!;
 
 	[SetUp]
 	public void PreRun()
 	{
-		_sut = new PlainTextFileWriter(A.Dummy<ILogger<PlainTextFileWriter>>(), A.Dummy<PlainTextFileWriterOptions>());
+		_sut = new TextFileWriter(A.Dummy<ILogger<TextFileWriter>>(), A.Dummy<TextFileWriterOptions>());
 	}
 
 	[Test]

@@ -14,12 +14,12 @@ using StdOut = System.Console;
 
 namespace RGen.Infrastructure.Writing.TextFile;
 
-public class PlainTextFileWriter : IWriter
+public class TextFileWriter : IWriter
 {
-	private readonly ILogger<PlainTextFileWriter> _logger;
-	private readonly PlainTextFileWriterOptions _options;
+	private readonly ILogger<TextFileWriter> _logger;
+	private readonly TextFileWriterOptions _options;
 
-	public PlainTextFileWriter(ILogger<PlainTextFileWriter> logger, PlainTextFileWriterOptions options)
+	public TextFileWriter(ILogger<TextFileWriter> logger, TextFileWriterOptions options)
 	{
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		_options = options;

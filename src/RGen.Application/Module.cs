@@ -39,8 +39,8 @@ public static class Module
 		services.AddSingleton(sp =>
 			new WriterFactory()
 				.Register<ConsoleWriterOptions>(o => new ConsoleWriter(o))
-				.Register<PlainTextFileWriterOptions>(o =>
-					new PlainTextFileWriter(sp.GetRequiredService<ILogger<PlainTextFileWriter>>(), o)));
+				.Register<TextFileWriterOptions>(o =>
+					new TextFileWriter(sp.GetRequiredService<ILogger<TextFileWriter>>(), o)));
 
 		return services;
 	}
