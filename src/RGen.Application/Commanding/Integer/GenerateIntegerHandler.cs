@@ -4,6 +4,7 @@ using System.CommandLine.Invocation;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using RGen.Application.Commanding.Globals;
 using RGen.Application.Formatting;
 using RGen.Application.Generating;
 using RGen.Application.Rendering;
@@ -80,7 +81,19 @@ public class GenerateIntegerHandler : GlobalCommandHandler
 	{
 		yield return _writerFactory.Create(new ConsoleWriterOptions());
 
-		if (Output != null)
-			yield return _writerFactory.Create(new TextFileWriterOptions(Output));
+		if (Output == null)
+			yield break;
+
+		var formatToUse = Enum.IsDefined(Format) ? Format : OutputFormat.Text;
+		var formatExtension = ConvertOutputFormatToFileExtension(formatToUse);
+
+		yield return _writerFactory.Create(new TextFileWriterOptions(Output, formatExtension));
 	}
+
+	private static string ConvertOutputFormatToFileExtension(OutputFormat format) =>
+		format switch
+			{
+				OutputFormat.Text => "txt",
+				_                 => throw new ArgumentOutOfRangeException(nameof(format), format, null)
+			};
 }

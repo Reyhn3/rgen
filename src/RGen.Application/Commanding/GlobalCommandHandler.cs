@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using RGen.Application.Commanding.Globals;
 using RGen.Infrastructure;
 using RGen.Infrastructure.Logging;
 
@@ -22,6 +23,7 @@ public abstract class GlobalCommandHandler : ICommandHandler
 #region Global Options
 	public bool NoColor { get; set; }
 	public FileInfo? Output { get; set; }
+	public OutputFormat Format { get; set; }
 #endregion Global Options
 
 	public int Invoke(InvocationContext context) =>

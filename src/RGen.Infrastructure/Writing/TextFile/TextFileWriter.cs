@@ -40,6 +40,7 @@ public class TextFileWriter : IWriter
 
 	internal bool TryGetOrCreateFileName(FileInfo? optionsFileName, out string? filename)
 	{
+		// Try use user input first
 		try
 		{
 			if (optionsFileName != null)
@@ -67,10 +68,11 @@ public class TextFileWriter : IWriter
 			return false;
 		}
 
+		// Try temporary file last
 		try
 		{
 			var tempFileName = Path.GetTempFileName();
-			filename = Path.ChangeExtension(tempFileName, "txt");
+			filename = Path.ChangeExtension(tempFileName, _options.suffix);
 			_logger.LogDebug("Created temporary file {TemporaryFileName}", filename);
 
 			return true;

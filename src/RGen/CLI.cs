@@ -28,10 +28,12 @@ public static class CLI
 			};
 
 		rootCommand.AddGlobalOption(GlobalOutputOption.Output);
+		rootCommand.AddGlobalOption(GlobalOutputOption.Format);
 
 		rootCommand.AddGlobalOption(GlobalVerbosityOption.Verbosity);
 		rootCommand.AddGlobalOption(GlobalVerbosityOption.Quiet);
 		rootCommand.AddGlobalOption(GlobalVerbosityOption.Loud);
+		
 		rootCommand.AddGlobalOption(GlobalColorOption.Color);
 
 		return new CommandLineBuilder(rootCommand);
