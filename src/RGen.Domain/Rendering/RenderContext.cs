@@ -1,8 +1,8 @@
 ﻿namespace RGen.Domain.Rendering;
 
 
-public record RenderContext(string Raw, string Rendered)
+public record RenderContext(string Formatted, string Rendered)
 {
 	public static RenderContext Empty { get; } = new(null!, null!);
-	public bool IsEmpty => Raw == null! && Rendered == null!;
+	public bool IsEmpty => Formatted == null! && Rendered == null!;
 }

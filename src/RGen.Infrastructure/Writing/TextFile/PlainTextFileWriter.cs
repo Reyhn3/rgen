@@ -30,7 +30,7 @@ public class PlainTextFileWriter : IWriter
 		if (!TryGetOrCreateFileName(_options.FileName, out var filename))
 			return Result.Failure(ResultCode.OutputFilePathError);
 
-		if (!await TryWriteContentToFileAsync(filename!, context.Raw, Encoding.UTF8, cancellationToken))
+		if (!await TryWriteContentToFileAsync(filename!, context.Formatted, Encoding.UTF8, cancellationToken))
 			return Result.Failure(ResultCode.OutputFileWriteError);
 
 		_logger.LogInformation("Values exported to: {OutputFile}", filename);

@@ -16,8 +16,8 @@ internal static class Helpers
 			return item;
 		}
 
-		Console.WriteLine("Raw:\t\t\t{0}", item.Raw);
-		Console.WriteLine("Formatted:\t{0}", item.Rendered);
+		Console.WriteLine("Formatted:\t\t\t{0}", item.Formatted);
+		Console.WriteLine("Rendered:\t{0}", item.Rendered);
 		return item;
 	}
 

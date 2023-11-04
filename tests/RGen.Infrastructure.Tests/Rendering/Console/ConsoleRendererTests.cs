@@ -80,7 +80,7 @@ public class ConsoleRendererTests
 						null,
 						new FormattedRandomValue(A.Dummy<object>(), "c")
 					}!,
-				A.Dummy<ConsoleRendererOptions>()).Dump()?.Raw
+				A.Dummy<ConsoleRendererOptions>()).Dump()?.Formatted
 			.ShouldBe("a\r\nc");
 
 	[Test]
@@ -92,7 +92,7 @@ public class ConsoleRendererTests
 						new FormattedRandomValue(A.Dummy<object>(), string.Empty),
 						new FormattedRandomValue(A.Dummy<object>(), "c")
 					}!,
-				A.Dummy<ConsoleRendererOptions>()).Dump()?.Raw
+				A.Dummy<ConsoleRendererOptions>()).Dump()?.Formatted
 			.ShouldBe("a\r\nc");
 
 	[Test]
@@ -104,42 +104,42 @@ public class ConsoleRendererTests
 						new FormattedRandomValue(A.Dummy<object>(), null!),
 						new FormattedRandomValue(A.Dummy<object>(), "c")
 					}!,
-				A.Dummy<ConsoleRendererOptions>()).Dump()?.Raw
+				A.Dummy<ConsoleRendererOptions>()).Dump()?.Formatted
 			.ShouldBe("a\r\nc");
 
 	[Test]
 	public void Render_single_set_single_value_should_not_append_nor_suffix() =>
-		_sut.Render(1, SingleValue, A.Dummy<ConsoleRendererOptions>()).Dump()?.Raw
+		_sut.Render(1, SingleValue, A.Dummy<ConsoleRendererOptions>()).Dump()?.Formatted
 			.ShouldBe("1");
 
 	[Test]
 	public void Render_single_set_multiple_values_should_not_append_nor_suffix() =>
-		_sut.Render(2, DoubleValues, A.Dummy<ConsoleRendererOptions>()).Dump()?.Raw
+		_sut.Render(2, DoubleValues, A.Dummy<ConsoleRendererOptions>()).Dump()?.Formatted
 			.ShouldBe("1\r\n2");
 
 	[Test]
 	public void Render_multiple_sets_single_value_should_not_append_nor_suffix() =>
-		_sut.Render(1, DoubleValues, A.Dummy<ConsoleRendererOptions>()).Dump()?.Raw
+		_sut.Render(1, DoubleValues, A.Dummy<ConsoleRendererOptions>()).Dump()?.Formatted
 			.ShouldBe("1\r\n2");
 
 	[Test]
 	public void Render_multiple_sets_with_multiple_values_should_enclose_set() =>
-		_sut.Render(2, MultipleValues, A.Dummy<ConsoleRendererOptions>()).Dump()?.Raw
+		_sut.Render(2, MultipleValues, A.Dummy<ConsoleRendererOptions>()).Dump()?.Formatted
 			.ShouldBe("[1, 2]\r\n[3, 4]");
 
 	[Test]
 	public void Render_many_elements_should_be_correctly_rendered() =>
-		_sut.Render(4, ManyValues, A.Dummy<ConsoleRendererOptions>()).Dump()?.Raw
+		_sut.Render(4, ManyValues, A.Dummy<ConsoleRendererOptions>()).Dump()?.Formatted
 			.ShouldBe("[1, 2, 3, 4]\r\n[5, 6, 7, 8]\r\n[9, 10, 11, 12]\r\n[13, 14, 15, 16]");
 
 	[Test]
 	public void Render_should_handle_multiple_sets_with_uneven_multiset_calculation() =>
-		_sut.Render(2, UnevenValues, A.Dummy<ConsoleRendererOptions>()).Dump()?.Raw
+		_sut.Render(2, UnevenValues, A.Dummy<ConsoleRendererOptions>()).Dump()?.Formatted
 			.ShouldBe("[1, 2]\r\n[3]");
 
 	[Test]
 	public void Render_should_handle_jagged_sets() =>
-		_sut.Render(3, MultipleValues, A.Dummy<ConsoleRendererOptions>()).Dump()?.Raw
+		_sut.Render(3, MultipleValues, A.Dummy<ConsoleRendererOptions>()).Dump()?.Formatted
 			.ShouldBe("[1, 2, 3]\r\n[4]");
 
 	[Test]
