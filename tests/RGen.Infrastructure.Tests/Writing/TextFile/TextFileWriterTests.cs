@@ -10,7 +10,7 @@ using Shouldly;
 
 namespace RGen.Infrastructure.Tests.Writing.TextFile;
 
-public class PlainTextFileWriterTests
+public class TextFileWriterTests
 {
 	private TextFileWriter _sut = null!;
 
