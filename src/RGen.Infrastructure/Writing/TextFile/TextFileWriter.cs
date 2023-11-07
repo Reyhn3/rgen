@@ -56,6 +56,8 @@ public class TextFileWriter : IWriter
 				if (pathOnly != null)
 					Directory.CreateDirectory(pathOnly);
 
+//TODO: Check if it is a file or a path - if it's a path then add a random file name
+
 				filename = pathAndFilename;
 				return true;
 			}

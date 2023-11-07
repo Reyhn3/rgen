@@ -10,6 +10,7 @@ using Shouldly;
 
 namespace RGen.Infrastructure.Tests.Writing.TextFile;
 
+
 public class TextFileWriterTests
 {
 	private TextFileWriter _sut = null!;
@@ -49,4 +50,29 @@ public class TextFileWriterTests
 	public void TryGetOrCreateFileName_should_return_false_for_invalid_filenames() =>
 		_sut.TryGetOrCreateFileName(new FileInfo(Path.GetInvalidFileNameChars().First().ToString()), out _)
 			.ShouldBeFalse();
+
+	[Test(Description = "A valid path that does not exist is OK because it will be created")]
+	public void TryGetOrCreateFileName_should_return_true_if_the_path_is_valid_but_does_not_exist() =>
+		_sut.TryGetOrCreateFileName(new FileInfo(Path.Join(Path.GetTempPath(),"does", "not", "exist")), out _)
+			.ShouldBeTrue();
+
+	[Test(Description = "A path to an existing folder is OK because a random file will be generated inside it")]
+	public void TryGetOrCreateFileName_should_return_true_if_the_path_is_an_existing_folder() =>
+		_sut.TryGetOrCreateFileName(new FileInfo(Path.GetTempPath()), out _)
+			.ShouldBeTrue();
+
+	[Test(Description = "A path to an existing file is OK because the file will be overwritten")]
+	public void TryGetOrCreateFileName_should_return_true_if_the_path_is_an_existing_file() =>
+		_sut.TryGetOrCreateFileName(new FileInfo(Path.GetTempFileName()), out _)
+			.ShouldBeTrue();
+
+	[Test(Description = "A path to a file that does not exist is OK because it will be created")]
+	public void TryGetOrCreateFileName_should_return_true_if_the_path_is_a_file_that_does_not_exist()
+	{
+		var fileName = Path.Join(Path.GetTempPath(), "does-not-exist-yet.txt");
+		_sut.TryGetOrCreateFileName(new FileInfo(fileName), out _)
+			.ShouldBeTrue();
+
+		File.Delete(fileName);
+	}
 }
