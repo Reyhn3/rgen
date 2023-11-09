@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -13,6 +12,7 @@ using StdOut = System.Console;
 
 
 namespace RGen.Infrastructure.Writing.TextFile;
+
 
 public class TextFileWriter : IWriter
 {
@@ -40,26 +40,42 @@ public class TextFileWriter : IWriter
 
 	internal bool TryGetOrCreateFileName(FileInfo? optionsFileName, out string? filename)
 	{
-		// Try use user input first
+		if (optionsFileName == null)
+			try
+			{
+				filename = GenerateRandomFileName();
+				return true;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Unable to create temporary file (no output filename was provided)");
+				LogHelper.PrintExceptionDetails(ex);
+				filename = null;
+				return false;
+			}
+
 		try
 		{
-			if (optionsFileName != null)
+			var pathAndFilename = Path.GetFullPath(optionsFileName.ToString());
+			var pathOnly = Path.GetDirectoryName(pathAndFilename);
+			if (pathOnly != null)
+				Directory.CreateDirectory(pathOnly);
+
+			var isDirectoryOrFileOrNeither = IsDirectory(pathAndFilename);
+			switch (isDirectoryOrFileOrNeither)
 			{
-				var pathAndFilename = Path.GetFullPath(optionsFileName.ToString());
-				if (IsInvalidPath(pathAndFilename))
-				{
-					filename = null;
-					return false;
-				}
-
-				var pathOnly = Path.GetDirectoryName(pathAndFilename);
-				if (pathOnly != null)
-					Directory.CreateDirectory(pathOnly);
-
-//TODO: Check if it is a file or a path - if it's a path then add a random file name
-
-				filename = pathAndFilename;
-				return true;
+				case true:
+					_logger.LogDebug("No filename provided - generating random filename");
+					filename = Path.Join(pathAndFilename, GenerateRandomFileName());
+					return true;
+				case false:
+					_logger.LogDebug("Directory and filename provided");
+					filename = pathAndFilename;
+					return true;
+				case null:
+					_logger.LogDebug("No file or directory provided - generating temporary file");
+					filename = string.IsNullOrWhiteSpace(Path.GetFileName(pathAndFilename)) ? GenerateRandomFileName() : pathAndFilename;
+					return true;
 			}
 		}
 		catch (Exception ex)
@@ -69,42 +85,21 @@ public class TextFileWriter : IWriter
 			filename = null;
 			return false;
 		}
-
-		// Try temporary file last
-		try
-		{
-			var tempFileName = Path.GetTempFileName();
-			filename = Path.ChangeExtension(tempFileName, _options.suffix);
-			_logger.LogDebug("Created temporary file {TemporaryFileName}", filename);
-
-			return true;
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError(ex, "Error constructing file path and name for output");
-			LogHelper.PrintExceptionDetails(ex);
-			filename = null;
-			return false;
-		}
 	}
 
-	private static bool IsInvalidPath(string proposed)
+	private static string GenerateRandomFileName() =>
+		new(Path.GetTempFileName());
+
+	internal static bool? IsDirectory(string path)
 	{
-		FileInfo? fileInfo = null;
+		if (Directory.Exists(path))
+			return true;
 
-		try
-		{
-//BUG: This should throw if invalid characters are used, but it does not...?!
-			fileInfo = new FileInfo(proposed);
-		}
-		catch (ArgumentException)
-		{}
-		catch (PathTooLongException)
-		{}
-		catch (NotSupportedException)
-		{}
+		if (File.Exists(path))
+			return false;
 
-		return ReferenceEquals(fileInfo, null);
+		// Unknown: Neither directory nor file exists
+		return null;
 	}
 
 	private async Task<bool> TryWriteContentToFileAsync(string filename, string content, Encoding encoding, CancellationToken cancellationToken)
@@ -117,7 +112,7 @@ public class TextFileWriter : IWriter
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError(ex, $"Error writing to file {filename}");
+			_logger.LogError(ex, "Error writing to file {OutputFileName}", filename);
 			LogHelper.PrintExceptionDetails(ex);
 			return false;
 		}

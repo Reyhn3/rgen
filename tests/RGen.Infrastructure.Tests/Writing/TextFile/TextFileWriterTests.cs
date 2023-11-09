@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
@@ -37,42 +36,52 @@ public class TextFileWriterTests
 		actual!.ShouldNotContain("..");
 	}
 
-//TODO: Add logic for file path validation
-	[Ignore("Temporarily ignored because file path validation logic is not in place yet")]
-	[Test]
-	public void TryGetOrCreateFileName_should_return_false_for_invalid_paths() =>
-		_sut.TryGetOrCreateFileName(new FileInfo(Path.GetInvalidPathChars().First().ToString()), out _)
-			.ShouldBeFalse();
-
-//TODO: Add logic for file name validation
-	[Ignore("Temporarily ignored because file path validation logic is not in place yet")]
-	[Test]
-	public void TryGetOrCreateFileName_should_return_false_for_invalid_filenames() =>
-		_sut.TryGetOrCreateFileName(new FileInfo(Path.GetInvalidFileNameChars().First().ToString()), out _)
-			.ShouldBeFalse();
-
 	[Test(Description = "A valid path that does not exist is OK because it will be created")]
-	public void TryGetOrCreateFileName_should_return_true_if_the_path_is_valid_but_does_not_exist() =>
-		_sut.TryGetOrCreateFileName(new FileInfo(Path.Join(Path.GetTempPath(),"does", "not", "exist")), out _)
-			.ShouldBeTrue();
+	public void TryGetOrCreateFileName_should_return_true_if_the_path_is_valid_but_does_not_exist()
+	{
+		_sut.TryGetOrCreateFileName(new FileInfo(Path.Join(Path.GetTempPath(), "does", "not", "exist.txt")), out var result).ShouldBeTrue();
+		Path.GetFileName(result).ShouldNotBeNullOrEmpty();
+	}
 
 	[Test(Description = "A path to an existing folder is OK because a random file will be generated inside it")]
-	public void TryGetOrCreateFileName_should_return_true_if_the_path_is_an_existing_folder() =>
-		_sut.TryGetOrCreateFileName(new FileInfo(Path.GetTempPath()), out _)
-			.ShouldBeTrue();
+	public void TryGetOrCreateFileName_should_return_true_if_the_path_is_an_existing_folder()
+	{
+		_sut.TryGetOrCreateFileName(new FileInfo(Path.Join(Path.GetTempPath())), out var result).ShouldBeTrue();
+		Path.GetFileName(result).ShouldNotBeNullOrEmpty();
+	}
 
 	[Test(Description = "A path to an existing file is OK because the file will be overwritten")]
-	public void TryGetOrCreateFileName_should_return_true_if_the_path_is_an_existing_file() =>
-		_sut.TryGetOrCreateFileName(new FileInfo(Path.GetTempFileName()), out _)
-			.ShouldBeTrue();
+	public void TryGetOrCreateFileName_should_return_true_if_the_path_is_an_existing_file()
+	{
+		var input = new FileInfo(Path.GetTempFileName());
+		_sut.TryGetOrCreateFileName(input, out var result).ShouldBeTrue();
+		Path.GetFileName(result).ShouldBe(input.Name);
+	}
 
 	[Test(Description = "A path to a file that does not exist is OK because it will be created")]
 	public void TryGetOrCreateFileName_should_return_true_if_the_path_is_a_file_that_does_not_exist()
 	{
-		var fileName = Path.Join(Path.GetTempPath(), "does-not-exist-yet.txt");
-		_sut.TryGetOrCreateFileName(new FileInfo(fileName), out _)
-			.ShouldBeTrue();
+		const string filename = "does-not-exist-yet.txt";
+		var input = Path.Join(Path.GetTempPath(), filename);
 
-		File.Delete(fileName);
+		_sut.TryGetOrCreateFileName(new FileInfo(input), out var result).ShouldBeTrue();
+		Path.GetFileName(result).ShouldBe(filename);
+
+		File.Delete(input);
 	}
+
+	[Test]
+	public void IsDirectory_should_return_true_if_the_path_is_an_existing_directory() =>
+		TextFileWriter.IsDirectory(Path.GetTempPath())
+			.ShouldNotBeNull().ShouldBeTrue();
+
+	[Test]
+	public void IsDirectory_should_return_false_if_the_path_is_an_existing_file() =>
+		TextFileWriter.IsDirectory(Path.GetTempFileName())
+			.ShouldNotBeNull().ShouldBeFalse();
+
+	[Test]
+	public void IsDirectory_should_return_null_if_the_path_does_not_exist() =>
+		TextFileWriter.IsDirectory(@"C:\Does\Not\Exist")
+			.ShouldBeNull();
 }
